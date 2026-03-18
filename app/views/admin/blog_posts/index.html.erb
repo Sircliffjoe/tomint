@@ -1,0 +1,50 @@
+<% content_for :title, "Manage Blog" %>
+
+<div class="px-4 sm:px-6 lg:px-8">
+  <div class="sm:flex sm:items-center">
+    <div class="sm:flex-auto">
+      <h1 class="text-base font-semibold leading-6 text-gray-900">Blog Posts</h1>
+      <p class="mt-2 text-sm text-gray-700">Manage blog articles.</p>
+    </div>
+    <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
+      <%= link_to "New Post", new_admin_blog_post_path, class: "block rounded-md bg-green-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600" %>
+    </div>
+  </div>
+  <div class="mt-8 flow-root">
+    <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+      <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+        <table class="min-w-full divide-y divide-gray-300">
+          <thead>
+            <tr>
+              <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">Title</th>
+              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Author</th>
+              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Status</th>
+              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Published At</th>
+              <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-0">
+                <span class="sr-only">Edit</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200">
+            <% @blog_posts.each do |post| %>
+              <tr>
+                <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0"><%= post.title %></td>
+                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= post.author.first_name %></td>
+                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                  <span class="inline-flex items-center rounded-md bg-<%= post.published_at.present? && post.published_at <= Time.current ? 'green' : 'yellow' %>-50 px-2 py-1 text-xs font-medium text-<%= post.published_at.present? && post.published_at <= Time.current ? 'green' : 'yellow' %>-700 ring-1 ring-inset ring-<%= post.published_at.present? && post.published_at <= Time.current ? 'green' : 'yellow' %>-600/20">
+                    <%= post.published_at.present? && post.published_at <= Time.current ? 'Published' : 'Draft' %>
+                  </span>
+                </td>
+                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= post.published_at&.strftime("%b %d, %Y %H:%M") || '-' %></td>
+                <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
+                  <%= link_to "Edit", edit_admin_blog_post_path(post), class: "text-green-600 hover:text-green-900 mr-4" %>
+                  <%= link_to "Delete", admin_blog_post_path(post), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "text-red-600 hover:text-red-900" %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

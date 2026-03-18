@@ -1,0 +1,80 @@
+<% content_for :title, "Join Us - TOM Int." %>
+
+<div class="flex min-h-screen flex-col justify-center px-6 py-12 lg:px-8 bg-gradient-to-br from-stone-100 via-stone-50 to-white relative overflow-hidden">
+  <!-- Background Elements -->
+  <div class="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
+    <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-leaf-200 rounded-full blur-[100px] opacity-40 animate-pulse"></div>
+    <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-leaf-300 rounded-full blur-[100px] opacity-40 animate-pulse delay-700"></div>
+  </div>
+
+  <div class="sm:mx-auto sm:w-full sm:max-w-md pt-20">
+    <!-- Logo removed as requested -->
+
+    <div class="bg-white/70 backdrop-blur-xl rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/50 p-8 sm:p-10">
+      <h2 class="text-center text-2xl font-bold leading-9 tracking-tight text-gray-900 mb-8">Create your account</h2>
+
+      <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "space-y-6" }) do |f| %>
+        <%= render "devise/shared/error_messages", resource: resource %>
+
+        <div class="grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2">
+            <div>
+                <%= f.label :first_name, class: "block text-sm font-medium leading-6 text-gray-900" %>
+                <div class="mt-2">
+                <%= f.text_field :first_name, autofocus: true, class: "block w-full rounded-lg border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-leaf-600 sm:text-sm sm:leading-6 bg-white/50" %>
+                </div>
+            </div>
+             <div>
+                <%= f.label :last_name, class: "block text-sm font-medium leading-6 text-gray-900" %>
+                <div class="mt-2">
+                <%= f.text_field :last_name, class: "block w-full rounded-lg border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-leaf-600 sm:text-sm sm:leading-6 bg-white/50" %>
+                </div>
+            </div>
+        </div>
+
+        <div>
+          <%= f.label :email, class: "block text-sm font-medium leading-6 text-gray-900" %>
+          <div class="mt-2">
+            <%= f.email_field :email, autocomplete: "email", class: "block w-full rounded-lg border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-leaf-600 sm:text-sm sm:leading-6 bg-white/50" %>
+          </div>
+        </div>
+
+        <div>
+          <%= f.label :phone, "Phone Number", class: "block text-sm font-medium leading-6 text-gray-900" %>
+          <div class="mt-2">
+            <%= f.telephone_field :phone, autocomplete: "tel", class: "block w-full rounded-lg border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-leaf-600 sm:text-sm sm:leading-6 bg-white/50" %>
+          </div>
+        </div>
+        
+        <!-- Only show directorate/state if needed, assuming user self-registers as member/volunteer initially -->
+
+        <div>
+          <%= f.label :password, class: "block text-sm font-medium leading-6 text-gray-900" %>
+          <% if @minimum_password_length %>
+          <span class="text-xs text-gray-500">(<%= @minimum_password_length %> characters minimum)</span>
+          <% end %>
+          <div class="mt-2">
+            <%= f.password_field :password, autocomplete: "new-password", class: "block w-full rounded-lg border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-leaf-600 sm:text-sm sm:leading-6 bg-white/50" %>
+          </div>
+        </div>
+
+        <div>
+          <%= f.label :password_confirmation, class: "block text-sm font-medium leading-6 text-gray-900" %>
+          <div class="mt-2">
+            <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "block w-full rounded-lg border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-leaf-600 sm:text-sm sm:leading-6 bg-white/50" %>
+          </div>
+        </div>
+
+        <div>
+          <%= f.submit "Sign up", class: "flex w-full justify-center rounded-lg bg-leaf-600 px-3 py-2.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-leaf-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-leaf-600 transition-all transform active:scale-95" %>
+        </div>
+      <% end %>
+
+      <p class="mt-8 text-center text-sm text-gray-500">
+        Already a member?
+        <%- if controller_name != 'sessions' %>
+          <%= link_to "Sign in here", new_session_path(resource_name), class: "font-semibold leading-6 text-leaf-600 hover:text-leaf-500" %>
+        <% end %>
+      </p>
+    </div>
+  </div>
+</div>

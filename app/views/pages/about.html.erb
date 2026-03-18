@@ -1,0 +1,133 @@
+<% content_for :title, "About TOM" %>
+
+<div class="bg-white">
+  <!-- Hero Section (Retained as requested) -->
+  <div class="relative overflow-hidden" style="padding-top: 180px; padding-bottom: 80px;">
+    <div class="mx-auto max-w-7xl px-6 lg:px-8">
+      <div class="grid grid-cols-1 gap-y-12 lg:grid-cols-2 lg:gap-x-12 lg:items-center">
+        <!-- Left Content -->
+        <div class="max-w-2xl lg:max-w-none">
+          <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl leading-tight">
+            Raising Leaders, <br>
+            <span class="text-leaf-600">Impacting Generations.</span>
+          </h1>
+          <p class="mt-6 text-lg leading-7 text-gray-600">
+            For over three decades, teenagers involved with TOM Int. represent a generation of young people who are vibrant, articulate, and poised to take their world for Christ. We are more than a ministry; we are a movement.
+          </p>
+          <div class="mt-8 flex gap-x-4">
+             <a href="#history" class="rounded-full bg-leaf-600 px-6 py-3 text-sm font-semibold text-white shadow-md hover:bg-leaf-500 hover:shadow-lg transition-all">
+              Our Story
+            </a>
+          </div>
+        </div>
+        
+        <!-- Right Image Grid -->
+        <div class="relative lg:-mr-16">
+            <div class="grid grid-cols-2 gap-4">
+                <div class="relative rounded-xl bg-gray-100 overflow-hidden shadow-lg">
+                    <%= image_tag "/about_1.png", class: "w-full h-56 object-cover hover:scale-105 transition-transform duration-500", alt: "Youth Worship" %>
+                </div>
+                <div class="relative rounded-xl bg-gray-100 overflow-hidden shadow-lg">
+                    <%= image_tag "/about_2.png", class: "w-full h-56 object-cover hover:scale-105 transition-transform duration-500", alt: "Mentoring Students" %>
+                </div>
+                <div class="col-span-2 relative rounded-xl bg-gray-100 overflow-hidden shadow-lg">
+                    <%= image_tag "/about_3.png", class: "w-full h-40 object-cover hover:scale-105 transition-transform duration-500", alt: "Community Outreach" %>
+                </div>
+            </div>
+             <!-- Soft decorative blobs -->
+            <div class="absolute -top-12 -right-12 -z-10 w-64 h-64 bg-yellow-50 rounded-full blur-3xl opacity-60"></div>
+            <div class="absolute -bottom-12 -left-12 -z-10 w-64 h-64 bg-green-50 rounded-full blur-3xl opacity-60"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 1: History (Text Left, Image Right) -->
+  <div id="history" class="overflow-hidden bg-white py-24 sm:py-32">
+    <div class="mx-auto max-w-7xl px-6 lg:px-8">
+      <div class="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-2">
+        <div class="lg:pr-8 lg:pt-4">
+          <div class="lg:max-w-lg">
+            <h2 class="text-base font-semibold leading-7 text-leaf-600">Established 1992</h2>
+            <p class="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Our History</p>
+            <p class="mt-6 text-lg leading-8 text-gray-600">
+              Founded in 1992, Teenagers' Outreach Ministries International began with a simple burden: to see teenagers saved and established in the faith.
+            </p>
+            <p class="mt-6 text-lg leading-8 text-gray-600">
+              From a small fellowship, we have grown into a multi-national ministry affecting thousands of lives across the continent. Our journey is a testament to God's faithfulness and the power of dedicated discipleship.
+            </p>
+          </div>
+        </div>
+        <div class="relative">
+             <%= image_tag "/about_1.png", class: "w-full max-w-none rounded-xl shadow-xl ring-1 ring-gray-400/10 sm:w-[57rem] md:-ml-4 lg:-ml-0 object-cover h-[28rem]", alt: "History of TOM Int." %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 2: Mission (Image Left, Text Right) -->
+  <div class="overflow-hidden bg-leaf-50 py-24 sm:py-32">
+    <div class="mx-auto max-w-7xl px-6 lg:px-8">
+      <div class="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-2 lg:items-center">
+        <!-- Image (Order 2 on mobile, Order 1 on Desktop) -->
+        <div class="relative order-last lg:order-first">
+             <%= image_tag "/about_2.png", class: "w-full max-w-none rounded-xl shadow-xl ring-1 ring-gray-400/10 sm:w-[57rem] md:-ml-4 lg:-ml-0 object-cover h-[28rem]", alt: "Our Mission" %>
+        </div>
+        
+        <div class="lg:pl-8 lg:pt-4 order-first lg:order-last">
+          <div class="lg:max-w-lg">
+            <h2 class="text-base font-semibold leading-7 text-leaf-600">Our Purpose</h2>
+            <p class="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Our Mission</p>
+            <p class="mt-6 text-lg leading-8 text-gray-600">
+              Our mission is clear: to reach out to teenagers everywhere with the gospel of our Lord Jesus Christ.
+            </p>
+            <ul role="list" class="mt-8 space-y-8 text-gray-600">
+                <li class="flex gap-x-3">
+                  <svg class="mt-1 h-5 w-5 flex-none text-leaf-600" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" />
+                  </svg>
+                  <span><strong>Evangelism:</strong> Sharing the life-transforming message of Jesus.</span>
+                </li>
+                 <li class="flex gap-x-3">
+                  <svg class="mt-1 h-5 w-5 flex-none text-leaf-600" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" />
+                  </svg>
+                  <span><strong>Discipleship:</strong> Guiding them unto maturity in the faith.</span>
+                </li>
+                 <li class="flex gap-x-3">
+                  <svg class="mt-1 h-5 w-5 flex-none text-leaf-600" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" />
+                  </svg>
+                  <span><strong>Responsibility:</strong> Raising adults who impact their generation.</span>
+                </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 3: Vision (Text Left, Image Right) -->
+   <div class="overflow-hidden bg-white py-24 sm:py-32">
+    <div class="mx-auto max-w-7xl px-6 lg:px-8">
+      <div class="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-2">
+        <div class="lg:pr-8 lg:pt-4">
+          <div class="lg:max-w-lg">
+            <h2 class="text-base font-semibold leading-7 text-leaf-600">Future Focus</h2>
+            <p class="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Our Vision</p>
+            <p class="mt-6 text-lg leading-8 text-gray-600">
+              We envision a world where teenagers are leading revivals, transforming their communities, and standing as pillars of truth in every sector of society.
+            </p>
+            <p class="mt-6 text-lg leading-8 text-gray-600">
+              Our vision is to raise leaders who do not just survive the challenges of the modern world but thrive and impact generations to come.
+            </p>
+          </div>
+        </div>
+        <div class="relative">
+             <%= image_tag "/about_3.png", class: "w-full max-w-none rounded-xl shadow-xl ring-1 ring-gray-400/10 sm:w-[57rem] md:-ml-4 lg:-ml-0 object-cover h-[28rem]", alt: "Future Vision" %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

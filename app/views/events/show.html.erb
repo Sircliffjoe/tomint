@@ -1,0 +1,191 @@
+<% content_for :title, @event.title %>
+
+<div class="min-h-screen bg-gray-50" style="padding-top: 180px;">
+
+  <!-- Hero Banner -->
+  <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+    <% if @event.image.attached? %>
+      <div class="overflow-hidden rounded-2xl shadow-lg" style="max-height: 400px;">
+        <%= image_tag @event.image, class: "w-full h-full object-cover", alt: @event.title %>
+      </div>
+    <% else %>
+      <div class="overflow-hidden rounded-2xl bg-gradient-to-br from-leaf-800 to-leaf-950 flex items-center justify-center" style="height: 280px;">
+        <svg style="width:64px;height:64px;" class="text-white/30" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" /></svg>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Content Area -->
+  <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 mt-8 pb-20">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+      <!-- Left Column: Event Details -->
+      <div class="lg:col-span-2">
+
+        <!-- Title -->
+        <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900" style="line-height: 1.25;">
+          <%= @event.title %>
+        </h1>
+
+        <!-- Date & Time Card -->
+        <div class="mt-6 flex items-start gap-4">
+          <!-- Calendar icon block -->
+          <div class="flex-shrink-0 rounded-xl bg-white border border-gray-200 text-center shadow-sm overflow-hidden" style="width:56px;">
+            <div class="bg-leaf-600 text-white text-[10px] font-bold uppercase tracking-wider py-1">
+              <%= @event.start_time.strftime("%b") %>
+            </div>
+            <div class="py-2">
+              <span class="text-xl font-extrabold text-gray-900 leading-none"><%= @event.start_time.strftime("%d") %></span>
+            </div>
+          </div>
+          <div>
+            <p class="text-sm font-semibold text-gray-900"><%= @event.start_time.strftime("%A, %B %d") %></p>
+            <p class="text-sm text-gray-500 mt-0.5">
+              <%= @event.start_time.strftime("%I:%M %p") %> – <%= @event.end_time.strftime("%I:%M %p") %>
+            </p>
+          </div>
+        </div>
+
+        <!-- Location -->
+        <% if @event.location.present? %>
+          <div class="mt-4 flex items-start gap-4">
+            <div class="flex-shrink-0 rounded-xl bg-white border border-gray-200 shadow-sm flex items-center justify-center" style="width:56px;height:56px;">
+              <svg style="width:22px;height:22px;" class="text-gray-500" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" /></svg>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-gray-900"><%= @event.location %></p>
+              <p class="text-sm text-gray-500 mt-0.5">In-person event</p>
+            </div>
+          </div>
+        <% end %>
+
+        <!-- Divider -->
+        <hr class="my-8 border-gray-200">
+
+        <!-- About Section -->
+        <div>
+          <h2 class="text-lg font-bold text-gray-900 mt-10">About This Event</h2>
+          <div class="mt-4 prose prose-sm prose-green max-w-none text-gray-600 mb-bb" style="line-height: 1.8;">
+            <%= @event.description %>
+          </div>
+        </div>
+
+        <!-- Back link -->
+        <div class="mb-bb mt-12">
+          <%= link_to events_path, class: "inline-flex items-center gap-2 text-sm font-medium text-gray-500 hover:text-leaf-600 transition-colors" do %>
+            <svg style="width:16px;height:16px;" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" /></svg>
+            Back to Events
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Right Column: Registration Sidebar -->
+      <div class="lg:col-span-1">
+        <div class="sticky" style="top: 120px;">
+          <div class="rounded-2xl bg-white border border-gray-200 shadow-sm overflow-hidden">
+
+            <!-- Price Header -->
+            <div class="px-6 py-5 border-b border-gray-100">
+              <% if @event.paid? %>
+                <div class="flex items-baseline gap-1">
+                  <span class="text-2xl font-bold text-gray-900"><%= @event.currency %> <%= number_with_delimiter(@event.price.to_i) %></span>
+                  <span class="text-sm text-gray-500">/ person</span>
+                </div>
+              <% else %>
+                <div class="flex items-baseline gap-1">
+                  <span class="text-2xl font-bold text-gray-900">Free</span>
+                  <span class="text-sm text-gray-500">event</span>
+                </div>
+              <% end %>
+            </div>
+
+            <!-- Registration Content -->
+            <div class="px-6 py-5">
+              <% if user_signed_in? %>
+                <% if @registration %>
+                  <!-- Already Registered -->
+                  <div class="rounded-xl bg-green-50 p-4 mb-4">
+                    <div class="flex items-center gap-2">
+                      <svg style="width:18px;height:18px;min-width:18px;" class="text-green-500" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" />
+                      </svg>
+                      <span class="text-sm font-semibold text-green-800">You're registered!</span>
+                    </div>
+                    <p class="mt-2 text-xs text-green-700">We look forward to seeing you there.</p>
+                  </div>
+
+                  <%= link_to "View Ticket", event_registration_path(@event, @registration), class: "block w-full text-center rounded-xl bg-leaf-600 px-4 py-3 text-sm font-bold text-white shadow-sm hover:bg-leaf-500 transition-all" %>
+
+                  <div class="mt-3 text-center">
+                    <%= button_to "Cancel Registration", event_registration_path(@event, @registration), method: :delete, data: { turbo_confirm: "Are you sure you want to cancel?" }, class: "text-sm text-red-500 hover:text-red-700 font-medium transition-colors" %>
+                  </div>
+
+                <% elsif @event.registration_open %>
+                  <!-- Register -->
+                  <% if @event.paid? %>
+                    <%= button_to "Pay & Register", event_registrations_path(@event), method: :post, class: "block w-full text-center rounded-xl bg-leaf-600 px-4 py-3.5 text-sm font-bold text-white shadow-sm hover:bg-leaf-500 transition-all" %>
+                  <% else %>
+                    <%= button_to "Register", event_registrations_path(@event), method: :post, class: "block w-full text-center rounded-xl bg-leaf-600 px-4 py-3.5 text-sm font-bold text-white shadow-sm hover:bg-leaf-500 transition-all" %>
+                  <% end %>
+
+                  <% if @event.registration_open %>
+                    <p class="mt-3 text-center text-xs text-gray-500">
+                      <svg style="width:12px;height:12px;display:inline;vertical-align:-1px;margin-right:2px;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-13a.75.75 0 00-1.5 0v5c0 .414.336.75.75.75h4a.75.75 0 000-1.5h-3.25V5z" clip-rule="evenodd" /></svg>
+                      Registration is open
+                    </p>
+                  <% end %>
+
+                <% else %>
+                  <!-- Closed -->
+                  <button disabled class="block w-full rounded-xl bg-gray-100 px-4 py-3.5 text-sm font-semibold text-gray-400 cursor-not-allowed">
+                    Registration Closed
+                  </button>
+                <% end %>
+              <% else %>
+                <!-- Not signed in -->
+                <p class="text-sm text-gray-600 mb-4">Sign in to register for this event.</p>
+                <%= link_to "Sign In", new_user_session_path, class: "block w-full text-center rounded-xl bg-leaf-600 px-4 py-3.5 text-sm font-bold text-white shadow-sm hover:bg-leaf-500 transition-all" %>
+                <p class="mt-3 text-center text-xs text-gray-500">
+                  Don't have an account?
+                  <%= link_to "Sign up", new_user_registration_path, class: "font-semibold text-leaf-600 hover:text-leaf-500" %>
+                </p>
+              <% end %>
+            </div>
+
+            <!-- Status Badge Footer -->
+            <div class="px-6 py-4 border-t border-gray-100 bg-gray-50/50">
+              <div class="flex items-center justify-between">
+                <span class="text-xs text-gray-500">Status</span>
+                <% if @event.registration_open %>
+                  <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-green-700">
+                    <span class="relative flex" style="width:6px;height:6px;">
+                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                      <span class="relative inline-flex rounded-full bg-green-500" style="width:6px;height:6px;"></span>
+                    </span>
+                    Open
+                  </span>
+                <% else %>
+                  <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-red-600">
+                    <span class="rounded-full bg-red-500" style="width:6px;height:6px;"></span>
+                    Closed
+                  </span>
+                <% end %>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<style>
+  .mb-bb { margin-bottom: 100px !important; }
+  .mt-tt { margin-top: 50px !important; }
+  .mt-tp { margin-top: -50px !important; }
+</style>
+
+

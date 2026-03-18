@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "TOM Int. - Raise Leaders, Impact Generations" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <link rel="icon" href="<%= image_path 'site-logo-white.png' %>" type="image/png">
+    <link rel="apple-touch-icon" href="<%= image_path 'site-logo-white.png' %>">
+
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="bg-stone-50 font-sans text-gray-900 antialiased selection:bg-leaf-100 selection:text-leaf-900 min-h-screen flex flex-col">
+    <%= render "shared/public_header" %>
+
+    <main class="isolate flex-auto">
+      <% if notice %>
+        <div class="fixed top-20 right-5 z-50 p-4 text-leaf-700 bg-leaf-50 rounded-lg shadow-lg border border-leaf-100 animate-fade-in-down" role="alert">
+          <%= notice %>
+        </div>
+      <% end %>
+      <% if alert %>
+        <div class="fixed top-20 right-5 z-50 p-4 text-red-700 bg-red-50 rounded-lg shadow-lg border border-red-100 animate-fade-in-down" role="alert">
+          <%= alert %>
+        </div>
+      <% end %>
+
+      <%= yield %>
+    </main>
+
+    <%= render "shared/footer" %>
+  </body>
+</html>

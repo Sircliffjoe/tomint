@@ -1,0 +1,98 @@
+<%= form_with(model: [:admin, event], class: "space-y-8 divide-y divide-gray-200") do |form| %>
+  <div class="space-y-8 divide-y divide-gray-200">
+    <div>
+      <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+        <div class="sm:col-span-4">
+          <%= form.label :title, class: "block text-sm font-medium leading-6 text-gray-900" %>
+          <div class="mt-2">
+            <%= form.text_field :title, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6" %>
+          </div>
+        </div>
+
+        <div class="sm:col-span-6">
+          <%= form.label :description, class: "block text-sm font-medium leading-6 text-gray-900" %>
+          <div class="mt-2">
+            <%= form.rich_text_area :description, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6 min-h-[200px]" %>
+          </div>
+        </div>
+
+        <div class="sm:col-span-3">
+          <%= form.label :start_time, class: "block text-sm font-medium leading-6 text-gray-900" %>
+          <div class="mt-2">
+            <%= form.datetime_field :start_time, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6" %>
+          </div>
+        </div>
+
+        <div class="sm:col-span-3">
+          <%= form.label :end_time, class: "block text-sm font-medium leading-6 text-gray-900" %>
+          <div class="mt-2">
+            <%= form.datetime_field :end_time, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6" %>
+          </div>
+        </div>
+
+        <div class="sm:col-span-4">
+          <%= form.label :location, class: "block text-sm font-medium leading-6 text-gray-900" %>
+          <div class="mt-2">
+            <%= form.text_field :location, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6" %>
+          </div>
+        </div>
+        
+        <% if current_user.super_admin? %>
+          <div class="sm:col-span-3">
+            <%= form.label :state_id, "State (Optional)", class: "block text-sm font-medium leading-6 text-gray-900" %>
+            <div class="mt-2">
+              <%= form.collection_select :state_id, State.order(:name), :id, :name, { include_blank: "National Event" }, { class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:max-w-xs sm:text-sm sm:leading-6" } %>
+            </div>
+          </div>
+        <% end %>
+
+        <div class="sm:col-span-3">
+          <%= form.label :event_type, class: "block text-sm font-medium leading-6 text-gray-900" %>
+          <div class="mt-2">
+            <%= form.select :event_type, Event.event_types.keys.map { |t| [t.humanize, t] }, {}, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:max-w-xs sm:text-sm sm:leading-6", data: { controller: "event-type", action: "change->event-type#togglePrice" } %>
+          </div>
+        </div>
+
+        <div class="sm:col-span-3" data-event-type-target="priceField">
+          <%= form.label :price, class: "block text-sm font-medium leading-6 text-gray-900" %>
+          <div class="mt-2">
+             <%= form.number_field :price, step: "0.01", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6" %>
+          </div>
+        </div>
+
+        <div class="sm:col-span-3" data-event-type-target="currencyField">
+          <%= form.label :currency, class: "block text-sm font-medium leading-6 text-gray-900" %>
+          <div class="mt-2">
+             <%= form.text_field :currency, value: "NGN", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6" %>
+          </div>
+        </div>
+
+        <div class="sm:col-span-6">
+          <%= form.label :image, "Event Banner/Image", class: "block text-sm font-medium leading-6 text-gray-900" %>
+          <div class="mt-2">
+            <%= form.file_field :image, class: "block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" %>
+          </div>
+        </div>
+
+        <div class="sm:col-span-4">
+          <div class="relative flex items-start">
+            <div class="flex h-6 items-center">
+              <%= form.check_box :registration_open, class: "h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-600" %>
+            </div>
+            <div class="ml-3 text-sm leading-6">
+              <%= form.label :registration_open, class: "font-medium text-gray-900" %>
+              <p class="text-gray-500">Allow users to register for this event.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pt-5">
+    <div class="flex justify-end gap-x-3">
+      <%= link_to "Cancel", admin_events_path, class: "rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" %>
+      <%= form.submit class: "inline-flex justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600" %>
+    </div>
+  </div>
+<% end %>

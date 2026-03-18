@@ -1,0 +1,55 @@
+<% content_for :title, "Registration Confirmed" %>
+
+<div class="bg-white px-6 py-24 sm:py-32 lg:px-8">
+  <div class="mx-auto max-w-2xl text-center">
+    <p class="text-base font-semibold leading-7 text-green-600">Successfully Registered</p>
+    <h2 class="mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">You're going!</h2>
+    <p class="mt-6 text-lg leading-8 text-gray-600">Registration confirmed for <%= @event.title %>.</p>
+    
+    <div class="mt-10 flex items-center justify-center gap-x-6">
+      <div class="bg-white p-4 rounded-lg shadow-lg border border-gray-200 inline-block">
+        <div class="bg-white p-2">
+           <%= @svg.html_safe %>
+        </div>
+        <p class="mt-2 text-xs text-gray-500 font-mono"><%= @registration.qr_code_token %></p>
+      </div>
+    </div>
+
+    <div class="mt-10 text-left bg-gray-50 rounded-lg p-6 max-w-lg mx-auto border border-gray-200">
+      <dl class="divide-y divide-gray-200">
+        <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+          <dt class="text-sm font-medium leading-6 text-gray-900">Event</dt>
+          <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0"><%= @event.title %></dd>
+        </div>
+        <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+          <dt class="text-sm font-medium leading-6 text-gray-900">Date/Time</dt>
+          <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0"><%= @event.start_time.strftime("%A, %B %d, %Y at %I:%M %p") %></dd>
+        </div>
+        <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+          <dt class="text-sm font-medium leading-6 text-gray-900">Location</dt>
+          <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0"><%= @event.location %></dd>
+        </div>
+        <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+            <dt class="text-sm font-medium leading-6 text-gray-900">Ticket Type</dt>
+            <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+              <%= @event.event_type.humanize %> 
+              <% if @event.paid? %>
+               (<%= number_to_currency(@registration.amount_paid, unit: @event.currency) %>)
+              <% end %>
+            </dd>
+        </div>
+          <% if @registration.payment_reference.present? %>
+            <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+            <dt class="text-sm font-medium leading-6 text-gray-900">Ref</dt>
+            <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0 font-mono text-xs"><%= @registration.payment_reference %></dd>
+            </div>
+         <% end %>
+      </dl>
+    </div>
+
+    <div class="mt-10 flex items-center justify-center gap-x-6">
+      <%= link_to "Back to Event", event_path(@event), class: "text-sm font-semibold leading-6 text-gray-900" %>
+      <button onclick="window.print()" class="rounded-md bg-green-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600">Print Ticket</button>
+    </div>
+  </div>
+</div>

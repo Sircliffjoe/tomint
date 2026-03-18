@@ -1,0 +1,17 @@
+<% content_for :title, "Edit Training" %>
+
+<div class="px-4 sm:px-6 lg:px-8">
+  <div class="sm:flex sm:items-center">
+    <div class="sm:flex-auto">
+      <h1 class="text-base font-semibold leading-6 text-gray-900">Edit Training</h1>
+      <p class="mt-2 text-sm text-gray-700">Update training details.</p>
+    </div>
+  </div>
+  <div class="mt-8 flow-root">
+    <div class="bg-white shadow sm:rounded-lg">
+      <div class="px-4 py-5 sm:p-6">
+        <%= render "form", training: @training %>
+      </div>
+    </div>
+  </div>
+</div>

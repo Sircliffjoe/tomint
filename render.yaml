@@ -1,0 +1,22 @@
+databases:
+  - name: tomint-db
+    plan: free
+    databaseName: tomint_production
+    user: tomint
+
+services:
+  - type: web
+    name: tomint
+    runtime: docker
+    plan: free
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: tomint-db
+          property: connectionString
+      - key: RAILS_MASTER_KEY
+        sync: false
+      - key: RAILS_ENV
+        value: production
+      - key: RAILS_LOG_TO_STDOUT
+        value: "1"

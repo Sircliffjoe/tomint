@@ -1,0 +1,94 @@
+<% content_for :title, "Welcome to TOM Int." %>
+
+<div class="bg-gradient-to-b from-green-100 via-white to-white relative overflow-hidden">
+  
+  <!-- Hero Section -->
+  <div class="relative isolate pt-14">
+    <!-- Blurred Gradients -->
+    <div class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80" aria-hidden="true">
+      <div class="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-leaf-200 to-leaf-600 opacity-20 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]" style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"></div>
+    </div>
+
+    <div class="py-24 sm:py-32 lg:pb-40">
+      <div class="mx-auto max-w-7xl px-6 lg:px-8">
+        <div class="mx-auto max-w-3xl text-center">
+          <div class="mb-8 flex justify-center">
+            <div class="relative rounded-full px-4 py-1.5 text-sm leading-6 text-gray-700 ring-1 ring-gray-900/10 hover:ring-leaf-500/50 bg-white/60 backdrop-blur-md shadow-sm transition-all hover:bg-white/80">
+              Impact. Discipleship. Leadership. <a href="<%= about_path %>" class="font-semibold text-leaf-600"><span class="absolute inset-0" aria-hidden="true"></span>Read our story <span aria-hidden="true">&rarr;</span></a>
+            </div>
+          </div>
+          <h1 class="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-6xl leading-tight">
+            Raise Leaders. <br>
+            <span class="text-transparent bg-clip-text" style="background-image: linear-gradient(to right, #14532d, #16a34a); -webkit-background-clip: text; background-clip: text; color: transparent;">Impact Generations.</span>
+          </h1>
+          <p class="mt-6 text-lg leading-8 text-gray-600">
+            Mentoring teenagers in Christ, building leaders through faith-based training, and reaching the next generation since 1992.
+          </p>
+          <div class="mt-10 flex items-center justify-center gap-x-6">
+            <%= link_to "Join Our Mission", new_user_registration_path, class: "rounded-lg bg-leaf-600 px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-leaf-600/30 hover:bg-leaf-500 hover:shadow-leaf-600/50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-leaf-600 transition-all transform hover:-translate-y-0.5" %>
+            <%= link_to "Live Events", events_path, class: "text-sm font-semibold leading-6 text-gray-900 flex items-center gap-1 group bg-white/50 px-4 py-3 rounded-lg hover:bg-white/80 backdrop-blur-sm transition-all" %>
+              See what's happening <span aria-hidden="true" class="group-hover:translate-x-1 transition-transform">&rarr;</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gradient Bottom Blur -->
+    <div class="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]" aria-hidden="true">
+      <div class="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-leaf-200 to-leaf-600 opacity-20 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]" style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"></div>
+    </div>
+  </div>
+
+  <!-- Glassmorphic Stats Section -->
+  <div class="mx-auto mt-8 max-w-7xl px-6 sm:mt-16 lg:px-8 relative z-10">
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <div class="bg-white/40 backdrop-blur-lg rounded-2xl p-8 border border-white/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] text-center">
+            <dt class="text-base leading-7 text-gray-600 font-medium">Active States</dt>
+            <dd class="order-first text-4xl font-extrabold tracking-tight text-leaf-800 sm:text-5xl">24+</dd>
+        </div>
+        <div class="bg-white/40 backdrop-blur-lg rounded-2xl p-8 border border-white/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] text-center">
+            <dt class="text-base leading-7 text-gray-600 font-medium">Lives Touched</dt>
+            <dd class="order-first text-4xl font-extrabold tracking-tight text-leaf-800 sm:text-5xl">50k+</dd>
+        </div>
+        <div class="bg-white/40 backdrop-blur-lg rounded-2xl p-8 border border-white/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] text-center">
+            <dt class="text-base leading-7 text-gray-600 font-medium">Year Founded</dt>
+            <dd class="order-first text-4xl font-extrabold tracking-tight text-leaf-800 sm:text-5xl">1992</dd>
+        </div>
+    </div>
+  </div>
+
+  <!-- Features Section -->
+  <div class="mx-auto mt-32 max-w-7xl px-6 sm:mt-40 lg:px-8 pb-32">
+    <div class="mx-auto max-w-2xl lg:text-center">
+      <h2 class="text-base font-semibold leading-7 text-leaf-600 uppercase tracking-widest">Our Core Values</h2>
+      <p class="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Everything we do is for the Kingdom</p>
+    </div>
+    <div class="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-4xl">
+      <dl class="grid max-w-xl grid-cols-1 gap-x-8 gap-y-10 lg:max-w-none lg:grid-cols-2 lg:gap-y-16">
+        <div class="relative pl-16 bg-white/60 p-6 rounded-2xl shadow-sm border border-white/50 backdrop-blur-sm hover:bg-white/80 transition-all hover:shadow-md">
+          <dt class="text-base font-bold leading-7 text-gray-900">
+            <div class="absolute left-0 top-0 flex h-16 w-16 -translate-x-4 -translate-y-4 items-center justify-center rounded-xl bg-leaf-600 shadow-lg shadow-leaf-600/20">
+              <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+              </svg>
+            </div>
+            Discipleship
+          </dt>
+          <dd class="mt-2 text-base leading-7 text-gray-600">Rooted in biblical teaching, we mentor young believers to grow in their faith and walk with God daily. We provide resources for personal growth.</dd>
+        </div>
+        <div class="relative pl-16 bg-white/60 p-6 rounded-2xl shadow-sm border border-white/50 backdrop-blur-sm hover:bg-white/80 transition-all hover:shadow-md">
+          <dt class="text-base font-bold leading-7 text-gray-900">
+            <div class="absolute left-0 top-0 flex h-16 w-16 -translate-x-4 -translate-y-4 items-center justify-center rounded-xl bg-leaf-600 shadow-lg shadow-leaf-600/20">
+              <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0Zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0Zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0Z" />
+              </svg>
+            </div>
+            Community
+          </dt>
+          <dd class="mt-2 text-base leading-7 text-gray-600">Building a strong network of believers who support and encourage one another. Our chapters in 24+ states provide a family for teenagers everywhere.</dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+</div>

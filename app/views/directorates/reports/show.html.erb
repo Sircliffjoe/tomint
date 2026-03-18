@@ -1,0 +1,33 @@
+<% content_for :title, "Review: #{@report.title}" %>
+
+<div class="max-w-4xl mx-auto">
+  <div class="md:flex md:items-center md:justify-between mb-6">
+    <div class="min-w-0 flex-1">
+      <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight"><%= @report.title %></h2>
+      <div class="mt-1 flex flex-col sm:mt-0 sm:flex-row sm:flex-wrap sm:space-x-6">
+         <!-- Details similar to public show -->
+        <div class="mt-2 flex items-center text-sm text-gray-500">
+           <%= @report.user.first_name %> (<%= @report.state.name %>)
+        </div>
+      </div>
+    </div>
+    <div class="mt-4 flex md:ml-4 md:mt-0 gap-2">
+      <%= link_to "Back", directorates_reports_path, class: "inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" %>
+      
+      <% if @report.submitted? %>
+        <%= button_to "Mark Reviewed", review_directorates_report_path(@report), method: :patch, class: "inline-flex items-center rounded-md bg-yellow-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-yellow-500" %>
+      <% end %>
+
+      <% if @report.reviewed? || @report.submitted? %>
+        <%= button_to "Approve", approve_directorates_report_path(@report), method: :patch, class: "inline-flex items-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500" %>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="bg-white shadow sm:rounded-lg overflow-hidden">
+     <!-- Content -->
+     <div class="px-4 py-5 sm:p-6 prose max-w-none">
+      <%= @report.body %>
+    </div>
+  </div>
+</div>

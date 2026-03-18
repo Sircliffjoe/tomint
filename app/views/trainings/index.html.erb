@@ -1,0 +1,40 @@
+<% content_for :title, "Training Resources" %>
+
+<div class="bg-white <%= (user_signed_in? && admin_area?) ? 'py-8' : 'py-24 sm:py-32' %>">
+  <div class="mx-auto max-w-7xl px-6 lg:px-8">
+    <div class="mx-auto max-w-2xl text-center">
+      <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Training Resources</h2>
+      <p class="mt-2 text-lg leading-8 text-gray-600">Equipping the next generation of leaders with biblical knowledge and practical skills.</p>
+    </div>
+
+    <% @trainings_by_category.each do |category, trainings| %>
+      <div class="mt-16">
+        <h3 class="text-2xl font-bold tracking-tight text-green-600"><%= category %></h3>
+        <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
+          <% trainings.each do |training| %>
+            <div class="group relative">
+              <div class="aspect-[16/9] w-full overflow-hidden rounded-md bg-gray-200 group-hover:opacity-75 lg:h-48">
+                 <div class="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400">
+                    <svg class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                 </div>
+              </div>
+              <div class="mt-4 flex justify-between">
+                <div>
+                  <h3 class="text-sm text-gray-700">
+                    <%= link_to training_path(training) do %>
+                      <span aria-hidden="true" class="absolute inset-0"></span>
+                      <%= training.title %>
+                    <% end %>
+                  </h3>
+                  <p class="mt-1 text-sm text-gray-500"><%= pluralize(training.training_sessions.count, "Session") %></p>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

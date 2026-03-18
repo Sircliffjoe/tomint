@@ -1,0 +1,41 @@
+<% content_for :title, @training.title %>
+
+<div class="bg-white px-6 <%= (user_signed_in? && admin_area?) ? 'py-8' : 'py-32' %> lg:px-8">
+  <div class="mx-auto max-w-3xl text-base leading-7 text-gray-700">
+    <div class="mb-8">
+      <%= link_to "Back to Training", trainings_path, class: "text-sm font-semibold leading-6 text-green-600 hover:text-green-500" %>
+    </div>
+    
+    <p class="text-base font-semibold leading-7 text-green-600"><%= @training.category %></p>
+    <h1 class="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl"><%= @training.title %></h1>
+    
+    <div class="mt-6 prose prose-lg text-gray-500">
+      <%= @training.description %>
+    </div>
+
+    <h2 class="mt-16 text-2xl font-bold tracking-tight text-gray-900">Modules</h2>
+    <div class="mt-6 bg-white shadow overflow-hidden sm:rounded-md">
+      <ul role="list" class="divide-y divide-gray-200">
+        <% @training.training_sessions.each_with_index do |session, index| %>
+          <li>
+            <%= link_to training_training_session_path(@training, session), class: "block hover:bg-gray-50" do %>
+              <div class="px-4 py-4 sm:px-6">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center">
+                    <span class="flex-shrink-0 h-10 w-10 rounded-full bg-green-100 flex items-center justify-center text-green-600 font-bold">
+                      <%= index + 1 %>
+                    </span>
+                    <p class="ml-4 text-sm font-medium text-green-600 truncate"><%= session.title %></p>
+                  </div>
+                  <div class="flex-shrink-0">
+                    <p class="text-sm text-gray-500"><%= session.duration %> mins</p>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,59 @@
+<% content_for :title, "Manage Training: #{@training.title}" %>
+
+<div class="px-4 sm:px-6 lg:px-8">
+  <div class="md:flex md:items-center md:justify-between">
+    <div class="min-w-0 flex-1">
+      <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight"><%= @training.title %></h2>
+      <p class="mt-1 text-sm text-gray-500"><%= @training.category %></p>
+    </div>
+    <div class="mt-4 flex md:ml-4 md:mt-0">
+      <%= link_to "Edit Training", edit_admin_training_path(@training), class: "inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 ml-3" %>
+      <%= link_to "Back", admin_trainings_path, class: "inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 ml-3" %>
+    </div>
+  </div>
+
+  <div class="mt-8 border-t border-gray-200 pt-8">
+    <div class="sm:flex sm:items-center">
+      <div class="sm:flex-auto">
+        <h3 class="text-base font-semibold leading-6 text-gray-900">Training Sessions</h3>
+        <p class="mt-2 text-sm text-gray-700">Sessions/Modules for this training.</p>
+      </div>
+      <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
+        <%= link_to "Add Session", new_admin_training_training_session_path(@training), class: "block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" %>
+      </div>
+    </div>
+    
+    <div class="mt-8 flow-root">
+      <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+        <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+          <table class="min-w-full divide-y divide-gray-300">
+            <thead>
+              <tr>
+                <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">Title</th>
+                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Duration (mins)</th>
+                <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-0">
+                  <span class="sr-only">Actions</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+              <% @training_sessions.each do |session| %>
+                <tr>
+                  <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0"><%= session.title %></td>
+                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= session.duration %></td>
+                  <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
+                    <%= link_to "Edit", edit_admin_training_training_session_path(@training, session), class: "text-indigo-600 hover:text-indigo-900 mr-4" %>
+                    <%= link_to "Delete", admin_training_training_session_path(@training, session), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "text-red-600 hover:text-red-900" %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+          <% if @training_sessions.empty? %>
+            <p class="text-sm text-gray-500 text-center py-4">No sessions added yet.</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

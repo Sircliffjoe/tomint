@@ -1,0 +1,49 @@
+<% content_for :title, "Upcoming Events" %>
+
+<div class="bg-white <%= (user_signed_in? && admin_area?) ? 'py-8' : 'py-24 sm:py-32' %>">
+  <div class="mx-auto max-w-7xl px-6 lg:px-8">
+    <div class="mx-auto max-w-2xl text-center">
+      <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Upcoming Events</h2>
+      <p class="mt-2 text-lg leading-8 text-gray-600">Join us for our upcoming outreaches, training sessions, and conferences.</p>
+    </div>
+    <div class="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-3">
+      <% @events.each do |event| %>
+        <article class="flex flex-col items-start justify-between">
+          <div class="relative w-full">
+            <% if event.image.attached? %>
+              <%= image_tag event.image, class: "aspect-[16/9] w-full rounded-2xl bg-gray-100 object-cover sm:aspect-[2/1] lg:aspect-[3/2]" %>
+            <% else %>
+              <div class="aspect-[16/9] w-full rounded-2xl bg-gray-100 object-cover sm:aspect-[2/1] lg:aspect-[3/2] flex items-center justify-center text-gray-400">
+                <svg class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </div>
+            <% end %>
+            <div class="absolute inset-0 rounded-2xl ring-1 ring-inset ring-gray-900/10"></div>
+          </div>
+          <div class="max-w-xl">
+            <div class="mt-8 flex items-center gap-x-4 text-xs">
+              <time datetime="<%= event.start_time %>" class="text-gray-500"><%= event.start_time.strftime("%b %d, %Y") %></time>
+              <% if event.state %>
+                <span class="relative z-10 rounded-full bg-gray-50 px-3 py-1.5 font-medium text-gray-600 hover:bg-gray-100"><%= event.state.name %></span>
+              <% else %>
+                <span class="relative z-10 rounded-full bg-green-50 px-3 py-1.5 font-medium text-green-600 hover:bg-green-100">National</span>
+              <% end %>
+            </div>
+            <div class="group relative">
+              <h3 class="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-600">
+                <%= link_to event do %>
+                  <span class="absolute inset-0"></span>
+                  <%= event.title %>
+                <% end %>
+              </h3>
+              <div class="mt-5 line-clamp-3 text-sm leading-6 text-gray-600">
+                <%= event.description %>
+              </div>
+            </div>
+          </div>
+        </article>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,2 @@
+module Directorate::ReportsHelper
+end

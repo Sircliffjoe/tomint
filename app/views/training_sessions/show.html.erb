@@ -1,0 +1,33 @@
+<% content_for :title, @session.title %>
+
+<div class="bg-gray-900 min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-4xl mx-auto">
+     <div class="mb-6">
+      <%= link_to "Back to Module", training_path(@training), class: "text-sm font-semibold leading-6 text-gray-300 hover:text-white" %>
+    </div>
+
+    <h1 class="text-2xl font-bold text-white mb-6"><%= @session.title %></h1>
+
+    <div class="aspect-w-16 aspect-h-9 bg-black rounded-lg overflow-hidden shadow-2xl mb-8">
+      <iframe src="<%= @session.media_url %>" class="w-full h-full" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+
+    <% if @session.resources.attached? %>
+      <div class="bg-gray-800 rounded-lg p-6">
+        <h3 class="text-lg font-medium text-white mb-4">Resources</h3>
+        <ul class="space-y-3">
+          <% @session.resources.each do |resource| %>
+            <li>
+              <%= link_to rails_blob_path(resource, disposition: "attachment"), class: "flex items-center text-gray-300 hover:text-white" do %>
+                <svg class="h-5 w-5 mr-3 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                </svg>
+                <%= resource.filename %>
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+  </div>
+</div>
