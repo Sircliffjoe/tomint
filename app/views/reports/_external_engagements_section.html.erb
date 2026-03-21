@@ -1,0 +1,43 @@
+<div class="space-y-6 border-t border-gray-200 pt-6">
+  <h3 class="text-lg font-medium text-gray-900">5. External Engagements</h3>
+  <div class="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Church Based</label>
+        <div class="mt-1">
+          <input type="number" name="report[external_engagements][church_based]" value="<%= report.external_engagements['church_based'] %>" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6">
+        </div>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700">School Based</label>
+        <div class="mt-1">
+          <input type="number" name="report[external_engagements][school]" value="<%= report.external_engagements['school'] %>" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6">
+        </div>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Orphanages</label>
+        <div class="mt-1">
+          <input type="number" name="report[external_engagements][orphanage]" value="<%= report.external_engagements['orphanage'] %>" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6">
+        </div>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700">NGOs</label>
+        <div class="mt-1">
+          <input type="number" name="report[external_engagements][ngos]" value="<%= report.external_engagements['ngos'] %>" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6">
+        </div>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Others</label>
+        <div class="mt-1">
+          <input type="number" name="report[external_engagements][others]" value="<%= report.external_engagements['others'] %>" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6">
+        </div>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Total Contacts Handled</label>
+        <div class="mt-1">
+          <input type="number" name="report[external_engagements][total]" value="<%= report.external_engagements['total'] %>" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6 bg-gray-50">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

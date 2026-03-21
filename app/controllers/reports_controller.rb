@@ -73,13 +73,15 @@ class ReportsController < ApplicationController
     end
 
     def report_params
-      params.require(:report).permit(:title, :body, :report_category_id,
-        :camp_date, :attendees_count, :decisions_count, :location,
-        :year, :total_events, :highlights, :challenges,
-        :quarter, :summary,
-        :training_date, :participants_count, :topic,
-        :total_income, :total_expenses, :currency,
-        :platform, :reach_count, :engagement_count
+      params.require(:report).permit(
+        :title, :body, :report_category_id,
+        clubs: [ :type, :no_of_clubs, :average_attendance, :new_clubs, :compliance_programs, :compliance_report ],
+        programmes: [ :type, :theme, :attendance, :first_timers, :facilitators, :cost ],
+        seminars: [ :type, :lga, :trainees, :facilitators, :mobilized, :cost ],
+        meetings: [ :type, :held, :avg_participants, :trainings, :others ],
+        external_engagements: [ :church_based, :school, :orphanage, :ngos, :others, :total ],
+        financial_summary: [ :total_income, :total_expenses, :deficit, income: [ :item, :amount ], expenses: [ :item, :amount ] ],
+        others: [ :paid_membership, :ict_capability, :support_hq, :camp_report_submitted, :own_secretariat, :invitation_minister ]
       )
     end
 end

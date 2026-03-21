@@ -45,7 +45,7 @@ module Admin
     end
 
     def state_params
-      params.require(:state).permit(:name, :code)
+      params.require(:state).permit(:name, :code, :zone_id, :year_created, :description, :status)
     end
 
     def authorize_admin!

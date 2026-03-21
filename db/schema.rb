@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_19_155244) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_21_140333) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -50,6 +50,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_19_155244) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "areas", force: :cascade do |t|
+    t.bigint "area_leader_id"
+    t.datetime "created_at", null: false
+    t.text "description"
+    t.string "name"
+    t.bigint "state_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["state_id"], name: "index_areas_on_state_id"
   end
 
   create_table "blog_posts", force: :cascade do |t|
@@ -150,9 +160,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_19_155244) do
     t.text "contact_info"
     t.string "country"
     t.datetime "created_at", null: false
+    t.text "description"
     t.string "name"
     t.integer "status"
     t.datetime "updated_at", null: false
+    t.integer "year_created"
+    t.bigint "zone_id"
   end
 
   create_table "training_sessions", force: :cascade do |t|
@@ -196,8 +209,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_19_155244) do
     t.index ["state_id"], name: "index_users_on_state_id"
   end
 
+  create_table "zones", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.text "description"
+    t.string "name"
+    t.datetime "updated_at", null: false
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "areas", "states"
   add_foreign_key "blog_posts", "users", column: "author_id"
   add_foreign_key "events", "states"
   add_foreign_key "registrations", "events"

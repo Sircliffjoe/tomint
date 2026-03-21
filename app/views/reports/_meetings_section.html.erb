@@ -1,0 +1,40 @@
+<div class="space-y-6 border-t border-gray-200 pt-6">
+  <h3 class="text-lg font-medium text-gray-900">4. Meetings</h3>
+  <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+    <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+      <table class="min-w-full divide-y divide-gray-300">
+        <thead>
+          <tr>
+            <th class="py-3 pl-4 pr-3 text-left text-sm font-semibold text-gray-900">Meetings</th>
+            <th class="px-3 py-3 text-left text-sm font-semibold text-gray-900 w-24">No. of Meetings Held</th>
+            <th class="px-3 py-3 text-left text-sm font-semibold text-gray-900 w-24">Average Participants</th>
+            <th class="px-3 py-3 text-left text-sm font-semibold text-gray-900 w-24">Trainings</th>
+            <th class="px-3 py-3 text-left text-sm font-semibold text-gray-900">Others</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200 bg-white">
+          <% report.meetings.each do |mtg| %>
+            <tr>
+              <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900">
+                <%= mtg['type'] %>
+                <input type="hidden" name="report[meetings][][type]" value="<%= mtg['type'] %>">
+              </td>
+              <td class="whitespace-nowrap px-3 py-2 text-sm text-gray-500">
+                <input type="number" name="report[meetings][][held]" value="<%= mtg['held'] %>" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6">
+              </td>
+              <td class="whitespace-nowrap px-3 py-2 text-sm text-gray-500">
+                <input type="number" name="report[meetings][][avg_participants]" value="<%= mtg['avg_participants'] %>" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6">
+              </td>
+              <td class="whitespace-nowrap px-3 py-2 text-sm text-gray-500">
+                <input type="number" name="report[meetings][][trainings]" value="<%= mtg['trainings'] %>" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6">
+              </td>
+              <td class="whitespace-nowrap px-3 py-2 text-sm text-gray-500">
+                <input type="text" name="report[meetings][][others]" value="<%= mtg['others'] %>" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6">
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

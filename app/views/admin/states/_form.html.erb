@@ -31,11 +31,38 @@
   </div>
 
   <div>
-    <%= form.label :code, "State Code (Optional)", class: "block text-sm font-medium text-gray-700" %>
+    <%= form.label :code, "State Code", class: "block text-sm font-medium text-gray-700" %>
     <div class="mt-1">
       <%= form.text_field :code, class: "shadow-sm focus:ring-green-500 focus:border-green-500 block w-full sm:text-sm border-gray-300 rounded-md" %>
     </div>
   </div>
+
+  <div>
+    <%= form.label :zone_id, "Zone", class: "block text-sm font-medium text-gray-700" %>
+    <div class="mt-1">
+      <%= form.select :zone_id, Zone.order(:name).map { |z| [z.name, z.id] }, { include_blank: "— Select Zone —" }, class: "shadow-sm focus:ring-green-500 focus:border-green-500 block w-full sm:text-sm border-gray-300 rounded-md" %>
+    </div>
+  </div>
+
+  <div>
+    <%= form.label :year_created, "Year Created", class: "block text-sm font-medium text-gray-700" %>
+    <div class="mt-1">
+      <%= form.number_field :year_created, min: 1980, max: Date.current.year, class: "shadow-sm focus:ring-green-500 focus:border-green-500 block w-full sm:text-sm border-gray-300 rounded-md" %>
+    </div>
+  </div>
+
+  <div>
+    <%= form.label :description, class: "block text-sm font-medium text-gray-700" %>
+    <div class="mt-1">
+      <%= form.text_area :description, rows: 3, class: "shadow-sm focus:ring-green-500 focus:border-green-500 block w-full sm:text-sm border-gray-300 rounded-md" %>
+    </div>
+  </div>
+
+  <% if state.persisted? %>
+    <div class="border-t border-gray-200 pt-4">
+      <%= link_to "Manage Areas (#{state.areas.count})", admin_state_areas_path(state), class: "text-green-600 hover:text-green-800 text-sm font-medium" %>
+    </div>
+  <% end %>
 
   <div class="flex justify-end">
     <%= link_to "Cancel", admin_states_path, class: "bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 mr-3" %>

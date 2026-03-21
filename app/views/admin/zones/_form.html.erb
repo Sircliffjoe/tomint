@@ -1,0 +1,30 @@
+<%= form_with(model: [:admin, zone], class: "space-y-6") do |form| %>
+  <% if zone.errors.any? %>
+    <div class="rounded-md bg-red-50 p-4">
+      <ul class="list-disc pl-5 space-y-1">
+        <% zone.errors.full_messages.each do |message| %>
+          <li class="text-sm text-red-700"><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :name, class: "block text-sm font-medium text-gray-700" %>
+    <div class="mt-1">
+      <%= form.text_field :name, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6" %>
+    </div>
+  </div>
+
+  <div>
+    <%= form.label :description, class: "block text-sm font-medium text-gray-700" %>
+    <div class="mt-1">
+      <%= form.text_area :description, rows: 4, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6" %>
+    </div>
+  </div>
+
+  <div class="flex justify-end gap-x-3">
+    <%= link_to "Cancel", admin_zones_path, class: "rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" %>
+    <%= form.submit class: "rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500" %>
+  </div>
+<% end %>

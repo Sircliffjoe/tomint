@@ -1,0 +1,37 @@
+<%= form_with(model: [:admin, @state, area], class: "space-y-6") do |form| %>
+  <% if area.errors.any? %>
+    <div class="rounded-md bg-red-50 p-4">
+      <ul class="list-disc pl-5 space-y-1">
+        <% area.errors.full_messages.each do |message| %>
+          <li class="text-sm text-red-700"><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :name, class: "block text-sm font-medium text-gray-700" %>
+    <div class="mt-1">
+      <%= form.text_field :name, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6" %>
+    </div>
+  </div>
+
+  <div>
+    <%= form.label :description, class: "block text-sm font-medium text-gray-700" %>
+    <div class="mt-1">
+      <%= form.text_area :description, rows: 3, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6" %>
+    </div>
+  </div>
+
+  <div>
+    <%= form.label :area_leader_id, "Area Leader", class: "block text-sm font-medium text-gray-700" %>
+    <div class="mt-1">
+      <%= form.select :area_leader_id, @state.users.map { |u| ["#{u.first_name} #{u.last_name}", u.id] }, { include_blank: "— Select Leader (optional) —" }, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6" %>
+    </div>
+  </div>
+
+  <div class="flex justify-end gap-x-3">
+    <%= link_to "Cancel", admin_state_areas_path(@state), class: "rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" %>
+    <%= form.submit class: "rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500" %>
+  </div>
+<% end %>

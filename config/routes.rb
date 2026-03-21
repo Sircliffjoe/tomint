@@ -13,7 +13,10 @@ Rails.application.routes.draw do
   namespace :admin do
     get "dashboard", to: "dashboard#index"
     resources :directorates
-    resources :states
+    resources :zones
+    resources :states do
+      resources :areas
+    end
     resources :users
     resources :events
     resources :trainings do

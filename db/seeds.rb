@@ -20,18 +20,75 @@ end
 
 puts "Created #{Directorate.count} directorates."
 
-# States (Example)
-states = [
-  { name: "Lagos", code: "LAG", country: "Nigeria" },
-  { name: "Abuja", code: "FCT", country: "Nigeria" },
-  { name: "Rivers", code: "RIV", country: "Nigeria" }
+# Zones
+zones_data = [
+  { name: "East", description: "Eastern zone of TOM covering the South-East states of Nigeria." },
+  { name: "North", description: "Northern zone of TOM covering the Northern states and FCT." },
+  { name: "West", description: "Western zone of TOM covering the South-West states of Nigeria." },
+  { name: "South-South", description: "South-South zone of TOM covering the Niger Delta states." }
 ]
 
-states.each do |state_attrs|
-  State.find_or_create_by!(code: state_attrs[:code]) do |state|
-    state.name = state_attrs[:name]
-    state.country = state_attrs[:country]
-    state.status = :active
+zones_data.each do |z|
+  Zone.find_or_create_by!(name: z[:name]) do |zone|
+    zone.description = z[:description]
+  end
+end
+
+puts "Created #{Zone.count} zones."
+
+# States
+states_data = {
+  "East" => [
+    { name: "Abia", code: "ABI", year_created: 2020 },
+    { name: "Anambra", code: "ANA", year_created: 2013 },
+    { name: "Ebonyi", code: "EBO", year_created: 2016 },
+    { name: "Enugu", code: "ENU", year_created: 2017 },
+    { name: "Imo", code: "IMO", year_created: 1999 }
+  ],
+  "North" => [
+    { name: "Abuja-FCT", code: "FCT", year_created: 1996 },
+    { name: "Adamawa", code: "ADA", year_created: 2010 },
+    { name: "Bauchi", code: "BAU", year_created: 2020 },
+    { name: "Benue", code: "BEN", year_created: 1994 },
+    { name: "Borno", code: "BOR", year_created: 2014 },
+    { name: "Kaduna", code: "KAD", year_created: 2001 },
+    { name: "Kebbi", code: "KEB", year_created: 2006 },
+    { name: "Kogi", code: "KOG", year_created: 2001 },
+    { name: "Plateau", code: "PLA", year_created: 1996 },
+    { name: "Taraba", code: "TAR", year_created: 2015 },
+    { name: "Zamfara", code: "ZAM", year_created: 2022 }
+  ],
+  "West" => [
+    { name: "Ekiti", code: "EKI", year_created: nil },
+    { name: "Kwara", code: "KWA", year_created: 1992 },
+    { name: "Lagos", code: "LAG", year_created: 1998 },
+    { name: "Ogun", code: "OGU", year_created: 2023 },
+    { name: "Osun", code: "OSU", year_created: 2003 },
+    { name: "Oyo", code: "OYO", year_created: 1996 }
+  ],
+  "South-South" => [
+    { name: "Akwa Ibom", code: "AKI", year_created: 2012 },
+    { name: "Cross River", code: "CRS", year_created: 1995 },
+    { name: "Delta", code: "DEL", year_created: 1993 },
+    { name: "Edo", code: "EDO", year_created: 2022 },
+    { name: "Rivers", code: "RIV", year_created: 1994 }
+  ]
+}
+
+states_data.each do |zone_name, states|
+  zone = Zone.find_by!(name: zone_name)
+  states.each do |s|
+    state = State.find_by(code: s[:code]) || State.find_by(name: s[:name]) || State.new
+    state.assign_attributes(
+      name: s[:name],
+      code: s[:code],
+      country: "Nigeria",
+      status: :active,
+      zone: zone,
+      year_created: s[:year_created],
+      description: s[:year_created] ? "TOM #{s[:name]} State, established in #{s[:year_created]}." : "TOM #{s[:name]} State."
+    )
+    state.save!
   end
 end
 
