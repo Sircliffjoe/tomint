@@ -15,6 +15,22 @@ class User < ApplicationRecord
     public_user: 4
   }, default: :public_user
 
+  ROLE_DISPLAY_NAMES = {
+    "super_admin" => "Super Admin",
+    "directorate_director" => "Director",
+    "state_admin" => "State Coordinator",
+    "state_secretary" => "State Secretary",
+    "public_user" => "User"
+  }.freeze
+
+  def display_role
+    ROLE_DISPLAY_NAMES[role] || role.humanize
+  end
+
+  def self.role_options_for_select
+    roles.keys.map { |r| [ ROLE_DISPLAY_NAMES[r] || r.humanize, r ] }
+  end
+
   validates :first_name, :last_name, presence: true
   validates :state_id, presence: true, if: -> { state_admin? || state_secretary? }
   validates :directorate_id, presence: true, if: :directorate_director?

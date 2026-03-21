@@ -45,7 +45,7 @@ module Admin
     end
 
     def page_params
-      params.require(:page).permit(:title, :slug, :body)
+      params.require(:page).permit(:title, :slug, :body, :template)
     end
 
     def authorize_admin!

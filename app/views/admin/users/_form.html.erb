@@ -56,7 +56,7 @@
   <div>
     <%= form.label :role, class: "block text-sm font-medium text-gray-700" %>
     <div class="mt-1">
-      <%= form.select :role, User.roles.keys.map { |r| [r.humanize, r] }, {}, class: "shadow-sm focus:ring-green-500 focus:border-green-500 block w-full sm:text-sm border-gray-300 rounded-md", id: "user_role_select" %>
+      <%= form.select :role, User.role_options_for_select, {}, class: "shadow-sm focus:ring-green-500 focus:border-green-500 block w-full sm:text-sm border-gray-300 rounded-md", id: "user_role_select" %>
     </div>
   </div>
 

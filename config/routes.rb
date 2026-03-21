@@ -70,7 +70,9 @@ Rails.application.routes.draw do
 
   # CMS Pages with named routes to maintain helpers
   get "about", to: "pages#about"
-  get "contact", to: "pages#show", defaults: { slug: "contact" }
+  get "contact", to: "pages#show", defaults: { slug: "contact" }, as: :contact
+  get "privacy", to: "pages#show", defaults: { slug: "privacy" }, as: :privacy
+  get "terms", to: "pages#show", defaults: { slug: "terms" }, as: :terms
 
   # Catch-all for other CMS pages (Must be the last route)
   get ":slug", to: "pages#show", as: :page

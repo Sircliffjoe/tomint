@@ -22,7 +22,9 @@
       <%= link_to "Events", events_path, class: "text-sm font-semibold leading-6 text-white hover:text-green-200 transition-colors" %>
       <%= link_to "Training", trainings_path, class: "text-sm font-semibold leading-6 text-white hover:text-green-200 transition-colors" %>
       <%= link_to "Blog", blog_index_path, class: "text-sm font-semibold leading-6 text-white hover:text-green-200 transition-colors" %>
-      <%= link_to "Contact", contact_path, class: "text-sm font-semibold leading-6 text-white hover:text-green-200 transition-colors" %>
+      <% if Page.exists?(slug: "contact") %>
+        <%= link_to "Contact", contact_path, class: "text-sm font-semibold leading-6 text-white hover:text-green-200 transition-colors" %>
+      <% end %>
     </div>
     <div class="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-x-4 items-center">
       <% if user_signed_in? %>
