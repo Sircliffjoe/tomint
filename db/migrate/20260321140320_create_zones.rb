@@ -9,5 +9,3 @@ class CreateZones < ActiveRecord::Migration[8.1]
     add_index :zones, :name, unique: true
   end
 end
-  end
-end
