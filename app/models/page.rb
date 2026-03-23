@@ -1,5 +1,6 @@
 class Page < ApplicationRecord
   has_rich_text :body
+  attribute :template, :string
   enum :template, { default: "default", contact: "contact", privacy: "privacy", terms: "terms" }, default: "default"
 
   validates :title, presence: true
