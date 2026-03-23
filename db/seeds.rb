@@ -174,18 +174,16 @@ puts "Created #{Training.count} trainings and sessions."
 # Blog Posts
 admin = User.find_by(email: "admin@tomint.org")
 
-BlogPost.create!(
-  title: "Successfully Completed the National Youth Camp",
-  body: "<div>We thank God for a successful camp meeting. Over 500 teenagers were in attendance, and many gave their lives to Christ. The atmosphere was charged with prayer and the word. We look forward to next year's edition with great anticipation.</div>",
-  published_at: 1.week.ago,
-  author: admin
-)
+BlogPost.find_or_create_by!(title: "Successfully Completed the National Youth Camp") do |post|
+  post.body = "<div>We thank God for a successful camp meeting. Over 500 teenagers were in attendance, and many gave their lives to Christ. The atmosphere was charged with prayer and the word. We look forward to next year's edition with great anticipation.</div>"
+  post.published_at = 1.week.ago
+  post.author = admin
+end
 
-BlogPost.create!(
-  title: "New Training Center Opening Soon",
-  body: "<div>We are excited to announce that our new training facility in Abuja will be opening next month. This center will serve as a hub for leadership development and discipleship training. Stay tuned for more details on the dedication ceremony.</div>",
-  published_at: 2.days.ago,
-  author: admin
-)
+BlogPost.find_or_create_by!(title: "New Training Center Opening Soon") do |post|
+  post.body = "<div>We are excited to announce that our new training facility in Abuja will be opening next month. This center will serve as a hub for leadership development and discipleship training. Stay tuned for more details on the dedication ceremony.</div>"
+  post.published_at = 2.days.ago
+  post.author = admin
+end
 
 puts "Created #{BlogPost.count} blog posts."

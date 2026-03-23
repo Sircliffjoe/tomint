@@ -1,9 +1,12 @@
 #!/bin/bash -e
 
 # If running the rails server then create or migrate existing database
-if [ "${@: -2:1}" == "./bin/rails" ] && [ "${@: -1:1}" == "server" ]; then
+if [[ "$*" == *"rails server"* ]]; then
+  echo "==> Rails server detected. Preparing database..."
   ./bin/rails db:prepare
+  echo "==> Running database seeds..."
   ./bin/rails db:seed
+  echo "==> Database is ready."
 fi
 
 exec "${@}"
