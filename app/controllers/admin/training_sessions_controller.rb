@@ -3,7 +3,10 @@ module Admin
     before_action :authenticate_user!
     before_action :authorize_admin!
     before_action :set_training
-    before_action :set_training_session, only: %i[ edit update destroy ]
+    before_action :set_training_session, only: %i[ show edit update destroy ]
+
+    def show
+    end
 
     def new
       @training_session = @training.training_sessions.build

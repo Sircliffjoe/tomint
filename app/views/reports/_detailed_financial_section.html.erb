@@ -1,0 +1,166 @@
+<div class="space-y-8 border-t border-gray-200 pt-8 mt-8">
+  <div class="flex items-center justify-between">
+    <h3 class="text-xl font-bold text-gray-900 flex items-center gap-2">
+      <svg class="w-6 h-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      Detailed Financial Report
+    </h3>
+  </div>
+
+  <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+    <table class="min-w-full divide-y divide-gray-300">
+      <thead class="bg-gray-50">
+        <tr>
+          <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6 w-12">S/N</th>
+          <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Particulars</th>
+          <th scope="col" class="px-3 py-3.5 text-right text-sm font-semibold text-gray-900 w-48">Amount (NGN)</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200 bg-white">
+        <!-- I. INCOME -->
+        <tr class="bg-green-50/50">
+          <td colspan="3" class="py-2 pl-4 pr-3 text-sm font-bold text-green-800 uppercase tracking-wider sm:pl-6">I. INCOME</td>
+        </tr>
+        <% [
+          ["1", "Opening Balance", "opening_balance"],
+          ["2", "Sale of Assets", "sale_of_assets"],
+          ["3", "Tithes and Offerings", "tithes_offerings"],
+          ["4", "Camp Registration", "camp_registration"],
+          ["5", "Membership Registration", "membership_registration"],
+          ["6", "Membership Annual Levy", "membership_annual_levy"],
+          ["7", "Trainings/Seminars", "trainings_seminars"],
+          ["8", "Publications/Sale of Books", "publications_books"],
+          ["9", "Loans", "loans"],
+          ["10", "Others", "others"]
+        ].each do |sn, label, key| %>
+          <tr>
+            <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-500 sm:pl-6"><%= sn %></td>
+            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-900"><%= label %></td>
+            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+              <input type="number" name="report[financial_report][income][<%= key %>]" value="<%= report.financial_report&.dig('income', key) %>" 
+                     data-calc="incomeInput"
+                     class="block w-full text-right rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6">
+            </td>
+          </tr>
+        <% end %>
+        <tr class="bg-gray-50">
+          <td></td>
+          <td class="px-3 py-3 text-sm font-bold text-gray-900 text-right">Total Income:</td>
+          <td class="px-3 py-3">
+            <input type="number" name="report[financial_report][income][total]" value="<%= report.financial_report&.dig('income', 'total') %>" 
+                   data-calc-total="totalIncome"
+                   class="block w-full text-right rounded-md border-0 py-1.5 text-gray-900 font-bold bg-transparent sm:text-sm sm:leading-6" readonly>
+          </td>
+        </tr>
+
+        <!-- II. PROGRAMME EXPENSES -->
+        <tr class="bg-blue-50/50">
+          <td colspan="3" class="py-2 pl-4 pr-3 text-sm font-bold text-blue-800 uppercase tracking-wider sm:pl-6">II. PROGRAMME EXPENSES</td>
+        </tr>
+        <% [
+          ["11", "Purchase of Assets", "purchase_of_assets"],
+          ["12", "Camp", "camp"],
+          ["13", "Trainings/Seminars", "trainings_seminars"],
+          ["14", "End of the Year/Dinner Party", "end_of_year_party"],
+          ["15", "Valentine", "valentine"],
+          ["16", "Others", "others"]
+        ].each do |sn, label, key| %>
+          <tr>
+            <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-500 sm:pl-6"><%= sn %></td>
+            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-900"><%= label %></td>
+            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+              <input type="number" name="report[financial_report][programme_expenses][<%= key %>]" value="<%= report.financial_report&.dig('programme_expenses', key) %>" 
+                     data-calc="programmeInput"
+                     class="block w-full text-right rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6">
+            </td>
+          </tr>
+        <% end %>
+        <tr class="bg-gray-50">
+          <td></td>
+          <td class="px-3 py-3 text-sm font-bold text-gray-900 text-right">Total Programme Expenses:</td>
+          <td class="px-3 py-3">
+            <input type="number" name="report[financial_report][programme_expenses][total]" value="<%= report.financial_report&.dig('programme_expenses', 'total') %>" 
+                   data-calc-total="totalProgramme"
+                   class="block w-full text-right rounded-md border-0 py-1.5 text-gray-900 font-bold bg-transparent sm:text-sm sm:leading-6" readonly>
+          </td>
+        </tr>
+
+        <!-- III. ADMINISTRATIVE EXPENSES -->
+        <tr class="bg-orange-50/50">
+          <td colspan="3" class="py-2 pl-4 pr-3 text-sm font-bold text-orange-800 uppercase tracking-wider sm:pl-6">III. ADMINISTRATIVE EXPENSES</td>
+        </tr>
+        <% [
+          ["17", "Salaries/Allowances", "salaries_allowances"],
+          ["18", "Rent", "rent"],
+          ["19", "Utilities", "utilities"],
+          ["20", "Others", "others"]
+        ].each do |sn, label, key| %>
+          <tr>
+            <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-500 sm:pl-6"><%= sn %></td>
+            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-900"><%= label %></td>
+            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+              <input type="number" name="report[financial_report][administrative_expenses][<%= key %>]" value="<%= report.financial_report&.dig('administrative_expenses', key) %>" 
+                     data-calc="adminInput"
+                     class="block w-full text-right rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6">
+            </td>
+          </tr>
+        <% end %>
+        <tr class="bg-gray-50">
+          <td></td>
+          <td class="px-3 py-3 text-sm font-bold text-gray-900 text-right">Total Administrative Expenses:</td>
+          <td class="px-3 py-3">
+            <input type="number" name="report[financial_report][administrative_expenses][total]" value="<%= report.financial_report&.dig('administrative_expenses', 'total') %>" 
+                   data-calc-total="totalAdmin"
+                   class="block w-full text-right rounded-md border-0 py-1.5 text-gray-900 font-bold bg-transparent sm:text-sm sm:leading-6" readonly>
+          </td>
+        </tr>
+
+        <!-- IV. OBLIGATION TO NATIONAL -->
+        <tr class="bg-purple-50/50">
+          <td colspan="3" class="py-2 pl-4 pr-3 text-sm font-bold text-purple-800 uppercase tracking-wider sm:pl-6">IV. OBLIGATION TO NATIONAL</td>
+        </tr>
+        <% [
+          ["21", "Tithes", "tithes"],
+          ["22", "20% of Excess Camp Proceeds", "excess_camp_proceeds_20"],
+          ["23", "40% of Membership Registration", "membership_registration_40"],
+          ["24", "Annual Levy", "annual_levy"],
+          ["25", "Missions/Missionaries Support", "missions_missionaries"],
+          ["26", "Donations", "donations"],
+          ["27", "Loan Repayment", "loan_repayment"],
+          ["28", "Others", "others"]
+        ].each do |sn, label, key| %>
+          <tr>
+            <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-500 sm:pl-6"><%= sn %></td>
+            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-900"><%= label %></td>
+            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+              <input type="number" name="report[financial_report][obligation_to_national][<%= key %>]" value="<%= report.financial_report&.dig('obligation_to_national', key) %>" 
+                     data-calc="obligationInput"
+                     class="block w-full text-right rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6">
+            </td>
+          </tr>
+        <% end %>
+        <tr class="bg-gray-50">
+          <td></td>
+          <td class="px-3 py-3 text-sm font-bold text-gray-900 text-right">Total Obligation to National:</td>
+          <td class="px-3 py-3">
+            <input type="number" name="report[financial_report][obligation_to_national][total]" value="<%= report.financial_report&.dig('obligation_to_national', 'total') %>" 
+                   data-calc-total="totalObligation"
+                   class="block w-full text-right rounded-md border-0 py-1.5 text-gray-900 font-bold bg-transparent sm:text-sm sm:leading-6" readonly>
+          </td>
+        </tr>
+
+        <!-- V. CLOSING BALANCE -->
+        <tr class="bg-gray-900 text-white">
+          <td class="py-4 pl-4 pr-3 text-sm font-bold sm:pl-6">29</td>
+          <td class="px-3 py-4 text-sm font-bold uppercase tracking-wider">Closing Balance</td>
+          <td class="px-3 py-4 text-right">
+            <input type="number" name="report[financial_report][closing_balance]" value="<%= report.financial_report&.fetch('closing_balance', 0) %>" 
+                   data-calc-total="closingBalance"
+                   class="block w-full text-right rounded-md border-0 py-1.5 text-white bg-transparent font-bold sm:text-sm sm:leading-6" readonly>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,124 @@
+<div class="bg-white shadow sm:rounded-lg overflow-hidden mt-8">
+  <div class="px-4 py-3 bg-gray-50 border-b border-gray-200">
+    <h4 class="text-sm font-semibold text-gray-900">Detailed Financial Report</h4>
+  </div>
+  <div class="overflow-x-auto">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider w-12">S/N</th>
+          <th class="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Particulars</th>
+          <th class="px-4 py-2 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider w-48">Amount (NGN)</th>
+        </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200">
+        <!-- I. INCOME -->
+        <tr class="bg-green-50/30">
+          <td colspan="3" class="px-4 py-2 text-xs font-bold text-green-800 uppercase tracking-wider">I. INCOME</td>
+        </tr>
+        <% [
+          ["1", "Opening Balance", "opening_balance"],
+          ["2", "Sale of Assets", "sale_of_assets"],
+          ["3", "Tithes and Offerings", "tithes_offerings"],
+          ["4", "Camp Registration", "camp_registration"],
+          ["5", "Membership Registration", "membership_registration"],
+          ["6", "Membership Annual Levy", "membership_annual_levy"],
+          ["7", "Trainings/Seminars", "trainings_seminars"],
+          ["8", "Publications/Sale of Books", "publications_books"],
+          ["9", "Loans", "loans"],
+          ["10", "Others", "others"]
+        ].each do |sn, label, key| %>
+          <tr>
+            <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500"><%= sn %></td>
+            <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900"><%= label %></td>
+            <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900 text-right font-medium"><%= number_to_currency(report.financial_report&.dig('income', key), unit: "₦") %></td>
+          </tr>
+        <% end %>
+        <tr class="bg-gray-50 font-bold">
+          <td></td>
+          <td class="px-4 py-2 text-sm text-gray-900 text-right">Total Income:</td>
+          <td class="px-4 py-2 text-sm text-green-700 text-right"><%= number_to_currency(report.financial_report&.dig('income', 'total'), unit: "₦") %></td>
+        </tr>
+
+        <!-- II. PROGRAMME EXPENSES -->
+        <tr class="bg-blue-50/30">
+          <td colspan="3" class="px-4 py-2 text-xs font-bold text-blue-800 uppercase tracking-wider">II. PROGRAMME EXPENSES</td>
+        </tr>
+        <% [
+          ["11", "Purchase of Assets", "purchase_of_assets"],
+          ["12", "Camp", "camp"],
+          ["13", "Trainings/Seminars", "trainings_seminars"],
+          ["14", "End of the Year/Dinner Party", "end_of_year_party"],
+          ["15", "Valentine", "valentine"],
+          ["16", "Others", "others"]
+        ].each do |sn, label, key| %>
+          <tr>
+            <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500"><%= sn %></td>
+            <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900"><%= label %></td>
+            <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900 text-right font-medium"><%= number_to_currency(report.financial_report&.dig('programme_expenses', key), unit: "₦") %></td>
+          </tr>
+        <% end %>
+        <tr class="bg-gray-50 font-bold">
+          <td></td>
+          <td class="px-4 py-2 text-sm text-gray-900 text-right">Total Programme Expenses:</td>
+          <td class="px-4 py-2 text-sm text-red-700 text-right"><%= number_to_currency(report.financial_report&.dig('programme_expenses', 'total'), unit: "₦") %></td>
+        </tr>
+
+        <!-- III. ADMINISTRATIVE EXPENSES -->
+        <tr class="bg-orange-50/30">
+          <td colspan="3" class="px-4 py-2 text-xs font-bold text-orange-800 uppercase tracking-wider">III. ADMINISTRATIVE EXPENSES</td>
+        </tr>
+        <% [
+          ["17", "Salaries/Allowances", "salaries_allowances"],
+          ["18", "Rent", "rent"],
+          ["19", "Utilities", "utilities"],
+          ["20", "Others", "others"]
+        ].each do |sn, label, key| %>
+          <tr>
+            <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500"><%= sn %></td>
+            <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900"><%= label %></td>
+            <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900 text-right font-medium"><%= number_to_currency(report.financial_report&.dig('administrative_expenses', key), unit: "₦") %></td>
+          </tr>
+        <% end %>
+        <tr class="bg-gray-50 font-bold">
+          <td></td>
+          <td class="px-4 py-2 text-sm text-gray-900 text-right">Total Administrative Expenses:</td>
+          <td class="px-4 py-2 text-sm text-red-700 text-right"><%= number_to_currency(report.financial_report&.dig('administrative_expenses', 'total'), unit: "₦") %></td>
+        </tr>
+
+        <!-- IV. OBLIGATION TO NATIONAL -->
+        <tr class="bg-purple-50/30">
+          <td colspan="3" class="px-4 py-2 text-xs font-bold text-purple-800 uppercase tracking-wider">IV. OBLIGATION TO NATIONAL</td>
+        </tr>
+        <% [
+          ["21", "Tithes", "tithes"],
+          ["22", "20% of Excess Camp Proceeds", "excess_camp_proceeds_20"],
+          ["23", "40% of Membership Registration", "membership_registration_40"],
+          ["24", "Annual Levy", "annual_levy"],
+          ["25", "Missions/Missionaries Support", "missions_missionaries"],
+          ["26", "Donations", "donations"],
+          ["27", "Loan Repayment", "loan_repayment"],
+          ["28", "Others", "others"]
+        ].each do |sn, label, key| %>
+          <tr>
+            <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500"><%= sn %></td>
+            <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900"><%= label %></td>
+            <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900 text-right font-medium"><%= number_to_currency(report.financial_report&.dig('obligation_to_national', key), unit: "₦") %></td>
+          </tr>
+        <% end %>
+        <tr class="bg-gray-50 font-bold">
+          <td></td>
+          <td class="px-4 py-2 text-sm text-gray-900 text-right">Total Obligation to National:</td>
+          <td class="px-4 py-2 text-sm text-purple-700 text-right"><%= number_to_currency(report.financial_report&.dig('obligation_to_national', 'total'), unit: "₦") %></td>
+        </tr>
+
+        <!-- V. CLOSING BALANCE -->
+        <tr class="bg-gray-900 text-white font-bold">
+          <td class="px-4 py-3">29</td>
+          <td class="px-4 py-3 uppercase tracking-wider">Closing Balance</td>
+          <td class="px-4 py-3 text-right"><%= number_to_currency(report.financial_report&.fetch('closing_balance', 0), unit: "₦") %></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

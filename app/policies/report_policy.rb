@@ -38,7 +38,9 @@ class ReportPolicy < ApplicationPolicy
   end
 
   def update?
-    (user.state_admin? || user.state_secretary?) && record.state == user.state && record.draft?
+    return false if record.approved?
+    user.super_admin? ||
+    ((user.state_admin? || user.state_secretary?) && record.state == user.state)
   end
 
   def edit?
@@ -46,10 +48,12 @@ class ReportPolicy < ApplicationPolicy
   end
 
   def destroy?
-    update?
+    return false if record.approved?
+    user.super_admin? ||
+    ((user.state_admin? || user.state_secretary?) && record.state == user.state)
   end
 
   def submit?
-    update?
+    (user.state_admin? || user.state_secretary?) && record.state == user.state && record.draft?
   end
 end

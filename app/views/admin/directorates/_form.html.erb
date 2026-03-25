@@ -1,44 +1,244 @@
-<%= form_with(model: [:admin, directorate], class: "space-y-6") do |form| %>
-  <% if directorate.errors.any? %>
-    <div class="bg-red-50 p-4 rounded-md">
-      <div class="flex">
-        <div class="flex-shrink-0">
-          <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+<div class="form-card">
+  <%= form_with(model: [:admin, directorate], class: "directorate-form") do |form| %>
+    <% if directorate.errors.any? %>
+      <div class="error-banner">
+        <div class="error-icon-wrap">
+          <svg class="error-icon" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
           </svg>
         </div>
-        <div class="ml-3">
-          <h3 class="text-sm font-medium text-red-800">
-            <%= pluralize(directorate.errors.count, "error") %> prohibited this directorate from being saved:
+        <div class="error-body">
+          <h3 class="error-title">
+            <%= pluralize(directorate.errors.count, "error") %> detected
           </h3>
-          <div class="mt-2 text-sm text-red-700">
-            <ul role="list" class="list-disc pl-5 space-y-1">
-              <% directorate.errors.each do |error| %>
-                <li><%= error.full_message %></li>
-              <% end %>
-            </ul>
-          </div>
+          <ul class="error-list">
+            <% directorate.errors.each do |error| %>
+              <li><%= error.full_message %></li>
+            <% end %>
+          </ul>
         </div>
       </div>
+    <% end %>
+
+    <div class="form-fields">
+      <div class="field-group">
+        <%= form.label :name, class: "field-label" %>
+        <div class="field-hint">The official name of this directorate unit</div>
+        <%= form.text_field :name,
+            placeholder: "e.g. Administration",
+            class: "field-input" %>
+      </div>
+
+      <div class="field-group">
+        <%= form.label :description, class: "field-label" %>
+        <div class="field-hint">Describe the purpose, scope, and responsibilities</div>
+        <%= form.text_area :description,
+            rows: 5,
+            placeholder: "Describe the purpose and goals of this directorate...",
+            class: "field-input field-textarea" %>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <%= link_to admin_directorates_path, class: "btn-cancel" do %>
+        <svg viewBox="0 0 20 20" fill="currentColor" class="btn-icon">
+          <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+        </svg>
+        Cancel
+      <% end %>
+      <%= form.submit directorate.new_record? ? "Create Directorate" : "Update Directorate",
+          class: "btn-submit" %>
     </div>
   <% end %>
+</div>
 
-  <div>
-    <%= form.label :name, class: "block text-sm font-medium text-gray-700" %>
-    <div class="mt-1">
-      <%= form.text_field :name, class: "shadow-sm focus:ring-green-500 focus:border-green-500 block w-full sm:text-sm border-gray-300 rounded-md" %>
-    </div>
-  </div>
+<style>
+  .form-card {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 24px rgba(0,0,0,0.04);
+    border: 1px solid #f0f0f0;
+    padding: 2.5rem;
+    font-family: 'Georgia', serif;
+  }
 
-  <div>
-    <%= form.label :description, class: "block text-sm font-medium text-gray-700" %>
-    <div class="mt-1">
-      <%= form.text_area :description, rows: 3, class: "shadow-sm focus:ring-green-500 focus:border-green-500 block w-full sm:text-sm border-gray-300 rounded-md" %>
-    </div>
-  </div>
+  /* ── Error Banner ── */
+  .error-banner {
+    display: flex;
+    gap: 0.875rem;
+    background: #fff5f5;
+    border: 1px solid #fecaca;
+    border-left: 4px solid #ef4444;
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 2rem;
+  }
+  .error-icon-wrap { flex-shrink: 0; padding-top: 1px; }
+  .error-icon { width: 18px; height: 18px; color: #ef4444; }
+  .error-title {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: #991b1b;
+    margin: 0 0 0.375rem;
+    letter-spacing: 0.01em;
+  }
+  .error-list {
+    margin: 0;
+    padding-left: 1.125rem;
+    font-size: 0.8125rem;
+    color: #b91c1c;
+    line-height: 1.6;
+  }
 
-  <div class="flex justify-end">
-    <%= link_to "Cancel", admin_directorates_path, class: "bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 mr-3" %>
-    <%= form.submit class: "inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" %>
-  </div>
-<% end %>
+  /* ── Form Fields ── */
+  .form-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .field-label {
+    display: block;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #374151;
+    margin-bottom: 0.375rem;
+  }
+
+  .field-hint {
+    font-size: 0.8rem;
+    color: #9ca3af;
+    margin-bottom: 0.75rem;
+    font-style: italic;
+    font-family: 'Georgia', serif;
+    line-height: 1.4;
+  }
+
+  .field-input {
+    display: block;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: #f9fafb;
+    border: 1.5px solid #22c55e;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    color: #111827;
+    font-family: inherit;
+    line-height: 1.5;
+    transition: border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+    box-sizing: border-box;
+    outline: none;
+    appearance: none;
+  }
+
+  .field-input::placeholder {
+    color: #b0bec5;
+    font-style: italic;
+  }
+
+  .field-input:hover {
+    border-color: #16a34a;
+    background: #ffffff;
+  }
+
+  .field-input:focus {
+    background: #ffffff;
+    border-color: #16a34a;
+    box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.1);
+  }
+
+  .field-textarea {
+    resize: vertical;
+    min-height: 120px;
+  }
+
+  /* ── Form Actions ── */
+  .form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.875rem;
+    margin-top: 2.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid #f3f4f6;
+  }
+
+  /* Cancel Button */
+  .btn-cancel {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.65rem 1.375rem;
+    font-size: 0.8375rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: #6b7280;
+    background: transparent;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 9px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    font-family: inherit;
+  }
+
+  .btn-cancel:hover {
+    color: #374151;
+    background: #f9fafb;
+    border-color: #d1d5db;
+  }
+
+  .btn-cancel:active {
+    transform: scale(0.98);
+  }
+
+  .btn-icon {
+    width: 14px;
+    height: 14px;
+    opacity: 0.7;
+  }
+
+  /* Submit Button */
+  .btn-submit {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1.75rem;
+    font-size: 0.8375rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #ffffff;
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    border: none;
+    border-radius: 9px;
+    box-shadow: 0 2px 8px rgba(22, 163, 74, 0.3), 0 1px 2px rgba(0,0,0,0.08);
+    cursor: pointer;
+    transition: all 0.18s ease;
+    font-family: inherit;
+  }
+
+  .btn-submit:hover {
+    background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+    box-shadow: 0 4px 14px rgba(22, 163, 74, 0.4), 0 2px 4px rgba(0,0,0,0.1);
+    transform: translateY(-1px);
+  }
+
+  .btn-submit:active {
+    transform: scale(0.98) translateY(0);
+    box-shadow: 0 1px 4px rgba(22, 163, 74, 0.3);
+  }
+
+  .btn-submit:focus {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.25), 0 2px 8px rgba(22, 163, 74, 0.3);
+  }
+</style>

@@ -2,7 +2,7 @@ module ReportTemplateData
   extend ActiveSupport::Concern
 
   included do
-    store_accessor :data, :clubs, :programmes, :seminars, :meetings, :external_engagements, :financial_summary, :others
+    store_accessor :data, :clubs, :programmes, :seminars, :meetings, :external_engagements, :financial_summary, :financial_report, :others, :camp_report
     after_initialize :set_default_template_data, if: :new_record?
   end
 
@@ -14,7 +14,36 @@ module ReportTemplateData
     self.meetings ||= default_meetings
     self.external_engagements ||= default_external_engagements
     self.financial_summary ||= default_financial_summary
+    self.financial_report ||= default_financial_report
     self.others ||= default_others
+    self.camp_report ||= default_camp_report
+  end
+
+  # Ensure sections always return default values even for existing records
+  def clubs; (self.data || {})["clubs"] || default_clubs; end
+  def programmes; (self.data || {})["programmes"] || default_programmes; end
+  def seminars; (self.data || {})["seminars"] || default_seminars; end
+  def meetings; (self.data || {})["meetings"] || default_meetings; end
+  def external_engagements; (self.data || {})["external_engagements"] || default_external_engagements; end
+  def financial_summary; (self.data || {})["financial_summary"] || default_financial_summary; end
+  def financial_report; (self.data || {})["financial_report"] || default_financial_report; end
+  def others; (self.data || {})["others"] || default_others; end
+  def camp_report; (self.data || {})["camp_report"] || default_camp_report; end
+
+  def visible_sections
+    category_name = report_category&.name
+    case category_name
+    when "Annual Report"
+      [ "clubs", "programmes", "seminars", "meetings", "external_engagements", "financial_summary", "others" ]
+    when "Camp Report"
+      [ "camp_report" ]
+    when "Training Report"
+      [ "seminars" ]
+    when "Financial Report"
+      [ "detailed_financial" ]
+    else
+      []
+    end
   end
 
   private
@@ -86,6 +115,86 @@ module ReportTemplateData
       "camp_report_submitted" => "No",
       "own_secretariat" => "No",
       "invitation_minister" => 0
+    }
+  end
+  def default_financial_report
+    {
+      "income" => {
+        "opening_balance" => 0,
+        "sale_of_assets" => 0,
+        "tithes_offerings" => 0,
+        "camp_registration" => 0,
+        "membership_registration" => 0,
+        "membership_annual_levy" => 0,
+        "trainings_seminars" => 0,
+        "publications_books" => 0,
+        "loans" => 0,
+        "others" => 0,
+        "total" => 0
+      },
+      "programme_expenses" => {
+        "purchase_of_assets" => 0,
+        "camp" => 0,
+        "trainings_seminars" => 0,
+        "end_of_year_party" => 0,
+        "valentine" => 0,
+        "others" => 0,
+        "total" => 0
+      },
+      "administrative_expenses" => {
+        "salaries_allowances" => 0,
+        "rent" => 0,
+        "utilities" => 0,
+        "others" => 0,
+        "total" => 0
+      },
+      "obligation_to_national" => {
+        "tithes" => 0,
+        "excess_camp_proceeds_20" => 0,
+        "membership_registration_40" => 0,
+        "annual_levy" => 0,
+        "missions_missionaries" => 0,
+        "donations" => 0,
+        "loan_repayment" => 0,
+        "others" => 0,
+        "total" => 0
+      },
+      "closing_balance" => 0
+    }
+  end
+
+  def default_camp_report
+    {
+      "reporting_year" => "",
+      "camp_state" => "",
+      "camp_date" => "",
+      "camp_fee" => 0,
+      "camp_venue" => "",
+      "camping_teenagers" => 0,
+      "visiting_teenagers" => 0,
+      "staff_volunteers" => 0,
+      "visiting_staff" => 0,
+      "cost_food" => 0,
+      "cost_logistics" => 0,
+      "attendance" => (1..6).each_with_object({}) { |d, h| h["day_#{d}"] = { "am" => 0, "pm" => 0 } },
+      "teens_attending_clubs" => 0,
+      "first_time_campers" => 0,
+      "facility" => {
+        "hall_adequate" => "Yes",
+        "classrooms_adequate" => "Yes",
+        "hostels_adequate" => "Yes",
+        "venue_secured" => "Yes",
+        "field_okay" => "Yes"
+      },
+      "spiritual" => {
+        "first_time_converts" => 0,
+        "holy_spirit_baptism" => 0,
+        "rededication" => 0,
+        "purity_pledge" => 0
+      },
+      "remarks" => "",
+      "compiled_by" => "",
+      "endorsed_by" => ""
     }
   end
 end

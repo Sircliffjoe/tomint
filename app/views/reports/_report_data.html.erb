@@ -1,243 +1,262 @@
 <div class="mt-8 space-y-8">
-  
-  <div class="bg-white shadow sm:rounded-lg overflow-hidden">
-    <div class="px-4 py-3 bg-gray-50 border-b border-gray-200">
-      <h4 class="text-sm font-semibold text-gray-900">1. Clubs</h4>
-    </div>
-    <div class="overflow-x-auto">
-      <table class="min-w-full divide-y divide-gray-200">
-        <thead class="bg-gray-50">
-          <tr>
-            <th class="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Type</th>
-            <th class="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">No. of Clubs</th>
-            <th class="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Avg Attendance</th>
-            <th class="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">New Clubs</th>
-            <th class="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">% Comp (Prog)</th>
-            <th class="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">% Comp (Rep)</th>
-          </tr>
-        </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
-          <% report.clubs.each do |c| %>
+  <% sections = report.visible_sections %>
+
+  <% if sections.include?("clubs") %>
+    <div class="bg-white shadow sm:rounded-lg overflow-hidden">
+      <div class="px-4 py-3 bg-gray-50 border-b border-gray-200">
+        <h4 class="text-sm font-semibold text-gray-900">1. Clubs</h4>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
             <tr>
-              <td class="px-4 py-2 whitespace-nowrap text-sm font-medium text-gray-900"><%= c['type'] %></td>
-              <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500"><%= c['no_of_clubs'] %></td>
-              <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500"><%= c['average_attendance'] %></td>
-              <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500"><%= c['new_clubs'] %></td>
-              <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500"><%= c['compliance_programs'] %>%</td>
-              <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500"><%= c['compliance_report'] %>%</td>
+              <th class="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Type</th>
+              <th class="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">No. of Clubs</th>
+              <th class="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Avg Attendance</th>
+              <th class="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">New Clubs</th>
+              <th class="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">% Comp (Prog)</th>
+              <th class="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">% Comp (Rep)</th>
             </tr>
-          <% end %>
-        </tbody>
-      </table>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <% report.clubs.each do |c| %>
+              <tr>
+                <td class="px-4 py-2 whitespace-nowrap text-sm font-medium text-gray-900"><%= c['type'] %></td>
+                <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500"><%= c['no_of_clubs'] %></td>
+                <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500"><%= c['average_attendance'] %></td>
+                <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500"><%= c['new_clubs'] %></td>
+                <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500"><%= c['compliance_programs'] %>%</td>
+                <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500"><%= c['compliance_report'] %>%</td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
     </div>
-  </div>
+  <% end %>
 
-  <div class="bg-white shadow sm:rounded-lg overflow-hidden">
-    <div class="px-4 py-3 bg-gray-50 border-b border-gray-200">
-      <h4 class="text-sm font-semibold text-gray-900">2. Programmes</h4>
-    </div>
-    <div class="overflow-x-auto">
-      <table class="min-w-full divide-y divide-gray-200">
-        <thead class="bg-gray-50">
-          <tr>
-            <th class="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Programme</th>
-            <th class="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Theme</th>
-            <th class="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Attendance</th>
-            <th class="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">First Timers</th>
-            <th class="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Facilitators</th>
-            <th class="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Cost</th>
-          </tr>
-        </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
-          <% report.programmes.each do |p| %>
+  <% if sections.include?("programmes") %>
+    <div class="bg-white shadow sm:rounded-lg overflow-hidden">
+      <div class="px-4 py-3 bg-gray-50 border-b border-gray-200">
+        <h4 class="text-sm font-semibold text-gray-900">2. Programmes</h4>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
             <tr>
-              <td class="px-4 py-2 whitespace-nowrap text-sm font-medium text-gray-900"><%= p['type'] %></td>
-              <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500"><%= p['theme'].presence || "—" %></td>
-              <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500"><%= p['attendance'] %></td>
-              <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500"><%= p['first_timers'] %></td>
-              <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500"><%= p['facilitators'] %></td>
-              <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500"><%= number_to_currency(p['cost'], unit: "₦") %></td>
+              <th class="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Programme</th>
+              <th class="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Theme</th>
+              <th class="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Attendance</th>
+              <th class="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">First Timers</th>
+              <th class="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Facilitators</th>
+              <th class="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Cost</th>
             </tr>
-          <% end %>
-        </tbody>
-      </table>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <% report.programmes.each do |p| %>
+              <tr>
+                <td class="px-4 py-2 whitespace-nowrap text-sm font-medium text-gray-900"><%= p['type'] %></td>
+                <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500"><%= p['theme'].presence || "—" %></td>
+                <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500"><%= p['attendance'] %></td>
+                <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500"><%= p['first_timers'] %></td>
+                <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500"><%= p['facilitators'] %></td>
+                <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500"><%= number_to_currency(p['cost'], unit: "₦") %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
     </div>
-  </div>
+  <% end %>
 
-  <div class="bg-white shadow sm:rounded-lg overflow-hidden">
-    <div class="px-4 py-3 bg-gray-50 border-b border-gray-200">
-      <h4 class="text-sm font-semibold text-gray-900">3. Seminars/Trainings</h4>
-    </div>
-    <div class="overflow-x-auto">
-      <table class="min-w-full divide-y divide-gray-200">
-        <thead class="bg-gray-50">
-          <tr>
-            <th class="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Type</th>
-            <th class="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">LGA/Zone/Group</th>
-            <th class="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Trainees</th>
-            <th class="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Facilitators</th>
-            <th class="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Mobilized</th>
-            <th class="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Cost</th>
-          </tr>
-        </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
-          <% report.seminars.each do |s| %>
+  <% if sections.include?("seminars") %>
+    <div class="bg-white shadow sm:rounded-lg overflow-hidden">
+      <div class="px-4 py-3 bg-gray-50 border-b border-gray-200">
+        <h4 class="text-sm font-semibold text-gray-900">3. Seminars/Trainings</h4>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
             <tr>
-              <td class="px-4 py-2 whitespace-nowrap text-sm font-medium text-gray-900"><%= s['type'] %></td>
-              <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500"><%= s['lga'].presence || "—" %></td>
-              <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500"><%= s['trainees'] %></td>
-              <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500"><%= s['facilitators'] %></td>
-              <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500"><%= s['mobilized'] %></td>
-              <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500"><%= number_to_currency(s['cost'], unit: "₦") %></td>
+              <th class="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Type</th>
+              <th class="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">LGA/Zone/Group</th>
+              <th class="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Trainees</th>
+              <th class="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Facilitators</th>
+              <th class="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Mobilized</th>
+              <th class="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Cost</th>
             </tr>
-          <% end %>
-        </tbody>
-      </table>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <% report.seminars.each do |s| %>
+              <tr>
+                <td class="px-4 py-2 whitespace-nowrap text-sm font-medium text-gray-900"><%= s['type'] %></td>
+                <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500"><%= s['lga'].presence || "—" %></td>
+                <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500"><%= s['trainees'] %></td>
+                <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500"><%= s['facilitators'] %></td>
+                <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500"><%= s['mobilized'] %></td>
+                <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500"><%= number_to_currency(s['cost'], unit: "₦") %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
     </div>
-  </div>
+  <% end %>
 
-  <div class="bg-white shadow sm:rounded-lg overflow-hidden">
-    <div class="px-4 py-3 bg-gray-50 border-b border-gray-200">
-      <h4 class="text-sm font-semibold text-gray-900">4. Meetings</h4>
-    </div>
-    <div class="overflow-x-auto">
-      <table class="min-w-full divide-y divide-gray-200">
-        <thead class="bg-gray-50">
-          <tr>
-            <th class="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Meeting Type</th>
-            <th class="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Held</th>
-            <th class="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Avg Participants</th>
-            <th class="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Trainings</th>
-            <th class="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Others</th>
-          </tr>
-        </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
-          <% report.meetings.each do |m| %>
+  <% if sections.include?("meetings") %>
+    <div class="bg-white shadow sm:rounded-lg overflow-hidden">
+      <div class="px-4 py-3 bg-gray-50 border-b border-gray-200">
+        <h4 class="text-sm font-semibold text-gray-900">4. Meetings</h4>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
             <tr>
-              <td class="px-4 py-2 whitespace-nowrap text-sm font-medium text-gray-900"><%= m['type'] %></td>
-              <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500"><%= m['held'] %></td>
-              <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500"><%= m['avg_participants'] %></td>
-              <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500"><%= m['trainings'] %></td>
-              <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500"><%= m['others'].presence || "—" %></td>
+              <th class="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Meeting Type</th>
+              <th class="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Held</th>
+              <th class="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Avg Participants</th>
+              <th class="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Trainings</th>
+              <th class="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Others</th>
             </tr>
-          <% end %>
-        </tbody>
-      </table>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <% report.meetings.each do |m| %>
+              <tr>
+                <td class="px-4 py-2 whitespace-nowrap text-sm font-medium text-gray-900"><%= m['type'] %></td>
+                <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500"><%= m['held'] %></td>
+                <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500"><%= m['avg_participants'] %></td>
+                <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500"><%= m['trainings'] %></td>
+                <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500"><%= m['others'].presence || "—" %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
     </div>
-  </div>
+  <% end %>
 
-  <div class="bg-white shadow sm:rounded-lg overflow-hidden">
-    <div class="px-4 py-3 bg-gray-50 border-b border-gray-200">
-      <h4 class="text-sm font-semibold text-gray-900">5. External Engagements</h4>
-    </div>
-    <div class="p-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-      <% ext = report.external_engagements %>
-      <div class="text-center p-3 bg-gray-50 rounded">
-        <div class="text-xs font-medium text-gray-500 uppercase">Church</div>
-        <div class="mt-1 text-lg font-semibold text-gray-900"><%= ext['church_based'] %></div>
+  <% if sections.include?("external_engagements") %>
+    <div class="bg-white shadow sm:rounded-lg overflow-hidden">
+      <div class="px-4 py-3 bg-gray-50 border-b border-gray-200">
+        <h4 class="text-sm font-semibold text-gray-900">5. External Engagements</h4>
       </div>
-      <div class="text-center p-3 bg-gray-50 rounded">
-        <div class="text-xs font-medium text-gray-500 uppercase">School</div>
-        <div class="mt-1 text-lg font-semibold text-gray-900"><%= ext['school'] %></div>
-      </div>
-      <div class="text-center p-3 bg-gray-50 rounded">
-        <div class="text-xs font-medium text-gray-500 uppercase">Orphanages</div>
-        <div class="mt-1 text-lg font-semibold text-gray-900"><%= ext['orphanage'] %></div>
-      </div>
-      <div class="text-center p-3 bg-gray-50 rounded">
-        <div class="text-xs font-medium text-gray-500 uppercase">NGOs</div>
-        <div class="mt-1 text-lg font-semibold text-gray-900"><%= ext['ngos'] %></div>
-      </div>
-      <div class="text-center p-3 bg-gray-50 rounded">
-        <div class="text-xs font-medium text-gray-500 uppercase">Others</div>
-        <div class="mt-1 text-lg font-semibold text-gray-900"><%= ext['others'] %></div>
-      </div>
-      <div class="text-center p-3 bg-green-50 rounded border border-green-100">
-        <div class="text-xs font-medium text-green-800 uppercase">Total</div>
-        <div class="mt-1 text-lg font-bold text-green-700"><%= ext['total'] %></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="bg-white shadow sm:rounded-lg overflow-hidden">
-    <div class="px-4 py-3 bg-gray-50 border-b border-gray-200">
-      <h4 class="text-sm font-semibold text-gray-900">6. Financial Summary</h4>
-    </div>
-    <div class="p-4 md:flex md:space-x-8">
-      <% fin = report.financial_summary %>
-      
-      <div class="flex-1 mb-6 md:mb-0">
-        <h5 class="text-xs font-bold text-gray-500 uppercase mb-2">Income</h5>
-        <ul class="divide-y divide-gray-200">
-          <% fin['income'].select { |i| i['item'].present? }.each do |inc| %>
-            <li class="py-2 flex justify-between text-sm">
-              <span class="text-gray-900"><%= inc['item'] %></span>
-              <span class="text-gray-500"><%= number_to_currency(inc['amount'], unit: "₦") %></span>
-            </li>
-          <% end %>
-        </ul>
-        <div class="mt-2 pt-2 border-t border-gray-200 flex justify-between font-bold text-sm">
-          <span>Total Income</span>
-          <span class="text-green-600"><%= number_to_currency(fin['total_income'], unit: "₦") %></span>
+      <div class="p-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        <% ext = report.external_engagements %>
+        <div class="text-center p-3 bg-gray-50 rounded">
+          <div class="text-xs font-medium text-gray-500 uppercase">Church</div>
+          <div class="mt-1 text-lg font-semibold text-gray-900"><%= ext['church_based'] %></div>
+        </div>
+        <div class="text-center p-3 bg-gray-50 rounded">
+          <div class="text-xs font-medium text-gray-500 uppercase">School</div>
+          <div class="mt-1 text-lg font-semibold text-gray-900"><%= ext['school'] %></div>
+        </div>
+        <div class="text-center p-3 bg-gray-50 rounded">
+          <div class="text-xs font-medium text-gray-500 uppercase">Orphanages</div>
+          <div class="mt-1 text-lg font-semibold text-gray-900"><%= ext['orphanage'] %></div>
+        </div>
+        <div class="text-center p-3 bg-gray-50 rounded">
+          <div class="text-xs font-medium text-gray-500 uppercase">NGOs</div>
+          <div class="mt-1 text-lg font-semibold text-gray-900"><%= ext['ngos'] %></div>
+        </div>
+        <div class="text-center p-3 bg-gray-50 rounded">
+          <div class="text-xs font-medium text-gray-500 uppercase">Others</div>
+          <div class="mt-1 text-lg font-semibold text-gray-900"><%= ext['others'] %></div>
+        </div>
+        <div class="text-center p-3 bg-green-50 rounded border border-green-100">
+          <div class="text-xs font-medium text-green-800 uppercase">Total</div>
+          <div class="mt-1 text-lg font-bold text-green-700"><%= ext['total'] %></div>
         </div>
       </div>
+    </div>
+  <% end %>
 
-      <div class="flex-1">
-        <h5 class="text-xs font-bold text-gray-500 uppercase mb-2">Expenses</h5>
-        <ul class="divide-y divide-gray-200">
-          <% fin['expenses'].select { |e| e['item'].present? }.each do |exp| %>
-            <li class="py-2 flex justify-between text-sm">
-              <span class="text-gray-900"><%= exp['item'] %></span>
-              <span class="text-gray-500"><%= number_to_currency(exp['amount'], unit: "₦") %></span>
-            </li>
-          <% end %>
-        </ul>
-        <div class="mt-2 pt-2 border-t border-gray-200 flex justify-between font-bold text-sm">
-          <span>Total Expenses</span>
-          <span class="text-red-600"><%= number_to_currency(fin['total_expenses'], unit: "₦") %></span>
+  <% if sections.include?("financial_summary") %>
+    <div class="bg-white shadow sm:rounded-lg overflow-hidden">
+      <div class="px-4 py-3 bg-gray-50 border-b border-gray-200">
+        <h4 class="text-sm font-semibold text-gray-900">6. Financial Summary</h4>
+      </div>
+      <div class="p-4 md:flex md:space-x-8">
+        <% fin = report.financial_summary %>
+        
+        <div class="flex-1 mb-6 md:mb-0">
+          <h5 class="text-xs font-bold text-gray-500 uppercase mb-2">Income</h5>
+          <ul class="divide-y divide-gray-200">
+            <% (fin['income'] || []).select { |i| i['item'].present? }.each do |inc| %>
+              <li class="py-2 flex justify-between text-sm">
+                <span class="text-gray-900"><%= inc['item'] %></span>
+                <span class="text-gray-500"><%= number_to_currency(inc['amount'], unit: "₦") %></span>
+              </li>
+            <% end %>
+          </ul>
+          <div class="mt-2 pt-2 border-t border-gray-200 flex justify-between font-bold text-sm">
+            <span>Total Income</span>
+            <span class="text-green-600"><%= number_to_currency(fin['total_income'], unit: "₦") %></span>
+          </div>
+        </div>
+
+        <div class="flex-1">
+          <h5 class="text-xs font-bold text-gray-500 uppercase mb-2">Expenses</h5>
+          <ul class="divide-y divide-gray-200">
+            <% (fin['expenses'] || []).select { |e| e['item'].present? }.each do |exp| %>
+              <li class="py-2 flex justify-between text-sm">
+                <span class="text-gray-900"><%= exp['item'] %></span>
+                <span class="text-gray-500"><%= number_to_currency(exp['amount'], unit: "₦") %></span>
+              </li>
+            <% end %>
+          </ul>
+          <div class="mt-2 pt-2 border-t border-gray-200 flex justify-between font-bold text-sm">
+            <span>Total Expenses</span>
+            <span class="text-red-600"><%= number_to_currency(fin['total_expenses'], unit: "₦") %></span>
+          </div>
+        </div>
+        
+      </div>
+      <% if fin['deficit'].to_f > 0 %>
+        <div class="px-4 py-3 bg-red-50 border-t border-red-100 flex justify-between items-center">
+          <span class="text-sm font-semibold text-red-800">Total Deficit:</span>
+          <span class="text-sm font-bold text-red-700"><%= number_to_currency(fin['deficit'], unit: "₦") %></span>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+
+  <% if sections.include?("detailed_financial") %>
+    <%= render "detailed_financial_data", report: report %>
+  <% end %>
+
+  <% if sections.include?("others") %>
+    <div class="bg-white shadow sm:rounded-lg overflow-hidden">
+      <div class="px-4 py-3 bg-gray-50 border-b border-gray-200">
+        <h4 class="text-sm font-semibold text-gray-900">7. Others</h4>
+      </div>
+      <div class="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-4 gap-x-6">
+        <% oth = report.others %>
+        <div>
+          <dt class="text-xs font-medium text-gray-500 uppercase">Paid Membership</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= oth['paid_membership'] %></dd>
+        </div>
+        <div>
+          <dt class="text-xs font-medium text-gray-500 uppercase">Support to HQ Sent?</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= oth['support_hq'] %></dd>
+        </div>
+        <div>
+          <dt class="text-xs font-medium text-gray-500 uppercase">Camp Report Submitted?</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= oth['camp_report_submitted'] %></dd>
+        </div>
+        <div>
+          <dt class="text-xs font-medium text-gray-500 uppercase">Has Secretariat?</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= oth['own_secretariat'] %></dd>
+        </div>
+        <div>
+          <dt class="text-xs font-medium text-gray-500 uppercase">Invitations to Minister</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= oth['invitation_minister'] %></dd>
+        </div>
+        <div class="sm:col-span-2 lg:col-span-3">
+          <dt class="text-xs font-medium text-gray-500 uppercase">ICT Capability</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= oth['ict_capability'].presence || "—" %></dd>
         </div>
       </div>
-      
     </div>
-    <% if fin['deficit'].to_f > 0 %>
-      <div class="px-4 py-3 bg-red-50 border-t border-red-100 flex justify-between items-center">
-        <span class="text-sm font-semibold text-red-800">Total Deficit:</span>
-        <span class="text-sm font-bold text-red-700"><%= number_to_currency(fin['deficit'], unit: "₦") %></span>
-      </div>
-    <% end %>
-  </div>
-
-  <div class="bg-white shadow sm:rounded-lg overflow-hidden">
-    <div class="px-4 py-3 bg-gray-50 border-b border-gray-200">
-      <h4 class="text-sm font-semibold text-gray-900">7. Others</h4>
-    </div>
-    <div class="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-4 gap-x-6">
-      <% oth = report.others %>
-      <div>
-        <dt class="text-xs font-medium text-gray-500 uppercase">Paid Membership</dt>
-        <dd class="mt-1 text-sm text-gray-900"><%= oth['paid_membership'] %></dd>
-      </div>
-      <div>
-        <dt class="text-xs font-medium text-gray-500 uppercase">Support to HQ Sent?</dt>
-        <dd class="mt-1 text-sm text-gray-900"><%= oth['support_hq'] %></dd>
-      </div>
-      <div>
-        <dt class="text-xs font-medium text-gray-500 uppercase">Camp Report Submitted?</dt>
-        <dd class="mt-1 text-sm text-gray-900"><%= oth['camp_report_submitted'] %></dd>
-      </div>
-      <div>
-        <dt class="text-xs font-medium text-gray-500 uppercase">Has Secretariat?</dt>
-        <dd class="mt-1 text-sm text-gray-900"><%= oth['own_secretariat'] %></dd>
-      </div>
-      <div>
-        <dt class="text-xs font-medium text-gray-500 uppercase">Invitations to Minister</dt>
-        <dd class="mt-1 text-sm text-gray-900"><%= oth['invitation_minister'] %></dd>
-      </div>
-      <div class="sm:col-span-2 lg:col-span-3">
-        <dt class="text-xs font-medium text-gray-500 uppercase">ICT Capability</dt>
-        <dd class="mt-1 text-sm text-gray-900"><%= oth['ict_capability'].presence || "—" %></dd>
-      </div>
-    </div>
-  </div>
+  <% end %>
 
 </div>

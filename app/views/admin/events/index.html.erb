@@ -29,7 +29,9 @@
           <tbody class="divide-y divide-gray-200">
             <% @events.each do |event| %>
               <tr>
-                <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0"><%= event.title %></td>
+                <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
+                  <%= link_to event.title, admin_event_path(event), class: "hover:text-green-600 transition-colors" %>
+                </td>
                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= event.start_time.strftime("%b %d, %Y %H:%M") %></td>
                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= event.location %></td>
                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= event.state&.name || 'National' %></td>

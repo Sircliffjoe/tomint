@@ -31,6 +31,14 @@ class User < ApplicationRecord
     roles.keys.map { |r| [ ROLE_DISPLAY_NAMES[r] || r.humanize, r ] }
   end
 
+  def full_name
+    "#{first_name} #{last_name}"
+  end
+
+  def initials
+    "#{first_name&.first}#{last_name&.first}".upcase
+  end
+
   validates :first_name, :last_name, presence: true
   validates :state_id, presence: true, if: -> { state_admin? || state_secretary? }
   validates :directorate_id, presence: true, if: :directorate_director?

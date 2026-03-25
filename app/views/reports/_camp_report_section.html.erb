@@ -1,0 +1,287 @@
+<div class="space-y-8 border-t border-gray-200 pt-8 mt-8">
+  <div class="flex items-center gap-2">
+    <svg class="w-6 h-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21V7l9-4 9 4v14M3 21h18M9 21V11h6v10" />
+    </svg>
+    <h3 class="text-xl font-bold text-gray-900">Camp Report Sheet</h3>
+  </div>
+
+  <% camp = report.camp_report || {} %>
+
+  <!-- 1. Camp Details -->
+  <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+    <div class="bg-green-50 px-5 py-3 border-b border-green-100">
+      <h4 class="text-sm font-bold text-green-800 uppercase tracking-wider">Camp Details</h4>
+    </div>
+    <div class="p-5 grid grid-cols-1 md:grid-cols-2 gap-5">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Reporting Year</label>
+        <input type="text" name="report[camp_report][reporting_year]" value="<%= camp['reporting_year'] %>"
+               class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm" placeholder="e.g. 2026">
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">State</label>
+        <select name="report[camp_report][camp_state]"
+                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm">
+          <option value="">— Select State —</option>
+          <% State.order(:name).each do |state| %>
+            <option value="<%= state.name %>" <%= 'selected' if camp['camp_state'] == state.name %>><%= state.name %></option>
+          <% end %>
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Camp Date</label>
+        <input type="date" name="report[camp_report][camp_date]" value="<%= camp['camp_date'] %>"
+               class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm">
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Camp Fee (₦)</label>
+        <input type="number" name="report[camp_report][camp_fee]" value="<%= camp['camp_fee'] %>"
+               class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm" placeholder="0">
+      </div>
+      <div class="md:col-span-2">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Camp Venue</label>
+        <input type="text" name="report[camp_report][camp_venue]" value="<%= camp['camp_venue'] %>"
+               class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm" placeholder="e.g. Ika Grammar School, Agbor">
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Camp Registration -->
+  <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+    <div class="bg-blue-50 px-5 py-3 border-b border-blue-100">
+      <h4 class="text-sm font-bold text-blue-800 uppercase tracking-wider">Camp Registration</h4>
+    </div>
+    <div class="p-5">
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Camping Teenagers</label>
+          <input type="number" name="report[camp_report][camping_teenagers]" value="<%= camp['camping_teenagers'] %>"
+                 data-camp-reg="input"
+                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm" placeholder="0">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Visiting Teenagers</label>
+          <input type="number" name="report[camp_report][visiting_teenagers]" value="<%= camp['visiting_teenagers'] %>"
+                 data-camp-reg="input"
+                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm" placeholder="0">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Staff Volunteers</label>
+          <input type="number" name="report[camp_report][staff_volunteers]" value="<%= camp['staff_volunteers'] %>"
+                 data-camp-reg="input"
+                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm" placeholder="0">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Visiting Staff</label>
+          <input type="number" name="report[camp_report][visiting_staff]" value="<%= camp['visiting_staff'] %>"
+                 data-camp-reg="input"
+                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm" placeholder="0">
+        </div>
+      </div>
+      <div class="mt-5 pt-4 border-t border-gray-200">
+        <div class="flex items-center justify-between">
+          <label class="text-sm font-bold text-gray-900">Total Number of People that Attended Camp (Cumulatively)</label>
+          <input type="number" name="report[camp_report][total_attendees]" value="<%= camp['total_attendees'] %>"
+                 id="camp-reg-total" readonly
+                 class="w-32 text-right rounded-md border-0 py-1.5 text-gray-900 font-bold bg-green-50 shadow-sm ring-1 ring-inset ring-green-300 sm:text-sm">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Camp Total Cost -->
+  <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+    <div class="bg-orange-50 px-5 py-3 border-b border-orange-100">
+      <h4 class="text-sm font-bold text-orange-800 uppercase tracking-wider">Camp Total Cost</h4>
+    </div>
+    <div class="p-5">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Food (₦)</label>
+          <input type="number" name="report[camp_report][cost_food]" value="<%= camp['cost_food'] %>"
+                 data-camp-cost="input"
+                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm" placeholder="0">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Logistics (₦)</label>
+          <input type="number" name="report[camp_report][cost_logistics]" value="<%= camp['cost_logistics'] %>"
+                 data-camp-cost="input"
+                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm" placeholder="0">
+        </div>
+      </div>
+      <div class="mt-5 pt-4 border-t border-gray-200">
+        <div class="flex items-center justify-between">
+          <label class="text-sm font-bold text-gray-900">Total Camp Cost (₦)</label>
+          <input type="number" name="report[camp_report][total_camp_cost]" value="<%= camp['total_camp_cost'] %>"
+                 id="camp-cost-total" readonly
+                 class="w-40 text-right rounded-md border-0 py-1.5 text-gray-900 font-bold bg-orange-50 shadow-sm ring-1 ring-inset ring-orange-300 sm:text-sm">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Daily Attendance -->
+  <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+    <div class="bg-indigo-50 px-5 py-3 border-b border-indigo-100">
+      <h4 class="text-sm font-bold text-indigo-800 uppercase tracking-wider">Daily Attendance</h4>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Day</th>
+            <th class="px-4 py-3 text-center text-xs font-semibold text-gray-600 uppercase">AM (Before 12noon)</th>
+            <th class="px-4 py-3 text-center text-xs font-semibold text-gray-600 uppercase">PM (Night Program)</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-100">
+          <% (1..6).each do |day| %>
+            <tr>
+              <td class="px-4 py-2 text-sm font-medium text-gray-700">Day <%= day %></td>
+              <td class="px-4 py-2">
+                <input type="number" name="report[camp_report][attendance][day_<%= day %>][am]"
+                       value="<%= camp.dig('attendance', "day_#{day}", 'am') %>"
+                       class="block w-full text-center rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm" placeholder="0">
+              </td>
+              <td class="px-4 py-2">
+                <input type="number" name="report[camp_report][attendance][day_<%= day %>][pm]"
+                       value="<%= camp.dig('attendance', "day_#{day}", 'pm') %>"
+                       class="block w-full text-center rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm" placeholder="0">
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 5. Club & First Timer Stats -->
+  <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+    <div class="bg-teal-50 px-5 py-3 border-b border-teal-100">
+      <h4 class="text-sm font-bold text-teal-800 uppercase tracking-wider">Club & First Timer Stats</h4>
+    </div>
+    <div class="p-5 grid grid-cols-1 sm:grid-cols-2 gap-5">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Teens Attending Clubs</label>
+        <input type="number" name="report[camp_report][teens_attending_clubs]" value="<%= camp['teens_attending_clubs'] %>"
+               class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm" placeholder="0">
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">First Time Campers</label>
+        <input type="number" name="report[camp_report][first_time_campers]" value="<%= camp['first_time_campers'] %>"
+               class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm" placeholder="0">
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. Facility Assessment -->
+  <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+    <div class="bg-yellow-50 px-5 py-3 border-b border-yellow-100">
+      <h4 class="text-sm font-bold text-yellow-800 uppercase tracking-wider">Facility Assessment</h4>
+    </div>
+    <div class="divide-y divide-gray-100">
+      <% [
+        ["hall_adequate", "Hall was adequate"],
+        ["classrooms_adequate", "Classrooms were adequate"],
+        ["hostels_adequate", "Hostels were adequate"],
+        ["venue_secured", "The venue was secured"],
+        ["field_okay", "Field for games was okay"]
+      ].each do |key, label| %>
+        <div class="flex items-center justify-between px-5 py-3">
+          <span class="text-sm text-gray-700"><%= label %></span>
+          <select name="report[camp_report][facility][<%= key %>]"
+                  class="rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm w-24 text-center">
+            <option value="Yes" <%= 'selected' if camp.dig('facility', key) == 'Yes' %>>Yes</option>
+            <option value="No" <%= 'selected' if camp.dig('facility', key) == 'No' %>>No</option>
+          </select>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- 7. Spiritual Matters -->
+  <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+    <div class="bg-purple-50 px-5 py-3 border-b border-purple-100">
+      <h4 class="text-sm font-bold text-purple-800 uppercase tracking-wider">Spiritual Matters</h4>
+    </div>
+    <div class="divide-y divide-gray-100">
+      <% [
+        ["first_time_converts", "First time Converts"],
+        ["holy_spirit_baptism", "First time Holy Spirit Baptism"],
+        ["rededication", "Re-dedication"],
+        ["purity_pledge", "Purity Pledge"]
+      ].each do |key, label| %>
+        <div class="flex items-center justify-between px-5 py-3">
+          <span class="text-sm text-gray-700"><%= label %></span>
+          <input type="number" name="report[camp_report][spiritual][<%= key %>]"
+                 value="<%= camp.dig('spiritual', key) %>"
+                 class="rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm w-28 text-center" placeholder="0">
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- 8. Remarks -->
+  <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+    <div class="bg-gray-50 px-5 py-3 border-b border-gray-200">
+      <h4 class="text-sm font-bold text-gray-800 uppercase tracking-wider">Remarks</h4>
+    </div>
+    <div class="p-5">
+      <textarea name="report[camp_report][remarks]" rows="4"
+                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm" placeholder="Any additional remarks about the camp..."><%= camp['remarks'] %></textarea>
+    </div>
+  </div>
+
+  <!-- 9. Sign-off -->
+  <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+    <div class="bg-gray-50 px-5 py-3 border-b border-gray-200">
+      <h4 class="text-sm font-bold text-gray-800 uppercase tracking-wider">Sign-off</h4>
+    </div>
+    <div class="p-5 grid grid-cols-1 sm:grid-cols-2 gap-5">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Compiled by (Camp Secretary)</label>
+        <input type="text" name="report[camp_report][compiled_by]" value="<%= camp['compiled_by'] %>"
+               class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm" placeholder="Name of Camp Secretary">
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Endorsed by (State Coordinator)</label>
+        <input type="text" name="report[camp_report][endorsed_by]" value="<%= camp['endorsed_by'] %>"
+               class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm" placeholder="Name of State Coordinator">
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    function sumInputs(selector, totalId) {
+      var inputs = document.querySelectorAll(selector);
+      var total = 0;
+      for (var i = 0; i < inputs.length; i++) {
+        total += parseFloat(inputs[i].value) || 0;
+      }
+      var el = document.getElementById(totalId);
+      if (el) el.value = total;
+    }
+
+    function bindCalc(selector, totalId) {
+      var inputs = document.querySelectorAll(selector);
+      for (var i = 0; i < inputs.length; i++) {
+        inputs[i].addEventListener("input", function() { sumInputs(selector, totalId); });
+      }
+      sumInputs(selector, totalId);
+    }
+
+    function init() {
+      bindCalc('[data-camp-reg="input"]', 'camp-reg-total');
+      bindCalc('[data-camp-cost="input"]', 'camp-cost-total');
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", init);
+    } else {
+      init();
+    }
+  })();
+</script>

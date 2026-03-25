@@ -27,7 +27,9 @@
           <tbody class="divide-y divide-gray-200">
             <% @pages.each do |page| %>
               <tr>
-                <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0"><%= page.title %></td>
+                <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
+                  <%= link_to page.title, admin_page_path(page), class: "hover:text-green-600 transition-colors" %>
+                </td>
                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-xs font-mono"><%= page.slug %></td>
                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                   <!-- We'll link to the public page once defined -->

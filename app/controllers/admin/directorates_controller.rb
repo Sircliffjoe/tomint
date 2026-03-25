@@ -2,10 +2,13 @@ module Admin
   class DirectoratesController < ApplicationController
     before_action :authenticate_user!
     before_action :authorize_admin!
-    before_action :set_directorate, only: %i[ edit update destroy ]
+    before_action :set_directorate, only: %i[ show edit update destroy ]
 
     def index
       @directorates = Directorate.all.order(:name)
+    end
+
+    def show
     end
 
     def new

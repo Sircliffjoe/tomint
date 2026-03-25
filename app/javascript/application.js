@@ -2,5 +2,4 @@
 import "@hotwired/turbo-rails"
 import "controllers"
 
-import "trix"
-import "@rails/actiontext"
+// Trix and ActionText are loaded via CDN in the layout

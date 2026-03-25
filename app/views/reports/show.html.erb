@@ -25,7 +25,11 @@
       <% end %>
 
       <% if policy(@report).submit? && @report.draft? %>
-        <%= button_to "Submit Report", submit_report_path(@report), method: :patch, class: "inline-flex items-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600" %>
+        <%= button_to "Submit Report", submit_report_path(@report), method: :patch, class: "inline-flex items-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 mr-2" %>
+      <% end %>
+
+      <% if policy(@report).destroy? %>
+        <%= button_to "Delete", report_path(@report), method: :delete, class: "inline-flex items-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500", data: { turbo_confirm: "Are you sure you want to delete this report? This action cannot be undone." } %>
       <% end %>
     </div>
   </div>

@@ -15,7 +15,7 @@ Rails.application.routes.draw do
     resources :directorates
     resources :zones
     resources :states do
-      resources :areas
+      resources :areas, only: [ :index, :show ]
     end
     resources :users
     resources :events
@@ -32,7 +32,9 @@ Rails.application.routes.draw do
   # State namespace
   namespace :states do
     get "dashboard", to: "dashboard#index"
-    resource :state, only: [ :show ]
+    resource :state, only: [ :show ] do
+      resources :areas
+    end
   end
 
   # Directorate namespace

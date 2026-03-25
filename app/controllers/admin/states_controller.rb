@@ -2,10 +2,13 @@ module Admin
   class StatesController < ApplicationController
     before_action :authenticate_user!
     before_action :authorize_admin!
-    before_action :set_state, only: %i[ edit update destroy ]
+    before_action :set_state, only: %i[ show edit update destroy ]
 
     def index
       @states = State.all.order(:name)
+    end
+
+    def show
     end
 
     def new

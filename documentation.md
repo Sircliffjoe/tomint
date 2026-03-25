@@ -170,6 +170,11 @@ Report Types
 - Training Reports
 - Media Reports
 - Project Reports
+- Club Reports
+- Camp Reports
+- Annual Reports
+- Quarterly Reports
+
 
 Workflow
 

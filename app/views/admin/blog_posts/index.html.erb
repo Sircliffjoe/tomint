@@ -28,7 +28,9 @@
           <tbody class="divide-y divide-gray-200">
             <% @blog_posts.each do |post| %>
               <tr>
-                <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0"><%= post.title %></td>
+                <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
+                  <%= link_to post.title, admin_blog_post_path(post), class: "hover:text-green-600 transition-colors" %>
+                </td>
                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= post.author.first_name %></td>
                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                   <span class="inline-flex items-center rounded-md bg-<%= post.published_at.present? && post.published_at <= Time.current ? 'green' : 'yellow' %>-50 px-2 py-1 text-xs font-medium text-<%= post.published_at.present? && post.published_at <= Time.current ? 'green' : 'yellow' %>-700 ring-1 ring-inset ring-<%= post.published_at.present? && post.published_at <= Time.current ? 'green' : 'yellow' %>-600/20">

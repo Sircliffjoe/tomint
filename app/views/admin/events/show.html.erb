@@ -1,0 +1,149 @@
+<div class="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
+
+  <!-- Page header -->
+  <div class="sm:flex sm:justify-between sm:items-center mb-8">
+    <div class="mb-4 sm:mb-0">
+      <h1 class="text-2xl md:text-3xl text-gray-800 font-bold tracking-tight">Event: <%= @event.title %></h1>
+      <div class="mt-2 text-sm text-gray-500 flex items-center gap-2">
+        <%= link_to "Events", admin_events_path, class: "hover:text-green-600 transition-colors" %>
+        <svg class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+        <span class="text-gray-900 font-medium truncate"><%= @event.title %></span>
+      </div>
+    </div>
+    
+    <div class="grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-3">
+      <%= link_to edit_admin_event_path(@event), class: "btn bg-white border-green-200 hover:border-green-300 text-green-600 shadow-sm" do %>
+        <svg class="w-4 h-4 fill-current opacity-50 shrink-0 mr-2" viewBox="0 0 16 16">
+          <path d="M11.7.3c-.4-.4-1-.4-1.4 0l-10 10c-.2.2-.3.4-.3.7v4c0 .6.4 1 1 1h4c.3 0 .5-.1.7-.3l10-10c.4-.4.4-1 0-1.4l-4-4zM4.6 14H2v-2.6l6-6L10.6 8l-6 6zM12 6.6L9.4 4 11 2.4 13.6 5 12 6.6z" />
+        </svg>
+        <span class="hidden xs:block ml-2">Edit Event</span>
+      <% end %>
+      <a href="<%= event_path(@event) %>" target="_blank" class="btn bg-green-600 hover:bg-green-700 text-white shadow-sm">
+        <svg class="w-4 h-4 fill-current opacity-50 shrink-0 mr-2" viewBox="0 0 16 16">
+          <path d="M15 15H1V1h7V0H0v16h16V8h-1v7z" />
+          <path d="M10 0v1h4.3L6.6 8.6l.7.7L15 1.7V6h1V0z" />
+        </svg>
+        <span class="hidden xs:block ml-2">View Live</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 xl:grid-cols-3 gap-8 mb-8">
+    <!-- Left column: Main info & Image -->
+    <div class="xl:col-span-2 space-y-8">
+      
+      <div class="bg-white shadow-sm rounded-xl border border-gray-200 p-6 overflow-hidden">
+        <% if @event.image.attached? %>
+          <div class="mb-6 rounded-lg overflow-hidden border border-gray-100 max-h-96 w-full object-cover">
+            <%= image_tag @event.image, class: "w-full h-full object-cover" %>
+          </div>
+        <% else %>
+          <div class="mb-6 bg-gray-50 rounded-lg p-12 text-center border border-dashed border-gray-200">
+            <svg class="h-12 w-12 text-gray-400 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            <p class="text-sm text-gray-500 font-medium">No cover image uploaded for this event</p>
+          </div>
+        <% end %>
+
+        <div class="border-b border-gray-100 pb-4 mb-4">
+          <h2 class="text-lg font-semibold text-gray-800">Event Details</h2>
+        </div>
+        
+        <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-6">
+          <div class="sm:col-span-2">
+            <dt class="text-sm font-medium text-gray-500 uppercase tracking-wide">Description</dt>
+            <dd class="mt-2 text-sm text-gray-900 leading-relaxed whitespace-pre-wrap"><%= @event.description.presence || "No description provided." %></dd>
+          </div>
+        </dl>
+      </div>
+      
+    </div>
+    
+    <!-- Right column: Metadata -->
+    <div class="xl:col-span-1 space-y-8">
+      
+      <div class="bg-white shadow-sm rounded-xl border border-gray-200 p-6">
+        <h3 class="text-lg font-semibold text-gray-800 border-b border-gray-100 pb-4 mb-4">Timing & Location</h3>
+        <dl class="space-y-6">
+          <div>
+            <dt class="text-sm font-medium text-gray-500 uppercase tracking-wide flex items-center">
+              <svg class="h-4 w-4 mr-2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              Start Time
+            </dt>
+            <dd class="mt-1 text-sm text-gray-900 font-medium"><%= @event.start_time&.strftime("%B %d, %Y at %l:%M %p") || "Not set" %></dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500 uppercase tracking-wide flex items-center">
+              <svg class="h-4 w-4 mr-2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              End Time
+            </dt>
+            <dd class="mt-1 text-sm text-gray-900 font-medium"><%= @event.end_time&.strftime("%B %d, %Y at %l:%M %p") || "Not set" %></dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500 uppercase tracking-wide flex items-center">
+              <svg class="h-4 w-4 mr-2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              Location
+            </dt>
+            <dd class="mt-1 text-sm text-gray-900 font-medium"><%= @event.location.presence || "TBD" %></dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500 uppercase tracking-wide flex items-center">
+              <svg class="h-4 w-4 mr-2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              State / Region
+            </dt>
+            <dd class="mt-1 text-sm text-gray-900 font-medium">
+              <% if @event.state %>
+                <%= link_to @event.state.name, admin_state_path(@event.state), class: "text-green-600 hover:text-green-800" %>
+              <% else %>
+                <span class="text-gray-400">National / Online</span>
+              <% end %>
+            </dd>
+          </div>
+        </dl>
+      </div>
+
+      <div class="bg-white shadow-sm rounded-xl border border-gray-200 p-6">
+        <h3 class="text-lg font-semibold text-gray-800 border-b border-gray-100 pb-4 mb-4">Registration & Pricing</h3>
+        <dl class="space-y-6">
+          <div>
+            <dt class="text-sm font-medium text-gray-500 uppercase tracking-wide">Status</dt>
+            <dd class="mt-1">
+              <% if @event.registration_open? %>
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Registration Open</span>
+              <% else %>
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">Registration Closed</span>
+              <% end %>
+            </dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500 uppercase tracking-wide">Event Type</dt>
+            <dd class="mt-1 text-sm text-gray-900 font-medium"><%= @event.event_type&.titleize || "Unspecified" %></dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500 uppercase tracking-wide">Price</dt>
+            <dd class="mt-1 text-sm text-gray-900 font-medium border border-gray-200 bg-gray-50 rounded px-3 py-2 inline-block">
+              <% if @event.price.to_i > 0 %>
+                <%= @event.currency || "NGN" %> <%= number_to_currency(@event.price, unit: "") %>
+              <% else %>
+                Free
+              <% end %>
+            </dd>
+          </div>
+        </dl>
+      </div>
+      
+    </div>
+  </div>
+</div>

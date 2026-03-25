@@ -27,7 +27,7 @@
         <% @states.each do |state| %>
           <tr>
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-              <%= state.name %>
+              <%= link_to state.name, admin_state_path(state), class: "hover:text-green-600 transition-colors" %>
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
               <%= state.code %>

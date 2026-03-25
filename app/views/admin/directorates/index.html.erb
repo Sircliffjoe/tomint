@@ -27,7 +27,7 @@
         <% @directorates.each do |directorate| %>
           <tr>
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-              <%= directorate.name %>
+              <%= link_to directorate.name, admin_directorate_path(directorate), class: "hover:text-green-600 transition-colors" %>
             </td>
             <td class="px-6 py-4 text-sm text-gray-500">
               <%= truncate(directorate.description, length: 50) %>

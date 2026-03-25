@@ -6,14 +6,14 @@
       <div>
         <label class="block text-sm font-medium text-gray-700">Nos of Paid Membership</label>
         <div class="mt-1">
-          <input type="number" name="report[others][paid_membership]" value="<%= report.others['paid_membership'] %>" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6">
+          <input type="number" name="report[others][paid_membership]" value="<%= report.others&.[]('paid_membership') %>" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6">
         </div>
       </div>
 
       <div class="lg:col-span-2">
         <label class="block text-sm font-medium text-gray-700">ICT Capability / Devices</label>
         <div class="mt-1">
-          <input type="text" name="report[others][ict_capability]" value="<%= report.others['ict_capability'] %>" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6" placeholder="e.g. Laptops, Projectors, Sounds...">
+          <input type="text" name="report[others][ict_capability]" value="<%= report.others&.[]('ict_capability') %>" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6" placeholder="e.g. Laptops, Projectors, Sounds...">
         </div>
       </div>
 
@@ -21,8 +21,8 @@
         <label class="block text-sm font-medium text-gray-700">Support to HQ Sent?</label>
         <div class="mt-1">
           <select name="report[others][support_hq]" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6">
-            <option value="No" <%= 'selected' if report.others['support_hq'] == 'No' %>>No</option>
-            <option value="Yes" <%= 'selected' if report.others['support_hq'] == 'Yes' %>>Yes</option>
+            <option value="No" <%= 'selected' if report.others&.[]('support_hq') == 'No' %>>No</option>
+            <option value="Yes" <%= 'selected' if report.others&.[]('support_hq') == 'Yes' %>>Yes</option>
           </select>
         </div>
       </div>
@@ -31,8 +31,8 @@
         <label class="block text-sm font-medium text-gray-700">Camp Report Submitted?</label>
         <div class="mt-1">
           <select name="report[others][camp_report_submitted]" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6">
-            <option value="No" <%= 'selected' if report.others['camp_report_submitted'] == 'No' %>>No</option>
-            <option value="Yes" <%= 'selected' if report.others['camp_report_submitted'] == 'Yes' %>>Yes</option>
+            <option value="No" <%= 'selected' if report.others&.[]('camp_report_submitted') == 'No' %>>No</option>
+            <option value="Yes" <%= 'selected' if report.others&.[]('camp_report_submitted') == 'Yes' %>>Yes</option>
           </select>
         </div>
       </div>
@@ -41,8 +41,8 @@
         <label class="block text-sm font-medium text-gray-700">Has Own Secretariat/Office?</label>
         <div class="mt-1">
           <select name="report[others][own_secretariat]" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6">
-            <option value="No" <%= 'selected' if report.others['own_secretariat'] == 'No' %>>No</option>
-            <option value="Yes" <%= 'selected' if report.others['own_secretariat'] == 'Yes' %>>Yes</option>
+            <option value="No" <%= 'selected' if report.others&.[]('own_secretariat') == 'No' %>>No</option>
+            <option value="Yes" <%= 'selected' if report.others&.[]('own_secretariat') == 'Yes' %>>Yes</option>
           </select>
         </div>
       </div>
@@ -50,7 +50,7 @@
       <div>
         <label class="block text-sm font-medium text-gray-700">Nos of Invitation to Minister</label>
         <div class="mt-1">
-          <input type="number" name="report[others][invitation_minister]" value="<%= report.others['invitation_minister'] %>" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6">
+          <input type="number" name="report[others][invitation_minister]" value="<%= report.others&.[]('invitation_minister') %>" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6">
         </div>
       </div>
 

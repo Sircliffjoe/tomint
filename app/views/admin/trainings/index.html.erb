@@ -28,7 +28,9 @@
           <tbody class="divide-y divide-gray-200">
             <% @trainings.each do |training| %>
               <tr>
-                <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0"><%= training.title %></td>
+                <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
+                  <%= link_to training.title, admin_training_path(training), class: "hover:text-green-600 transition-colors" %>
+                </td>
                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= training.category %></td>
                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= training.state&.name || 'National' %></td>
                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= training.training_sessions.count %></td>

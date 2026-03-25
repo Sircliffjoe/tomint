@@ -1,84 +1,119 @@
-<%= form_with(model: [:admin, user], class: "space-y-6") do |form| %>
-  <% if user.errors.any? %>
-    <div class="bg-red-50 p-4 rounded-md">
-      <div class="flex">
-        <div class="flex-shrink-0">
-          <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+<div class="form-card">
+  <%= form_with(model: [:admin, user], class: "directorate-form") do |form| %>
+    <% if user.errors.any? %>
+      <div class="error-banner">
+        <div class="error-icon-wrap">
+          <svg class="error-icon" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
           </svg>
         </div>
-        <div class="ml-3">
-          <h3 class="text-sm font-medium text-red-800">
-            <%= pluralize(user.errors.count, "error") %> prohibited this user from being saved:
-          </h3>
-          <div class="mt-2 text-sm text-red-700">
-            <ul role="list" class="list-disc pl-5 space-y-1">
-              <% user.errors.each do |error| %>
-                <li><%= error.full_message %></li>
-              <% end %>
-            </ul>
-          </div>
+        <div class="error-body">
+          <h3 class="error-title"><%= pluralize(user.errors.count, "error") %> detected</h3>
+          <ul class="error-list">
+            <% user.errors.each do |error| %>
+              <li><%= error.full_message %></li>
+            <% end %>
+          </ul>
         </div>
       </div>
+    <% end %>
+
+    <div class="form-fields">
+      <div class="form-row">
+        <div class="field-group">
+          <%= form.label :first_name, class: "field-label" %>
+          <div class="field-hint">User's given name</div>
+          <%= form.text_field :first_name, placeholder: "e.g. John", class: "field-input" %>
+        </div>
+        <div class="field-group">
+          <%= form.label :last_name, class: "field-label" %>
+          <div class="field-hint">User's family name</div>
+          <%= form.text_field :last_name, placeholder: "e.g. Doe", class: "field-input" %>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <%= form.label :email, class: "field-label" %>
+        <div class="field-hint">Primary email address used for login and notifications</div>
+        <%= form.email_field :email, placeholder: "john.doe@example.com", class: "field-input" %>
+      </div>
+
+      <div class="field-group">
+        <%= form.label :phone, "Phone Number", class: "field-label" %>
+        <div class="field-hint">Contact phone number including country code</div>
+        <%= form.text_field :phone, placeholder: "+234 ...", class: "field-input" %>
+      </div>
+
+      <div class="field-group">
+        <%= form.label :role, class: "field-label" %>
+        <div class="field-hint">Determines the user's access level and permissions across the system</div>
+        <%= form.select :role,
+            User.role_options_for_select,
+            {},
+            class: "field-input field-select",
+            id: "user_role_select" %>
+      </div>
+
+      <div id="directorate-field" class="field-group <%= user.directorate_director? ? '' : 'hidden' %>">
+        <%= form.label :directorate_id, "Assign Directorate", class: "field-label" %>
+        <div class="field-hint">Select the directorate this user will oversee as director</div>
+        <%= form.collection_select :directorate_id,
+            Directorate.all.order(:name), :id, :name,
+            { include_blank: "— Select Directorate —" },
+            { class: "field-input field-select" } %>
+      </div>
+
+      <div id="state-field" class="field-group <%= (user.state_admin? || user.state_secretary?) ? '' : 'hidden' %>">
+        <%= form.label :state_id, "Assign State", class: "field-label" %>
+        <div class="field-hint">Select the state this user will administer or serve as secretary</div>
+        <%= form.collection_select :state_id,
+            State.all.order(:name), :id, :name,
+            { include_blank: "— Select State —" },
+            { class: "field-input field-select" } %>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <%= link_to admin_users_path(role: user.role), class: "btn-cancel" do %>
+        <svg viewBox="0 0 20 20" fill="currentColor" class="btn-icon">
+          <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+        </svg>
+        Cancel
+      <% end %>
+      <%= form.submit user.new_record? ? "Create User" : "Update User", class: "btn-submit" %>
     </div>
   <% end %>
+</div>
 
-  <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
-    <div>
-      <%= form.label :first_name, class: "block text-sm font-medium text-gray-700" %>
-      <div class="mt-1">
-        <%= form.text_field :first_name, class: "shadow-sm focus:ring-green-500 focus:border-green-500 block w-full sm:text-sm border-gray-300 rounded-md" %>
-      </div>
-    </div>
-
-    <div>
-      <%= form.label :last_name, class: "block text-sm font-medium text-gray-700" %>
-      <div class="mt-1">
-        <%= form.text_field :last_name, class: "shadow-sm focus:ring-green-500 focus:border-green-500 block w-full sm:text-sm border-gray-300 rounded-md" %>
-      </div>
-    </div>
-  </div>
-
-  <div>
-    <%= form.label :email, class: "block text-sm font-medium text-gray-700" %>
-    <div class="mt-1">
-      <%= form.email_field :email, class: "shadow-sm focus:ring-green-500 focus:border-green-500 block w-full sm:text-sm border-gray-300 rounded-md" %>
-    </div>
-  </div>
-
-  <div>
-    <%= form.label :phone, "Phone number", class: "block text-sm font-medium text-gray-700" %>
-    <div class="mt-1">
-      <%= form.text_field :phone, class: "shadow-sm focus:ring-green-500 focus:border-green-500 block w-full sm:text-sm border-gray-300 rounded-md" %>
-    </div>
-  </div>
-
-  <div>
-    <%= form.label :role, class: "block text-sm font-medium text-gray-700" %>
-    <div class="mt-1">
-      <%= form.select :role, User.role_options_for_select, {}, class: "shadow-sm focus:ring-green-500 focus:border-green-500 block w-full sm:text-sm border-gray-300 rounded-md", id: "user_role_select" %>
-    </div>
-  </div>
-
-  <div id="directorate-field" class="<%= user.directorate_director? ? '' : 'hidden' %>">
-    <%= form.label :directorate_id, class: "block text-sm font-medium text-gray-700" %>
-    <div class="mt-1">
-      <%= form.collection_select :directorate_id, Directorate.all.order(:name), :id, :name, { include_blank: "Select Directorate" }, class: "shadow-sm focus:ring-green-500 focus:border-green-500 block w-full sm:text-sm border-gray-300 rounded-md" %>
-    </div>
-  </div>
-
-  <div id="state-field" class="<%= (user.state_admin? || user.state_secretary?) ? '' : 'hidden' %>">
-    <%= form.label :state_id, class: "block text-sm font-medium text-gray-700" %>
-    <div class="mt-1">
-      <%= form.collection_select :state_id, State.all.order(:name), :id, :name, { include_blank: "Select State" }, class: "shadow-sm focus:ring-green-500 focus:border-green-500 block w-full sm:text-sm border-gray-300 rounded-md" %>
-    </div>
-  </div>
-
-  <div class="flex justify-end pt-5">
-    <%= link_to "Cancel", admin_users_path(role: user.role), class: "bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 mr-3" %>
-    <%= form.submit class: "inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" %>
-  </div>
-<% end %>
+<style>
+  .form-card { background:#fff; border-radius:16px; box-shadow:0 1px 3px rgba(0,0,0,.06),0 4px 24px rgba(0,0,0,.04); border:1px solid #f0f0f0; padding:2.5rem; font-family:'Georgia',serif; }
+  .error-banner { display:flex; gap:.875rem; background:#fff5f5; border:1px solid #fecaca; border-left:4px solid #ef4444; border-radius:10px; padding:1rem 1.25rem; margin-bottom:2rem; }
+  .error-icon-wrap { flex-shrink:0; padding-top:1px; }
+  .error-icon { width:18px; height:18px; color:#ef4444; }
+  .error-title { font-size:.8125rem; font-weight:700; color:#991b1b; margin:0 0 .375rem; letter-spacing:.01em; }
+  .error-list { margin:0; padding-left:1.125rem; font-size:.8125rem; color:#b91c1c; line-height:1.6; }
+  .form-fields { display:flex; flex-direction:column; gap:2rem; }
+  .form-row { display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; }
+  @media(max-width:540px){ .form-row { grid-template-columns:1fr; } }
+  .field-group { display:flex; flex-direction:column; }
+  .field-group.hidden { display:none; }
+  .field-label { display:block; font-size:.6875rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#374151; margin-bottom:.375rem; }
+  .field-hint { font-size:.8rem; color:#9ca3af; margin-bottom:.75rem; font-style:italic; font-family:'Georgia',serif; line-height:1.4; }
+  .field-input { display:block; width:100%; padding:.75rem 1rem; background:#f9fafb; border:1.5px solid #22c55e; border-radius:10px; font-size:.9rem; color:#111827; font-family:inherit; line-height:1.5; transition:border-color .18s ease,background .18s ease,box-shadow .18s ease; box-sizing:border-box; outline:none; appearance:none; }
+  .field-input::placeholder { color:#b0bec5; font-style:italic; }
+  .field-input:hover { border-color:#16a34a; background:#fff; }
+  .field-input:focus { background:#fff; border-color:#16a34a; box-shadow:0 0 0 4px rgba(34,197,94,.1); }
+  .field-select { cursor:pointer; }
+  .form-actions { display:flex; align-items:center; justify-content:flex-end; gap:.875rem; margin-top:2.5rem; padding-top:2rem; border-top:1px solid #f3f4f6; }
+  .btn-cancel { display:inline-flex; align-items:center; gap:.4rem; padding:.65rem 1.375rem; font-size:.8375rem; font-weight:600; letter-spacing:.02em; color:#6b7280; background:transparent; border:1.5px solid #e5e7eb; border-radius:9px; text-decoration:none; cursor:pointer; transition:all .18s ease; font-family:inherit; }
+  .btn-cancel:hover { color:#374151; background:#f9fafb; border-color:#d1d5db; }
+  .btn-cancel:active { transform:scale(.98); }
+  .btn-icon { width:14px; height:14px; opacity:.7; }
+  .btn-submit { display:inline-flex; align-items:center; padding:.7rem 1.75rem; font-size:.8375rem; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:#fff; background:linear-gradient(135deg,#22c55e 0%,#16a34a 100%); border:none; border-radius:9px; box-shadow:0 2px 8px rgba(22,163,74,.3),0 1px 2px rgba(0,0,0,.08); cursor:pointer; transition:all .18s ease; font-family:inherit; }
+  .btn-submit:hover { background:linear-gradient(135deg,#16a34a 0%,#15803d 100%); box-shadow:0 4px 14px rgba(22,163,74,.4),0 2px 4px rgba(0,0,0,.1); transform:translateY(-1px); }
+  .btn-submit:active { transform:scale(.98) translateY(0); box-shadow:0 1px 4px rgba(22,163,74,.3); }
+  .btn-submit:focus { outline:none; box-shadow:0 0 0 4px rgba(34,197,94,.25),0 2px 8px rgba(22,163,74,.3); }
+</style>
 
 <script>
   (function() {
@@ -91,7 +126,6 @@
 
       function toggleFields() {
         const role = roleSelect.value;
-        
         if (role === "directorate_director") {
           directorateField.classList.remove("hidden");
           stateField.classList.add("hidden");
@@ -105,18 +139,14 @@
       }
 
       roleSelect.addEventListener("change", toggleFields);
-      // Run once on load to set initial state
       toggleFields();
     }
 
-    // Run on direct load
     if (document.readyState === "loading") {
       document.addEventListener("DOMContentLoaded", initUserForm);
     } else {
       initUserForm();
     }
-    
-    // Run on Turbo navigation
     document.addEventListener("turbo:load", initUserForm);
   })();
 </script>

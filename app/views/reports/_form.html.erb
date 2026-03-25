@@ -1,49 +1,219 @@
-<%= form_with(model: report, class: "space-y-6") do |form| %>
-  <% if report.errors.any? %>
-    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-lg mt-3">
-      <h2><%= pluralize(report.errors.count, "error") %> prohibited this report from being saved:</h2>
+<div class="form-card">
+  <%= form_with(model: report, class: "report-form", data: { turbo: false }) do |form| %>
+    <% if report.errors.any? %>
+      <div class="error-banner">
+        <div class="error-icon-wrap">
+          <svg class="error-icon" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+          </svg>
+        </div>
+        <div class="error-body">
+          <h3 class="error-title"><%= pluralize(report.errors.count, "error") %> detected</h3>
+          <ul class="error-list">
+            <% report.errors.each do |error| %>
+              <li><%= error.full_message %></li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    <% end %>
 
-      <ul>
-        <% report.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
+    <div class="form-fields">
+      <div class="field-group">
+        <%= form.label :title, class: "field-label" %>
+        <div class="field-hint">A clear, descriptive title for this report</div>
+        <%= form.text_field :title, class: "field-input", placeholder: "e.g. Q3 Activity Report — Lagos State" %>
+      </div>
+
+      <div class="field-group">
+        <%= form.label :report_category_id, "Category", class: "field-label" %>
+        <div class="field-hint">Select the category that best describes this report</div>
+        <%= form.collection_select :report_category_id,
+            ReportCategory.all, :id, :name,
+            { prompt: "— Select a Category —" },
+            { class: "field-input field-select", id: "report-category-select" } %>
+      </div>
+
+      <div class="field-group">
+        <%= form.label :body, class: "field-label" %>
+        <div class="field-hint">The full body of this report — supports rich text formatting</div>
+        <%= form.rich_text_area :body %>
+      </div>
+    </div>
+
+    <!-- Structured Sections Panel -->
+    <div class="sections-panel">
+      <div class="sections-panel-header">
+        <svg class="sections-panel-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+        </svg>
+        <div>
+          <p class="sections-panel-title">Report Sections</p>
+          <p class="sections-panel-desc">Complete each section relevant to this reporting period</p>
+        </div>
+      </div>
+      <div class="sections-body">
+        <div class="report-section" data-section="clubs" style="display:none;">
+          <%= render "clubs_section", form: form, report: report %>
+        </div>
+        <div class="report-section" data-section="programmes" style="display:none;">
+          <%= render "programmes_section", form: form, report: report %>
+        </div>
+        <div class="report-section" data-section="seminars" style="display:none;">
+          <%= render "seminars_section", form: form, report: report %>
+        </div>
+        <div class="report-section" data-section="meetings" style="display:none;">
+          <%= render "meetings_section", form: form, report: report %>
+        </div>
+        <div class="report-section" data-section="external_engagements" style="display:none;">
+          <%= render "external_engagements_section", form: form, report: report %>
+        </div>
+        <div class="report-section" data-section="financial_summary" style="display:none;">
+          <%= render "financial_section", form: form, report: report %>
+        </div>
+        <div class="report-section" data-section="detailed_financial" style="display:none;">
+          <%= render "detailed_financial_section", form: form, report: report %>
+        </div>
+        <div class="report-section" data-section="others" style="display:none;">
+          <%= render "others_section", form: form, report: report %>
+        </div>
+        <div class="report-section" data-section="camp_report" style="display:none;">
+          <%= render "camp_report_section", form: form, report: report %>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <%= link_to reports_path, class: "btn-cancel" do %>
+        <svg viewBox="0 0 20 20" fill="currentColor" class="btn-icon">
+          <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+        </svg>
+        Cancel
+      <% end %>
+      <%= form.submit report.new_record? ? "Create Report" : "Update Report", class: "btn-submit" %>
     </div>
   <% end %>
+</div>
 
-  <div>
-    <%= form.label :title, class: "block text-sm font-medium text-gray-700" %>
-    <div class="mt-1">
-      <%= form.text_field :title, class: "shadow-sm focus:ring-green-500 focus:border-green-500 block w-full sm:text-sm border-gray-300 rounded-md" %>
-    </div>
-  </div>
+<style>
+  .form-card { background:#fff; border-radius:16px; box-shadow:0 1px 3px rgba(0,0,0,.06),0 4px 24px rgba(0,0,0,.04); border:1px solid #f0f0f0; padding:2.5rem; font-family:'Georgia',serif; }
+  .error-banner { display:flex; gap:.875rem; background:#fff5f5; border:1px solid #fecaca; border-left:4px solid #ef4444; border-radius:10px; padding:1rem 1.25rem; margin-bottom:2rem; }
+  .error-icon-wrap { flex-shrink:0; padding-top:1px; }
+  .error-icon { width:18px; height:18px; color:#ef4444; }
+  .error-title { font-size:.8125rem; font-weight:700; color:#991b1b; margin:0 0 .375rem; letter-spacing:.01em; }
+  .error-list { margin:0; padding-left:1.125rem; font-size:.8125rem; color:#b91c1c; line-height:1.6; }
+  .form-fields { display:flex; flex-direction:column; gap:2rem; }
+  .field-group { display:flex; flex-direction:column; }
+  .field-label { display:block; font-size:.6875rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#374151; margin-bottom:.375rem; }
+  .field-hint { font-size:.8rem; color:#9ca3af; margin-bottom:.75rem; font-style:italic; font-family:'Georgia',serif; line-height:1.4; }
+  .field-input { display:block; width:100%; padding:.75rem 1rem; background:#f9fafb; border:1.5px solid #22c55e; border-radius:10px; font-size:.9rem; color:#111827; font-family:inherit; line-height:1.5; transition:border-color .18s ease,background .18s ease,box-shadow .18s ease; box-sizing:border-box; outline:none; appearance:none; }
+  .field-input::placeholder { color:#b0bec5; font-style:italic; }
+  .field-input:hover { border-color:#16a34a; background:#fff; }
+  .field-input:focus { background:#fff; border-color:#16a34a; box-shadow:0 0 0 4px rgba(34,197,94,.1); }
+  .field-select { cursor:pointer; }
 
-  <div>
-    <%= form.label :report_category_id, "Category", class: "block text-sm font-medium text-gray-700" %>
-    <div class="mt-1">
-      <%= form.collection_select :report_category_id, ReportCategory.all, :id, :name, { prompt: "Select a Category" }, { class: "shadow-sm focus:ring-green-500 focus:border-green-500 block w-full sm:text-sm border-gray-300 rounded-md" } %>
-    </div>
-  </div>
+  /* Sections Panel */
+  .sections-panel { margin-top:2.5rem; border:1.5px solid #e5e7eb; border-radius:14px; overflow:hidden; }
+  .sections-panel-header { display:flex; align-items:flex-start; gap:.875rem; padding:1.25rem 1.5rem; background:linear-gradient(135deg,#f9fafb,#f0fdf4); border-bottom:1px solid #e5e7eb; }
+  .sections-panel-icon { width:1.375rem; height:1.375rem; color:#16a34a; flex-shrink:0; margin-top:1px; }
+  .sections-panel-title { font-size:.875rem; font-weight:700; color:#111827; margin:0 0 .2rem; letter-spacing:-.01em; }
+  .sections-panel-desc { font-size:.775rem; color:#9ca3af; margin:0; font-style:italic; }
+  .sections-body { padding:1.5rem; display:flex; flex-direction:column; gap:1.5rem; }
 
-  <div>
-    <%= form.label :body, class: "block text-sm font-medium text-gray-700" %>
-    <div class="mt-1 prose max-w-none">
-      <%= form.rich_text_area :body, class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm min-h-[300px]" %>
-    </div>
-  </div>
+  /* Actions */
+  .form-actions { display:flex; align-items:center; justify-content:flex-end; gap:.875rem; margin-top:2.5rem; padding-top:2rem; border-top:1px solid #f3f4f6; }
+  .btn-cancel { display:inline-flex; align-items:center; gap:.4rem; padding:.65rem 1.375rem; font-size:.8375rem; font-weight:600; letter-spacing:.02em; color:#6b7280; background:transparent; border:1.5px solid #e5e7eb; border-radius:9px; text-decoration:none; cursor:pointer; transition:all .18s ease; font-family:inherit; }
+  .btn-cancel:hover { color:#374151; background:#f9fafb; border-color:#d1d5db; }
+  .btn-cancel:active { transform:scale(.98); }
+  .btn-icon { width:14px; height:14px; opacity:.7; }
+  .btn-submit { display:inline-flex; align-items:center; padding:.7rem 1.75rem; font-size:.8375rem; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:#fff; background:linear-gradient(135deg,#22c55e 0%,#16a34a 100%); border:none; border-radius:9px; box-shadow:0 2px 8px rgba(22,163,74,.3),0 1px 2px rgba(0,0,0,.08); cursor:pointer; transition:all .18s ease; font-family:inherit; }
+  .btn-submit:hover { background:linear-gradient(135deg,#16a34a 0%,#15803d 100%); box-shadow:0 4px 14px rgba(22,163,74,.4),0 2px 4px rgba(0,0,0,.1); transform:translateY(-1px); }
+  .btn-submit:active { transform:scale(.98) translateY(0); box-shadow:0 1px 4px rgba(22,163,74,.3); }
+  .btn-submit:focus { outline:none; box-shadow:0 0 0 4px rgba(34,197,94,.25),0 2px 8px rgba(22,163,74,.3); }
+</style>
 
-  <div class="space-y-8 mt-12 bg-gray-50 p-6 rounded-lg border border-gray-200 shadow-inner">
-    <%= render "clubs_section", form: form, report: report %>
-    <%= render "programmes_section", form: form, report: report %>
-    <%= render "seminars_section", form: form, report: report %>
-    <%= render "meetings_section", form: form, report: report %>
-    <%= render "external_engagements_section", form: form, report: report %>
-    <%= render "financial_section", form: form, report: report %>
-    <%= render "others_section", form: form, report: report %>
-  </div>
+<script>
+  (function() {
+    // Category-to-sections mapping
+    var SECTION_MAP = {
+      "Annual Report": ["clubs", "programmes", "seminars", "meetings", "external_engagements", "financial_summary", "others"],
+      "Camp Report": ["camp_report"],
+      "Training Report": ["seminars"],
+      "Financial Report": ["detailed_financial"]
+    };
 
-  <div class="flex justify-end pt-5 border-t border-gray-200">
-    <%= link_to "Cancel", reports_path, class: "bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 mr-3" %>
-    <%= form.submit "Create Report", class: "inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" %>
-  </div>
-<% end %>
+    function toggleSections() {
+      var select = document.getElementById("report-category-select");
+      if (!select) return;
+
+      var categoryName = select.options[select.selectedIndex] ? select.options[select.selectedIndex].text.trim() : "";
+      var activeSections = SECTION_MAP[categoryName] || [];
+
+      var allSections = document.querySelectorAll(".report-section");
+      for (var i = 0; i < allSections.length; i++) {
+        var sectionName = allSections[i].getAttribute("data-section");
+        if (activeSections.indexOf(sectionName) !== -1) {
+          allSections[i].style.display = "";
+        } else {
+          allSections[i].style.display = "none";
+        }
+      }
+    }
+
+    function calculateFinancial() {
+      var form = document.querySelector(".report-form");
+      if (!form) return;
+
+      function getSum(targetName) {
+        var inputs = form.querySelectorAll('[data-calc="' + targetName + '"]');
+        var total = 0;
+        for (var i = 0; i < inputs.length; i++) {
+          total += parseFloat(inputs[i].value) || 0;
+        }
+        return total;
+      }
+
+      var totalIncome = getSum("incomeInput");
+      var totalProgramme = getSum("programmeInput");
+      var totalAdmin = getSum("adminInput");
+      var totalObligation = getSum("obligationInput");
+
+      var el;
+      el = form.querySelector('[data-calc-total="totalIncome"]');
+      if (el) el.value = totalIncome;
+      el = form.querySelector('[data-calc-total="totalProgramme"]');
+      if (el) el.value = totalProgramme;
+      el = form.querySelector('[data-calc-total="totalAdmin"]');
+      if (el) el.value = totalAdmin;
+      el = form.querySelector('[data-calc-total="totalObligation"]');
+      if (el) el.value = totalObligation;
+      el = form.querySelector('[data-calc-total="closingBalance"]');
+      if (el) el.value = totalIncome - (totalProgramme + totalAdmin + totalObligation);
+    }
+
+    // Bind events
+    function init() {
+      var select = document.getElementById("report-category-select");
+      if (select) {
+        select.addEventListener("change", toggleSections);
+        toggleSections(); // run on page load
+      }
+
+      var form = document.querySelector(".report-form");
+      if (form) {
+        form.addEventListener("input", function(e) {
+          if (e.target.hasAttribute("data-calc")) {
+            calculateFinancial();
+          }
+        });
+      }
+    }
+
+    // Run immediately if DOM is ready, otherwise wait
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", init);
+    } else {
+      init();
+    }
+  })();
+</script>

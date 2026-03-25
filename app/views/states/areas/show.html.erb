@@ -1,0 +1,63 @@
+<div class="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
+
+  <!-- Page header -->
+  <div class="sm:flex sm:justify-between sm:items-center mb-8">
+    <div class="mb-4 sm:mb-0">
+      <h1 class="text-2xl md:text-3xl text-gray-800 font-bold tracking-tight">Area: <%= @area.name %></h1>
+      <div class="mt-2 text-sm text-gray-500 flex items-center gap-2">
+        <%= link_to @state.name, states_state_path, class: "hover:text-green-600 transition-colors" %>
+        <svg class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+        <%= link_to "Areas", states_state_areas_path, class: "hover:text-green-600 transition-colors" %>
+        <svg class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+        <span class="text-gray-900 font-medium truncate"><%= @area.name %></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-white shadow-sm rounded-xl border border-gray-200 p-6 mb-8">
+    <div class="border-b border-gray-100 pb-4 mb-4">
+      <h2 class="text-lg font-semibold text-gray-800">Area Details</h2>
+    </div>
+
+    <dl class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-8 sm:gap-x-8">
+      <div class="sm:col-span-1 lg:col-span-2">
+        <dt class="text-sm font-medium text-gray-500 uppercase tracking-wide">Name</dt>
+        <dd class="mt-1 text-base text-gray-900 font-semibold"><%= @area.name %></dd>
+      </div>
+      <div class="sm:col-span-1">
+        <dt class="text-sm font-medium text-gray-500 uppercase tracking-wide">State</dt>
+        <dd class="mt-1 text-base text-gray-900"><%= link_to @state.name, states_state_path, class: "text-green-600 hover:text-green-800 transition-colors" %></dd>
+      </div>
+
+      <div class="sm:col-span-1 lg:col-span-3 border-t border-gray-100 pt-6">
+        <dt class="text-sm font-medium text-gray-500 uppercase tracking-wide mb-2">Description</dt>
+        <dd class="mt-1 text-sm text-gray-900 leading-relaxed whitespace-pre-wrap"><%= @area.description.presence || "No description provided." %></dd>
+      </div>
+      
+      <div class="sm:col-span-1 lg:col-span-3 border-t border-gray-100 pt-6">
+        <dt class="text-sm font-medium text-gray-500 uppercase tracking-wide mb-4">Area Leader</dt>
+        <dd>
+          <% if @area.area_leader %>
+            <div class="flex items-center p-4 bg-gray-50 rounded-lg border border-gray-100 max-w-md">
+              <div class="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center text-green-700 font-bold mr-4 shrink-0">
+                <%= @area.area_leader.initials %>
+              </div>
+              <div class="min-w-0 flex-1">
+                <p class="text-sm font-semibold text-gray-900 truncate"><%= @area.area_leader.full_name %></p>
+                <p class="text-sm text-gray-500 truncate"><%= @area.area_leader.email %></p>
+              </div>
+            </div>
+          <% else %>
+            <div class="bg-gray-50 rounded-lg p-6 max-w-md border border-dashed border-gray-200">
+              <p class="text-sm text-gray-500">No area leader assigned to this area yet.</p>
+            </div>
+          <% end %>
+        </dd>
+      </div>
+    </dl>
+  </div>
+</div>

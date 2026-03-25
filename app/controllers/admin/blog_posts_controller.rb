@@ -2,10 +2,13 @@ module Admin
   class BlogPostsController < ApplicationController
     before_action :authenticate_user!
     before_action :authorize_admin!
-    before_action :set_blog_post, only: %i[ edit update destroy ]
+    before_action :set_blog_post, only: %i[ show edit update destroy ]
 
     def index
       @blog_posts = BlogPost.all.order(created_at: :desc)
+    end
+
+    def show
     end
 
     def new

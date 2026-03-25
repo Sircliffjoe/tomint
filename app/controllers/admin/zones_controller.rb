@@ -2,10 +2,13 @@ module Admin
   class ZonesController < ApplicationController
     before_action :authenticate_user!
     before_action :authorize_admin!
-    before_action :set_zone, only: %i[ edit update destroy ]
+    before_action :set_zone, only: %i[ show edit update destroy ]
 
     def index
       @zones = Zone.all.order(:name).includes(:states)
+    end
+
+    def show
     end
 
     def new

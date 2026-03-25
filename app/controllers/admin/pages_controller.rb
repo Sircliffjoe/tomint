@@ -2,10 +2,13 @@ module Admin
   class PagesController < ApplicationController
     before_action :authenticate_user!
     before_action :authorize_admin!
-    before_action :set_page, only: %i[ edit update destroy ]
+    before_action :set_page, only: %i[ show edit update destroy ]
 
     def index
       @pages = Page.all.order(:title)
+    end
+
+    def show
     end
 
     def new

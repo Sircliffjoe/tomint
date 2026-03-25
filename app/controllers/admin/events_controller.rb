@@ -2,10 +2,14 @@ module Admin
   class EventsController < ApplicationController
     before_action :authenticate_user!
     before_action :authorize_admin!
-    before_action :set_event, only: %i[ edit update destroy ]
+    before_action :set_event, only: %i[ show edit update destroy ]
 
     def index
       @events = policy_scope(Event).order(start_time: :desc)
+    end
+
+    def show
+      authorize @event
     end
 
     def new

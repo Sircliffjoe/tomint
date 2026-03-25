@@ -64,7 +64,9 @@
                   </div>
                 </div>
                 <div class="ml-4">
-                  <div class="text-sm font-medium text-gray-900"><%= user.first_name %> <%= user.last_name %></div>
+                  <div class="text-sm font-medium text-gray-900">
+                    <%= link_to "#{user.first_name} #{user.last_name}", admin_user_path(user), class: "hover:text-green-600 transition-colors" %>
+                  </div>
                   <div class="text-sm text-gray-500"><%= user.email %></div>
                 </div>
               </div>
