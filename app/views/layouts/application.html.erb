@@ -14,14 +14,32 @@
     <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
     <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
 
-    <link rel="icon" href="<%= image_path 'site-logo-white.png' %>" type="image/png">
-    <link rel="apple-touch-icon" href="<%= image_path 'site-logo-white.png' %>">
+    <link rel="icon" href="<%= image_path 'logo.png' %>" type="image/png">
+    <link rel="apple-touch-icon" href="<%= image_path 'logo.png' %>">
 
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "mobile_forms", "data-turbo-track": "reload" %>
     <link rel="stylesheet" href="https://unpkg.com/trix@2.0.8/dist/trix.css">
     <script src="https://unpkg.com/trix@2.0.8/dist/trix.umd.min.js"></script>
     <%= javascript_importmap_tags %>
+
+    <script>
+      function fadeFlashAlerts() {
+        var alerts = document.querySelectorAll('.flash-alert');
+        for (var i = 0; i < alerts.length; i++) {
+          (function(el) {
+            if (el.dataset.fadeBound) return;
+            el.dataset.fadeBound = '1';
+            setTimeout(function() { el.style.opacity = '0'; }, 4000);
+            setTimeout(function() { el.remove(); }, 4500);
+          })(alerts[i]);
+        }
+      }
+      document.addEventListener('DOMContentLoaded', fadeFlashAlerts);
+      document.addEventListener('turbo:load', fadeFlashAlerts);
+      document.addEventListener('turbo:render', fadeFlashAlerts);
+    </script>
   </head>
 
   <body class="bg-gray-50 font-sans text-gray-900 antialiased">
@@ -34,13 +52,15 @@
 
     <main class="<%= (user_signed_in? && admin_area?) ? 'md:ml-64 pt-20 px-6 pb-6' : '' %>">
       <% if notice %>
-        <div class="mb-4 p-4 text-green-700 bg-green-100 rounded-lg" role="alert">
-          <%= notice %>
+        <div class="flash-alert flash-notice mb-4 p-4 text-green-700 bg-green-100 rounded-lg flex items-center justify-between" role="alert" style="transition: opacity 0.5s ease;">
+          <span><%= notice %></span>
+          <button type="button" onclick="this.parentElement.style.opacity='0';setTimeout(function(){this.parentElement.remove()}.bind(this),500);" class="text-green-700 hover:text-green-900 ml-4 text-lg font-bold leading-none">&times;</button>
         </div>
       <% end %>
       <% if alert %>
-        <div class="mb-4 p-4 text-red-700 bg-red-100 rounded-lg" role="alert">
-          <%= alert %>
+        <div class="flash-alert flash-error mb-4 p-4 text-red-700 bg-red-100 rounded-lg flex items-center justify-between" role="alert" style="transition: opacity 0.5s ease;">
+          <span><%= alert %></span>
+          <button type="button" onclick="this.parentElement.style.opacity='0';setTimeout(function(){this.parentElement.remove()}.bind(this),500);" class="text-red-700 hover:text-red-900 ml-4 text-lg font-bold leading-none">&times;</button>
         </div>
       <% end %>
 

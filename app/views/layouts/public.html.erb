@@ -13,6 +13,7 @@
     <link rel="apple-touch-icon" href="<%= image_path 'site-logo-white.png' %>">
 
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "mobile_forms", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
@@ -21,12 +22,12 @@
 
     <main class="isolate flex-auto">
       <% if notice %>
-        <div class="fixed top-20 right-5 z-50 p-4 text-leaf-700 bg-leaf-50 rounded-lg shadow-lg border border-leaf-100 animate-fade-in-down" role="alert">
+        <div class="flash-alert fixed top-20 right-5 z-50 p-4 text-leaf-700 bg-leaf-50 rounded-lg shadow-lg border border-leaf-100" role="alert" style="transition: opacity 0.5s ease;">
           <%= notice %>
         </div>
       <% end %>
       <% if alert %>
-        <div class="fixed top-20 right-5 z-50 p-4 text-red-700 bg-red-50 rounded-lg shadow-lg border border-red-100 animate-fade-in-down" role="alert">
+        <div class="flash-alert fixed top-20 right-5 z-50 p-4 text-red-700 bg-red-50 rounded-lg shadow-lg border border-red-100" role="alert" style="transition: opacity 0.5s ease;">
           <%= alert %>
         </div>
       <% end %>
@@ -35,5 +36,24 @@
     </main>
 
     <%= render "shared/footer" %>
+
+    <script>
+      (function() {
+        function fade() {
+          var alerts = document.querySelectorAll('.flash-alert');
+          for (var i = 0; i < alerts.length; i++) {
+            (function(el) {
+              if (el.dataset.fadeBound) return;
+              el.dataset.fadeBound = '1';
+              setTimeout(function() { el.style.opacity = '0'; }, 4000);
+              setTimeout(function() { el.remove(); }, 4500);
+            })(alerts[i]);
+          }
+        }
+        fade();
+        document.addEventListener('turbo:load', fade);
+        document.addEventListener('turbo:render', fade);
+      })();
+    </script>
   </body>
 </html>

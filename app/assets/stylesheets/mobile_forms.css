@@ -1,0 +1,248 @@
+/* ==========================================================================
+   GLOBAL MOBILE FORM FIXES
+   Responsive overrides for all admin/report form components.
+   These target the shared CSS classes used across ALL form templates.
+   ========================================================================== */
+
+@media (max-width: 640px) {
+
+  /* ── Form Card ──────────────────────────────────────────── */
+  .form-card {
+    padding: 1.25rem !important;
+    border-radius: 12px !important;
+    margin-left: -0.25rem;
+    margin-right: -0.25rem;
+  }
+
+  /* ── Grid rows: always single column ────────────────────── */
+  .form-row {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+
+  /* ── Inputs: ensure full width, proper sizing ───────────── */
+  .field-input,
+  .field-select,
+  input[type="text"],
+  input[type="number"],
+  input[type="email"],
+  input[type="password"],
+  input[type="date"],
+  input[type="datetime-local"],
+  input[type="url"],
+  input[type="tel"],
+  textarea,
+  select {
+    max-width: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    font-size: 16px !important;
+    /* prevents iOS zoom on focus */
+  }
+
+  /* ── Rich text editor ───────────────────────────────────── */
+  .rich-text-wrap {
+    max-width: 100% !important;
+  }
+
+  trix-editor {
+    min-height: 150px !important;
+    font-size: 16px !important;
+  }
+
+  /* ── Upload zone ────────────────────────────────────────── */
+  .upload-zone {
+    padding: 1.25rem 1rem !important;
+  }
+
+  /* ── Checkbox row: stack if needed ──────────────────────── */
+  .checkbox-row {
+    padding: 0.875rem 1rem !important;
+  }
+
+  /* ── Form Actions: stack buttons vertically ─────────────── */
+  .form-actions {
+    flex-direction: column-reverse !important;
+    gap: 0.75rem !important;
+    padding-top: 1.5rem !important;
+  }
+
+  .form-actions .btn-submit,
+  .form-actions .btn-cancel,
+  .form-actions input[type="submit"],
+  .form-actions a {
+    width: 100% !important;
+    justify-content: center !important;
+    text-align: center !important;
+  }
+
+  .btn-submit {
+    padding: 0.875rem 1.5rem !important;
+  }
+
+  .btn-cancel {
+    padding: 0.75rem 1.375rem !important;
+  }
+
+  /* ── Sections Panel (report form) ───────────────────────── */
+  .sections-panel {
+    margin-top: 1.5rem !important;
+    border-radius: 10px !important;
+  }
+
+  .sections-panel-header {
+    padding: 1rem 1.25rem !important;
+  }
+
+  .sections-body {
+    padding: 1rem !important;
+  }
+
+  /* ── Error banners ──────────────────────────────────────── */
+  .error-banner {
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.875rem 1rem !important;
+  }
+
+  /* ── Field spacing ──────────────────────────────────────── */
+  .form-fields {
+    gap: 1.5rem !important;
+  }
+
+  /* ── Report camp section sections ───────────────────────── */
+  .report-section table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* ── Flash alerts ───────────────────────────────────────── */
+  .flash-alert {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    font-size: 0.875rem;
+  }
+
+  /* ── Main content area: less padding on mobile ──────────── */
+  main {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+}
+
+/* Medium tablets (641px - 768px) */
+@media (min-width: 641px) and (max-width: 768px) {
+  .form-card {
+    padding: 1.75rem !important;
+  }
+
+  .form-actions {
+    flex-wrap: wrap;
+  }
+}
+
+/* ==========================================================================
+   GLOBAL MOBILE PAGE LAYOUT FIXES
+   Dashboard headers, index page headers, tables, action buttons.
+   ========================================================================== */
+
+@media (max-width: 640px) {
+
+  /* ── Page headers: stack title + actions vertically ──────── */
+  .space-y-6>.flex.items-center.justify-between {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 0.75rem !important;
+  }
+
+  /* ── Role badge on dashboards: smaller, below title ─────── */
+  .space-y-6>.flex.items-center.justify-between>span {
+    align-self: flex-start;
+  }
+
+  /* ── Action button group on index pages ─────────────────── */
+  .space-y-6>.flex.items-center.justify-between>.flex.space-x-2 {
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  /* ── "New …" buttons: full width on mobile ──────────────── */
+  .space-y-6>.flex.items-center.justify-between>a {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+
+  /* ── Tailwind sm:flex-auto header containers ────────────── */
+  .sm\:flex-auto {
+    min-width: 0;
+  }
+
+  /* ── Index Tables: horizontal scroll ────────────────────── */
+  .bg-white.shadow.overflow-hidden,
+  .overflow-hidden.shadow {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  table.min-w-full {
+    min-width: 500px;
+  }
+
+  /* ── Table cells: tighter padding ──────────────────────── */
+  table.min-w-full th,
+  table.min-w-full td {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+    font-size: 0.8125rem !important;
+  }
+
+  /* ── Table action cells: keep text visible ──────────────── */
+  table.min-w-full td:last-child {
+    white-space: nowrap;
+  }
+
+  /* ── Dashboard stats grid: 2 columns on mobile ─────────── */
+  .grid.grid-cols-1.gap-5 {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.75rem !important;
+  }
+
+  /* ── Dashboard stat cards: smaller padding ──────────────── */
+  .grid.grid-cols-1.gap-5 .p-5 {
+    padding: 0.875rem !important;
+  }
+
+  /* ── Dashboard manage grid: single column on small mobile ─ */
+  .grid.grid-cols-2.gap-4 {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.5rem !important;
+  }
+
+  /* ── Manage grid items: smaller padding ─────────────────── */
+  .grid.grid-cols-2.gap-4>a {
+    padding: 0.75rem !important;
+    font-size: 0.8125rem;
+  }
+
+  /* ── Report index: sm:flex header area ──────────────────── */
+  .sm\:flex.sm\:items-center {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 0.75rem;
+  }
+
+  .sm\:flex.sm\:items-center .sm\:ml-16 {
+    margin-left: 0 !important;
+    margin-top: 0.5rem;
+    width: 100%;
+  }
+
+  .sm\:flex.sm\:items-center .sm\:ml-16 a {
+    display: block;
+    width: 100%;
+    text-align: center;
+  }
+}
