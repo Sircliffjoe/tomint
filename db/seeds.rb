@@ -108,19 +108,21 @@ end
 puts "Created super admin user: #{admin_email}"
 
 # Report Categories
-categories = [
-  "Monthly Outreach Report",
-  "Quarterly Financial Report",
-  "Training Workshop Report",
-  "Special Project Update",
-  "State Visit Report"
+# Clear existing reports and non-core categories as requested
+Report.delete_all
+core_categories = [
+  "Annual Report",
+  "Camp Report",
+  "Training Report",
+  "Financial Report"
 ]
+ReportCategory.where.not(name: core_categories).delete_all
 
-categories.each do |cat_name|
+core_categories.each do |cat_name|
   ReportCategory.find_or_create_by!(name: cat_name)
 end
 
-puts "Created #{ReportCategory.count} report categories."
+puts "Synced #{ReportCategory.count} report categories."
 
 # Events
 Event.find_or_create_by!(title: "National Youth Conference 2026") do |event|
