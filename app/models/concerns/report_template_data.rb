@@ -34,7 +34,7 @@ module ReportTemplateData
     category_name = report_category&.name
     case category_name
     when "Annual Report"
-      [ "clubs", "programmes", "seminars", "meetings", "external_engagements", "financial_summary", "others" ]
+      [ "clubs", "programmes", "seminars", "meetings", "external_engagements", "financial_summary", "detailed_financial", "camp_report", "others" ]
     when "Camp Report"
       [ "camp_report" ]
     when "Training Report"

@@ -259,4 +259,211 @@
     </div>
   <% end %>
 
+  <% if sections.include?("camp_report") %>
+    <% camp = report.camp_report %>
+    <div class="space-y-6">
+      <!-- Camp Information -->
+      <div class="bg-white shadow sm:rounded-lg overflow-hidden">
+        <div class="px-4 py-3 bg-gray-50 border-b border-gray-200">
+          <h4 class="text-sm font-semibold text-gray-900">Camp Information</h4>
+        </div>
+        <div class="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-4 gap-x-6">
+          <div>
+            <dt class="text-xs font-medium text-gray-500 uppercase">Reporting Year</dt>
+            <dd class="mt-1 text-sm text-gray-900"><%= camp['reporting_year'].presence || "—" %></dd>
+          </div>
+          <div>
+            <dt class="text-xs font-medium text-gray-500 uppercase">State</dt>
+            <dd class="mt-1 text-sm text-gray-900"><%= camp['camp_state'].presence || "—" %></dd>
+          </div>
+          <div>
+            <dt class="text-xs font-medium text-gray-500 uppercase">Camp Date</dt>
+            <dd class="mt-1 text-sm text-gray-900"><%= camp['camp_date'].presence || "—" %></dd>
+          </div>
+          <div>
+            <dt class="text-xs font-medium text-gray-500 uppercase">Camp Fee</dt>
+            <dd class="mt-1 text-sm text-gray-900"><%= number_to_currency(camp['camp_fee'], unit: "₦") %></dd>
+          </div>
+          <div class="sm:col-span-2 lg:col-span-2">
+            <dt class="text-xs font-medium text-gray-500 uppercase">Camp Venue</dt>
+            <dd class="mt-1 text-sm text-gray-900"><%= camp['camp_venue'].presence || "—" %></dd>
+          </div>
+        </div>
+      </div>
+
+      <!-- Registration & Attendance Stats -->
+      <div class="bg-white shadow sm:rounded-lg overflow-hidden">
+        <div class="px-4 py-3 bg-gray-50 border-b border-gray-200">
+          <h4 class="text-sm font-semibold text-gray-900">Registration & Attendance</h4>
+        </div>
+        <div class="p-4 grid grid-cols-2 md:grid-cols-5 gap-4">
+          <div class="text-center p-3 bg-gray-50 rounded">
+            <div class="text-[10px] font-medium text-gray-500 uppercase">Teenagers</div>
+            <div class="mt-1 text-lg font-semibold text-gray-900"><%= camp['camping_teenagers'] %></div>
+          </div>
+          <div class="text-center p-3 bg-gray-50 rounded">
+            <div class="text-[10px] font-medium text-gray-500 uppercase">Visitors (Teens)</div>
+            <div class="mt-1 text-lg font-semibold text-gray-900"><%= camp['visiting_teenagers'] %></div>
+          </div>
+          <div class="text-center p-3 bg-gray-50 rounded">
+            <div class="text-[10px] font-medium text-gray-500 uppercase">Staff Volunteers</div>
+            <div class="mt-1 text-lg font-semibold text-gray-900"><%= camp['staff_volunteers'] %></div>
+          </div>
+          <div class="text-center p-3 bg-gray-50 rounded">
+            <div class="text-[10px] font-medium text-gray-500 uppercase">Staff Visitors</div>
+            <div class="mt-1 text-lg font-semibold text-gray-900"><%= camp['visiting_staff'] %></div>
+          </div>
+          <div class="text-center p-3 bg-green-50 rounded border border-green-100">
+            <div class="text-[10px] font-medium text-green-800 uppercase">Total Attendees</div>
+            <div class="mt-1 text-lg font-bold text-green-700">
+              <%= (camp['camping_teenagers'].to_i + camp['visiting_teenagers'].to_i + camp['staff_volunteers'].to_i + camp['visiting_staff'].to_i) %>
+            </div>
+          </div>
+        </div>
+        <div class="p-4 pt-0 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
+            <span class="text-xs font-medium text-gray-500 uppercase">Number of Teens Attending Clubs</span>
+            <span class="text-sm font-bold text-gray-900"><%= camp['teens_attending_clubs'] %></span>
+          </div>
+          <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
+            <span class="text-xs font-medium text-gray-500 uppercase">Number of First Time Campers</span>
+            <span class="text-sm font-bold text-gray-900"><%= camp['first_time_campers'] %></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Financial Detail -->
+      <div class="bg-white shadow sm:rounded-lg overflow-hidden">
+        <div class="px-4 py-3 bg-gray-50 border-b border-gray-200">
+          <h4 class="text-sm font-semibold text-gray-900">Camp Cost Detail</h4>
+        </div>
+        <div class="p-4 grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
+            <span class="text-xs font-medium text-gray-500 uppercase">Food</span>
+            <span class="text-sm font-bold text-gray-900"><%= number_to_currency(camp['cost_food'], unit: "₦") %></span>
+          </div>
+          <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
+            <span class="text-xs font-medium text-gray-500 uppercase">Logistics</span>
+            <span class="text-sm font-bold text-gray-900"><%= number_to_currency(camp['cost_logistics'], unit: "₦") %></span>
+          </div>
+          <div class="flex justify-between items-center p-3 bg-green-50 rounded border border-green-100">
+            <span class="text-xs font-medium text-green-800 uppercase">Total Camp Cost</span>
+            <span class="text-sm font-bold text-green-700">
+              <%= number_to_currency(camp['cost_food'].to_f + camp['cost_logistics'].to_f, unit: "₦") %>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Daily Attendance -->
+      <div class="bg-white shadow sm:rounded-lg overflow-hidden">
+        <div class="px-4 py-3 bg-gray-50 border-b border-gray-200">
+          <h4 class="text-sm font-semibold text-gray-900">Daily Attendance</h4>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase">Day</th>
+                <th class="px-4 py-2 text-center text-xs font-semibold text-gray-500 uppercase">Morning (AM)</th>
+                <th class="px-4 py-2 text-center text-xs font-semibold text-gray-500 uppercase">Evening (PM)</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <% (1..6).each do |day| %>
+                <% d_key = "day_#{day}" %>
+                <% att = camp['attendance'][d_key] || { 'am' => 0, 'pm' => 0 } %>
+                <tr>
+                  <td class="px-4 py-2 whitespace-nowrap text-sm font-medium text-gray-900">Day <%= day %></td>
+                  <td class="px-4 py-2 whitespace-nowrap text-sm text-center text-gray-500"><%= att['am'] %></td>
+                  <td class="px-4 py-2 whitespace-nowrap text-sm text-center text-gray-500"><%= att['pm'] %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Facility & Spiritual -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-white shadow sm:rounded-lg overflow-hidden">
+          <div class="px-4 py-3 bg-gray-50 border-b border-gray-200">
+            <h4 class="text-sm font-semibold text-gray-900">Facility Assessment</h4>
+          </div>
+          <div class="p-4 space-y-3">
+            <% f = camp['facility'] || {} %>
+            <div class="flex justify-between items-center text-sm">
+              <span class="text-gray-600">Hall was adequate?</span>
+              <span class="font-bold <%= f['hall_adequate'] == 'Yes' ? 'text-green-600' : 'text-red-600' %>"><%= f['hall_adequate'] %></span>
+            </div>
+            <div class="flex justify-between items-center text-sm">
+              <span class="text-gray-600">Classrooms were adequate?</span>
+              <span class="font-bold <%= f['classrooms_adequate'] == 'Yes' ? 'text-green-600' : 'text-red-600' %>"><%= f['classrooms_adequate'] %></span>
+            </div>
+            <div class="flex justify-between items-center text-sm">
+              <span class="text-gray-600">Hostels were adequate?</span>
+              <span class="font-bold <%= f['hostels_adequate'] == 'Yes' ? 'text-green-600' : 'text-red-600' %>"><%= f['hostels_adequate'] %></span>
+            </div>
+            <div class="flex justify-between items-center text-sm">
+              <span class="text-gray-600">The venue was secured?</span>
+              <span class="font-bold <%= f['venue_secured'] == 'Yes' ? 'text-green-600' : 'text-red-600' %>"><%= f['venue_secured'] %></span>
+            </div>
+            <div class="flex justify-between items-center text-sm">
+              <span class="text-gray-600">Field for games was okay?</span>
+              <span class="font-bold <%= f['field_okay'] == 'Yes' ? 'text-green-600' : 'text-red-600' %>"><%= f['field_okay'] %></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white shadow sm:rounded-lg overflow-hidden">
+          <div class="px-4 py-3 bg-gray-50 border-b border-gray-200">
+            <h4 class="text-sm font-semibold text-gray-900">Spiritual Matters</h4>
+          </div>
+          <div class="p-4 space-y-3">
+            <% s = camp['spiritual'] || {} %>
+            <div class="flex justify-between items-center text-sm">
+              <span class="text-gray-600">Number of first time converts</span>
+              <span class="font-bold text-gray-900"><%= s['first_time_converts'] %></span>
+            </div>
+            <div class="flex justify-between items-center text-sm">
+              <span class="text-gray-600">First time Holy Spirit baptism</span>
+              <span class="font-bold text-gray-900"><%= s['holy_spirit_baptism'] %></span>
+            </div>
+            <div class="flex justify-between items-center text-sm">
+              <span class="text-gray-600">Number of Re-dedication</span>
+              <span class="font-bold text-gray-900"><%= s['rededication'] %></span>
+            </div>
+            <div class="flex justify-between items-center text-sm">
+              <span class="text-gray-600">Number of Purity pledge</span>
+              <span class="font-bold text-gray-900"><%= s['purity_pledge'] %></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Remarks & Endorsement -->
+      <div class="bg-white shadow sm:rounded-lg overflow-hidden">
+        <div class="px-4 py-3 bg-gray-50 border-b border-gray-200">
+          <h4 class="text-sm font-semibold text-gray-900">Remarks & Endorsement</h4>
+        </div>
+        <div class="p-4 space-y-4">
+          <div>
+            <dt class="text-xs font-medium text-gray-500 uppercase">Remarks</dt>
+            <dd class="mt-1 text-sm text-gray-900 italic"><%= camp['remarks'].presence || "No remarks provided." %></dd>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-gray-100">
+            <div>
+              <dt class="text-xs font-medium text-gray-500 uppercase">Compiled By</dt>
+              <dd class="mt-1 text-sm font-semibold text-gray-900"><%= camp['compiled_by'].presence || "—" %></dd>
+            </div>
+            <div>
+              <dt class="text-xs font-medium text-gray-500 uppercase">Endorsed By</dt>
+              <dd class="mt-1 text-sm font-semibold text-gray-900"><%= camp['endorsed_by'].presence || "—" %></dd>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
 </div>
