@@ -1,0 +1,41 @@
+<div class="mt-8">
+  <h3 class="text-base font-semibold leading-6 text-gray-900">Training Insights</h3>
+  <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-2">
+    <!-- Total Seminars -->
+    <div class="relative overflow-hidden rounded-lg bg-white px-4 pt-5 pb-12 shadow sm:px-6 sm:pt-6">
+      <dt>
+        <div class="absolute rounded-md bg-indigo-500 p-3">
+          <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.174L10.778 19.03a1.5 1.5 0 01-1.397 2.37H2.619a1.5 1.5 0 01-1.397-2.37L7.74 10.174a1.5 1.5 0 012.52 0z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042c1.747 0 3.332.477 4.5 1.253v13C15.332 19.523 13.747 19 12 19c-1.746 0-3.332.477-4.5 1.253v-13C8.668 6.519 10.254 6.042 12 6.042z" />
+          </svg>
+        </div>
+        <p class="ml-16 truncate text-sm font-medium text-gray-500">Total Seminars Held</p>
+      </dt>
+      <dd class="ml-16 flex items-baseline pb-6 sm:pb-7">
+        <p class="text-2xl font-semibold text-gray-900"><%= number_with_delimiter(@insights[:total_seminars]) %></p>
+        <div class="absolute inset-x-0 bottom-0 bg-gray-50 px-4 py-4 sm:px-6 text-xs text-gray-500">
+          Across all reported sessions
+        </div>
+      </dd>
+    </div>
+
+    <!-- Total Attendance -->
+    <div class="relative overflow-hidden rounded-lg bg-white px-4 pt-5 pb-12 shadow sm:px-6 sm:pt-6">
+      <dt>
+        <div class="absolute rounded-md bg-blue-500 p-3">
+          <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0zM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+          </svg>
+        </div>
+        <p class="ml-16 truncate text-sm font-medium text-gray-500">Total Training Attendance</p>
+      </dt>
+      <dd class="ml-16 flex items-baseline pb-6 sm:pb-7">
+        <p class="text-2xl font-semibold text-gray-900"><%= number_with_delimiter(@insights[:total_attendance]) %></p>
+        <div class="absolute inset-x-0 bottom-0 bg-gray-50 px-4 py-4 sm:px-6 text-xs text-blue-600 font-medium">
+          Engagement Level
+        </div>
+      </dd>
+    </div>
+  </dl>
+</div>

@@ -1,0 +1,58 @@
+<div class="mt-8">
+  <h3 class="text-base font-semibold leading-6 text-gray-900">Administration Insights (Annual Summary)</h3>
+  <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+    <!-- Total Clubs -->
+    <div class="relative overflow-hidden rounded-lg bg-white px-4 pt-5 pb-12 shadow sm:px-6 sm:pt-6">
+      <dt>
+        <div class="absolute rounded-md bg-pink-500 p-3">
+          <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+             <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.964-1.5841A4.5 4.5 0 0113.5 15c1.171 0 2.233.447 3.033 1.185m-.001 3.198a12.023 12.023 0 01-5.969 1.216m5.969-1.216a12.022 12.022 0 01-5.969 1.216m-5.969-1.216a11.95 11.95 0 01-6.533-3.07m0 0a12.023 12.023 0 01-5.969-1.216" />
+          </svg>
+        </div>
+        <p class="ml-16 truncate text-sm font-medium text-gray-500">Active Clubs</p>
+      </dt>
+      <dd class="ml-16 flex items-baseline pb-6 sm:pb-7">
+        <p class="text-2xl font-semibold text-gray-900"><%= number_with_delimiter(@insights[:total_clubs]) %></p>
+        <div class="absolute inset-x-0 bottom-0 bg-gray-50 px-4 py-4 sm:px-6 text-xs text-gray-500">
+           Youth groups managed
+        </div>
+      </dd>
+    </div>
+
+    <!-- Total Programmes -->
+    <div class="relative overflow-hidden rounded-lg bg-white px-4 pt-5 pb-12 shadow sm:px-6 sm:pt-6">
+      <dt>
+        <div class="absolute rounded-md bg-orange-500 p-3">
+          <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+          </svg>
+        </div>
+        <p class="ml-16 truncate text-sm font-medium text-gray-500">Programmes Held</p>
+      </dt>
+      <dd class="ml-16 flex items-baseline pb-6 sm:pb-7">
+        <p class="text-2xl font-semibold text-gray-900"><%= number_with_delimiter(@insights[:total_programmes]) %></p>
+        <div class="absolute inset-x-0 bottom-0 bg-gray-50 px-4 py-4 sm:px-6 text-xs text-orange-600 font-medium">
+          Strategic Events
+        </div>
+      </dd>
+    </div>
+
+    <!-- Meetings -->
+    <div class="relative overflow-hidden rounded-lg bg-white px-4 pt-5 pb-12 shadow sm:px-6 sm:pt-6">
+      <dt>
+        <div class="absolute rounded-md bg-cyan-500 p-3">
+          <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.964-1.5841A4.5 4.5 0 0113.5 15c1.171 0 2.233.447 3.033 1.185m-.001 3.198a12.023 12.023 0 01-5.969 1.216m5.969-1.216a12.022 12.022 0 01-5.969 1.216m-5.969-1.216a11.95 11.95 0 01-6.533-3.07m0 0a12.023 12.023 0 01-5.969-1.216" />
+          </svg>
+        </div>
+        <p class="ml-16 truncate text-sm font-medium text-gray-500">Meetings Logged</p>
+      </dt>
+      <dd class="ml-16 flex items-baseline pb-6 sm:pb-7">
+        <p class="text-2xl font-semibold text-gray-900"><%= number_with_delimiter(@insights[:total_meetings]) %></p>
+        <div class="absolute inset-x-0 bottom-0 bg-gray-50 px-4 py-4 sm:px-6 text-xs text-cyan-600">
+           Overall Administrative Engagement
+        </div>
+      </dd>
+    </div>
+  </dl>
+</div>

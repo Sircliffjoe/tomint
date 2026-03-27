@@ -19,7 +19,7 @@
           </div>
           <div class="ml-5 w-0 flex-1">
             <dl>
-              <dt class="text-sm font-medium text-gray-500 truncate">Pending Review</dt>
+              <dt class="text-sm font-medium text-gray-500 truncate">Pending Reviews</dt>
               <dd>
                 <div class="text-lg font-medium text-gray-900"><%= @pending_reports %></div>
               </dd>
@@ -34,6 +34,18 @@
       </div>
     </div>
   </div>
+
+  <%# Dynamic Insights based on Directorate %>
+  <% partial_name = case @directorate.name
+                  when "Outreaches" then "outreach_insights"
+                  when "Finance"    then "finance_insights"
+                  when "Training"   then "training_insights"
+                  when "Administration" then "admin_insights"
+                  end %>
+  
+  <% if partial_name %>
+    <%= render partial_name %>
+  <% end %>
 
   <h2 class="mt-8 text-lg font-medium text-gray-900">Recent Reports</h2>
   <div class="mt-4 bg-white shadow overflow-hidden sm:rounded-md">
