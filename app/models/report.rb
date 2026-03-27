@@ -1,7 +1,7 @@
 class Report < ApplicationRecord
   belongs_to :user
   belongs_to :state
-  belongs_to :directorate
+  belongs_to :directorate, optional: true
   belongs_to :report_category
 
   include ReportTemplateData
