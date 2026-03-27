@@ -7,11 +7,25 @@
     <h2 class="text-xl font-semibold text-gray-800"><%= content_for(:title) %></h2>
   </div>
 
-  <div class="flex items-center space-x-4">
-    <button class="text-gray-500 hover:text-green-600 focus:outline-none">
+  <div class="flex items-center space-x-6">
+    <button class="text-gray-500 hover:text-green-600 focus:outline-none hidden sm:block">
        <span class="sr-only">Notifications</span>
        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
     </button>
+
+    <%= link_to profile_path, class: "flex items-center group" do %>
+      <div class="hidden sm:block text-right mr-3">
+        <p class="text-sm font-semibold text-gray-700 group-hover:text-green-700"><%= current_user.first_name %></p>
+        <p class="text-[10px] text-gray-500 uppercase tracking-widest"><%= current_user.display_role %></p>
+      </div>
+      <% if current_user.avatar.attached? %>
+        <%= image_tag current_user.avatar, class: "h-9 w-9 rounded-full object-cover ring-2 ring-white shadow-sm ring-offset-1 group-hover:ring-green-400 transition-all" %>
+      <% else %>
+        <div class="h-9 w-9 rounded-full bg-green-100 flex items-center justify-center text-green-700 font-bold group-hover:bg-green-200 transition-all">
+          <%= current_user.initials %>
+        </div>
+      <% end %>
+    <% end %>
   </div>
 </header>
 

@@ -12,6 +12,6 @@ class ApplicationController < ActionController::Base
 
   def admin_area?
     self.class.name.start_with?("Admin::", "Directorates::", "States::") ||
-    %w[dashboard reports events trainings].include?(controller_name)
+    %w[dashboard reports events trainings profiles].include?(controller_name)
   end
 end

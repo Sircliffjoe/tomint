@@ -25,8 +25,19 @@
     </div>
     <div class="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-x-4 items-center">
       <% if user_signed_in? %>
+        <%= link_to profile_path, class: "flex items-center gap-x-2 text-sm font-semibold leading-6 text-white hover:text-green-200" do %>
+          <% if current_user.avatar.attached? %>
+            <%= image_tag current_user.avatar, class: "h-8 w-8 rounded-full object-cover ring-2 ring-white/20" %>
+          <% else %>
+            <div class="h-8 w-8 rounded-full bg-green-500 flex items-center justify-center text-[10px] font-bold text-white">
+              <%= current_user.initials %>
+            </div>
+          <% end %>
+          <span>Profile</span>
+        <% end %>
+        <span class="text-green-800">|</span>
         <%= link_to "Dashboard", dashboard_path, class: "text-sm font-semibold leading-6 text-white hover:text-green-200" %>
-        <span class="text-green-400">|</span>
+        <span class="text-green-800">|</span>
         <%= button_to "Log out", destroy_user_session_path, method: :delete, class: "text-sm font-semibold leading-6 text-white hover:text-green-200 bg-transparent border-0 cursor-pointer" %>
       <% else %>
         <%= link_to "Log in", new_user_session_path, class: "text-sm font-semibold leading-6 text-white hover:text-green-200" %>

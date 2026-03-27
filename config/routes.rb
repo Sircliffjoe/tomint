@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   # Dashboard redirect
   get "dashboard", to: "dashboard#index", as: :dashboard
+  resource :profile, only: [ :show, :edit, :update ]
 
   resources :blog, only: [ :index, :show ], controller: "blog"
   resources :donations, only: [ :new, :create ] do
