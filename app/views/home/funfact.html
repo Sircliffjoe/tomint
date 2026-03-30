@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Our FunFact – A Glimpse of Our Journey</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --green: #2ec443;
+      --green-dark: #22a334;
+      --white: #ffffff;
+      --off-white: #f5f5f2;
+      --dark: #1a1a1a;
+      --muted: #555555;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--off-white);
+      color: var(--dark);
+    }
+
+    /* ── SECTION WRAPPER ─────────────────────────────────────── */
+    .funfact-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 520px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ── LEFT PANEL (dark bg image overlay) ─────────────────── */
+    .left-panel {
+      position: relative;
+      background-image: url('https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1200&q=80');
+      background-size: cover;
+      background-position: center;
+      padding: 64px 56px 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .left-panel::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(10, 30, 10, 0.72);
+    }
+
+    .left-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .label {
+      font-family: 'Caveat', cursive;
+      color: var(--green);
+      font-size: 1.1rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+
+    .headline {
+      font-family: 'Playfair Display', serif;
+      color: var(--white);
+      font-size: clamp(1.9rem, 3vw, 2.6rem);
+      line-height: 1.2;
+      margin-bottom: 20px;
+    }
+
+    .subtext {
+      color: rgba(255, 255, 255, 0.72);
+      font-size: 0.9rem;
+      line-height: 1.65;
+      max-width: 440px;
+      margin-bottom: 40px;
+    }
+
+    /* ── STATS GRID (top two) ────────────────────────────────── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .stat-icon {
+      width: 44px;
+      height: 44px;
+      margin-bottom: 4px;
+      color: var(--green);
+    }
+
+    .stat-icon svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .stat-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.9rem;
+      color: var(--white);
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 0.78rem;
+      color: rgba(255, 255, 255, 0.6);
+      letter-spacing: 0.04em;
+    }
+
+    /* ── RIGHT PANEL (image collage) ────────────────────────── */
+    .right-panel {
+      background: var(--white);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .africa-shape-wrapper {
+      position: relative;
+      width: 340px;
+      height: 420px;
+      margin: 32px auto;
+    }
+
+    /* Africa silhouette mask using clip-path approximation */
+    .africa-clip {
+      width: 100%;
+      height: 100%;
+      clip-path: polygon(30% 0%, 60% 2%, 75% 8%, 80% 18%, 75% 22%,
+          85% 30%, 90% 42%, 82% 55%, 88% 65%, 80% 78%,
+          68% 90%, 58% 98%, 48% 100%, 40% 95%, 32% 82%,
+          22% 70%, 15% 60%, 18% 48%, 12% 38%, 15% 25%,
+          20% 14%, 25% 6%);
+      background: #d9d4c8;
+      overflow: hidden;
+      border-radius: 4px;
+    }
+
+    .africa-clip img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Quote badge */
+    .quote-badge {
+      position: absolute;
+      bottom: 20px;
+      left: -20px;
+      background: var(--green);
+      color: var(--white);
+      font-family: 'Caveat', cursive;
+      font-size: 1.05rem;
+      padding: 14px 22px;
+      line-height: 1.4;
+      max-width: 210px;
+      border-radius: 4px;
+      box-shadow: 0 8px 24px rgba(46, 196, 67, 0.28);
+      animation: floatBadge 3s ease-in-out infinite;
+    }
+
+    @keyframes floatBadge {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-6px);
+      }
+    }
+
+    /* ── BOTTOM BAR ──────────────────────────────────────────── */
+    .bottom-bar {
+      background: var(--off-white);
+      display: flex;
+      align-items: center;
+      gap: 0;
+      padding: 0 56px;
+      min-height: 110px;
+      border-top: 1px solid #e0e0dc;
+    }
+
+    .bottom-stat {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding: 28px 0;
+      border-right: 1px solid #e0e0dc;
+    }
+
+    .bottom-stat:last-of-type {
+      border-right: none;
+    }
+
+    .bottom-icon {
+      width: 48px;
+      height: 48px;
+      flex-shrink: 0;
+      color: var(--green);
+    }
+
+    .bottom-icon svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .bottom-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--dark);
+      line-height: 1;
+    }
+
+    .bottom-label {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 3px;
+      letter-spacing: 0.03em;
+    }
+
+    .bottom-quote {
+      flex: 1;
+      display: flex;
+      justify-content: flex-end;
+      padding-left: 32px;
+    }
+
+    .green-tag {
+      background: var(--green);
+      color: var(--white);
+      font-family: 'Caveat', cursive;
+      font-size: 1.1rem;
+      padding: 14px 24px;
+      line-height: 1.4;
+      text-align: center;
+      border-radius: 4px;
+      max-width: 220px;
+    }
+
+    /* ── COUNTER ANIMATION ───────────────────────────────────── */
+    .stat-number,
+    .bottom-number {
+      opacity: 0;
+      transform: translateY(12px);
+      animation: fadeUp 0.7s ease forwards;
+    }
+
+    .stat-item:nth-child(1) .stat-number {
+      animation-delay: 0.2s;
+    }
+
+    .stat-item:nth-child(2) .stat-number {
+      animation-delay: 0.4s;
+    }
+
+    .bottom-stat:nth-child(1) .bottom-number {
+      animation-delay: 0.6s;
+    }
+
+    .bottom-stat:nth-child(2) .bottom-number {
+      animation-delay: 0.8s;
+    }
+
+    @keyframes fadeUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ── RESPONSIVE ──────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .funfact-section {
+        grid-template-columns: 1fr;
+      }
+
+      .right-panel {
+        display: none;
+      }
+
+      .bottom-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 24px 28px;
+        gap: 16px;
+      }
+
+      .bottom-stat {
+        border-right: none;
+        border-bottom: 1px solid #e0e0dc;
+        padding: 16px 0;
+        width: 100%;
+      }
+
+      .bottom-stat:last-of-type {
+        border-bottom: none;
+      }
+
+      .bottom-quote {
+        justify-content: flex-start;
+        padding-left: 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <section>
+    <!-- TOP TWO-COLUMN ROW -->
+    <div class="funfact-section">
+
+      <!-- LEFT: dark overlay + text + top stats -->
+      <div class="left-panel">
+        <div class="left-content">
+          <p class="label">Our FunFact</p>
+          <h2 class="headline">A Glimpse of Our Journey<br>Across the World...</h2>
+          <p class="subtext">
+            We've come a long way – and we're just getting started!
+            From humble beginnings to a growing international family,
+            these highlights make our journey exciting and worth celebrating.
+          </p>
+
+          <div class="stats-grid">
+            <!-- Teens Reached -->
+            <div class="stat-item">
+              <div class="stat-icon">
+                <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="20" cy="20" r="8" stroke="currentColor" stroke-width="3" />
+                  <circle cx="44" cy="20" r="8" stroke="currentColor" stroke-width="3" />
+                  <path d="M4 52c0-8.837 7.163-16 16-16h8" stroke="currentColor" stroke-width="3"
+                    stroke-linecap="round" />
+                  <path d="M60 52c0-8.837-7.163-16-16-16h-8" stroke="currentColor" stroke-width="3"
+                    stroke-linecap="round" />
+                  <circle cx="32" cy="30" r="9" stroke="currentColor" stroke-width="3" />
+                  <path d="M14 58c0-9.941 8.059-18 18-18s18 8.059 18 18" stroke="currentColor" stroke-width="3"
+                    stroke-linecap="round" />
+                </svg>
+              </div>
+              <span class="stat-number">16 M+</span>
+              <span class="stat-label">Teens Reached</span>
+            </div>
+
+            <!-- TOM Clubs -->
+            <div class="stat-item">
+              <div class="stat-icon">
+                <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="32" cy="32" r="26" stroke="currentColor" stroke-width="3" />
+                  <ellipse cx="32" cy="32" rx="12" ry="26" stroke="currentColor" stroke-width="3" />
+                  <line x1="6" y1="32" x2="58" y2="32" stroke="currentColor" stroke-width="3" />
+                  <path d="M10 18c7 4 14 6 22 6s15-2 22-6" stroke="currentColor" stroke-width="3"
+                    stroke-linecap="round" />
+                  <path d="M10 46c7-4 14-6 22-6s15 2 22 6" stroke="currentColor" stroke-width="3"
+                    stroke-linecap="round" />
+                </svg>
+              </div>
+              <span class="stat-number">60 +</span>
+              <span class="stat-label">TOM Clubs</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Africa-shaped image collage -->
+      <div class="right-panel">
+        <div class="africa-shape-wrapper">
+          <div class="africa-clip">
+            <img src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=600&q=80"
+              alt="Young Africans smiling" />
+          </div>
+          <div class="quote-badge">"Give A Hand To Make The Better World"</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- BOTTOM STATS BAR -->
+    <div class="bottom-bar">
+
+      <!-- Workers Trained -->
+      <div class="bottom-stat">
+        <div class="bottom-icon">
+          <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="10" y="28" width="44" height="28" rx="4" stroke="currentColor" stroke-width="3" />
+            <path d="M22 28V20a10 10 0 0 1 20 0v8" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
+            <circle cx="32" cy="42" r="5" stroke="currentColor" stroke-width="3" />
+            <line x1="32" y1="47" x2="32" y2="52" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
+          </svg>
+        </div>
+        <div>
+          <div class="bottom-number">750,000 +</div>
+          <div class="bottom-label">Workers Trained</div>
+        </div>
+      </div>
+
+      <!-- Countries Worldwide -->
+      <div class="bottom-stat" style="padding-left: 48px;">
+        <div class="bottom-icon">
+          <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="32" cy="32" r="26" stroke="currentColor" stroke-width="3" />
+            <path d="M32 6v52M6 32h52" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
+            <path d="M12 16c6 3 12 5 20 5s14-2 20-5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+            <path d="M12 48c6-3 12-5 20-5s14 2 20 5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+            <ellipse cx="32" cy="32" rx="10" ry="26" stroke="currentColor" stroke-width="3" />
+          </svg>
+        </div>
+        <div>
+          <div class="bottom-number">Over 7</div>
+          <div class="bottom-label">Countries Worldwide</div>
+        </div>
+      </div>
+
+      <!-- Quote tag -->
+      <div class="bottom-quote">
+        <div class="green-tag">"Give A Hand To Make The Better World"</div>
+      </div>
+
+    </div>
+  </section>
+
+</body>
+
+</html>

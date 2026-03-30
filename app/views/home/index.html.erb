@@ -62,7 +62,7 @@
         <p class="text-gray-500 text-sm leading-relaxed mb-8 flex-grow">
           To share the gospel of Christ with teenagers of all Nations and disciple them unto maturity in the Christian faith.
         </p>
-        <a href="<%= about_path %>" class="inline-block text-leaf-50 text-xs font-bold py-3 px-8 uppercase tracking-wider transition-colors">
+        <a href="<%= about_path %>" class="inline-block text-dark text-xs font-bold py-3 px-8 uppercase tracking-wider transition-colors">
           Learn More
         </a>
       </div>
@@ -79,7 +79,7 @@
         <p class="text-gray-500 text-sm leading-relaxed mb-8 flex-grow">
           Is that through a flexible and dynamic fellowship devoid of denominational traditions such as the Teenagers’ Club...
         </p>
-         <a href="<%= about_path %>" class="inline-block text-leaf-50 text-xs font-bold py-3 px-8 uppercase tracking-wider transition-colors">
+         <a href="<%= about_path %>" class="inline-block text-dark text-xs font-bold py-3 px-8 uppercase tracking-wider transition-colors">
           Learn More
         </a>
       </div>
@@ -104,7 +104,7 @@
 
       <!-- Card 4: Image -->
       <div class="relative h-full min-h-[300px] lg:min-h-0">
-        <%= image_tag "/hero.jpg", class: "absolute inset-0 w-full h-full object-cover", alt: "Teenagers smiling" %>
+        <%= image_tag "section.png", class: "absolute inset-0 w-full h-full object-cover", alt: "Teenagers smiling" %>
         <!-- Overlay gradient if needed -->
         <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
       </div>
@@ -127,7 +127,7 @@
         <!-- Card 1: Outreach -->
         <div class="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group border border-gray-100">
           <div class="h-56 overflow-hidden">
-            <%= image_tag "/about_1.png", class: "w-full h-full object-cover group-hover:scale-105 transition-transform duration-500", alt: "Outreach programmes" %>
+            <%= image_tag "/outreach.png", class: "w-full h-full object-cover group-hover:scale-105 transition-transform duration-500", alt: "Outreach programmes" %>
           </div>
           <div class="p-6">
             <h3 class="text-lg font-bold text-gray-900 uppercase tracking-wide">Outreach</h3>
@@ -141,7 +141,7 @@
         <!-- Card 2: Training -->
         <div class="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group border border-gray-100">
           <div class="h-56 overflow-hidden">
-            <%= image_tag "/about_2.png", class: "w-full h-full object-cover group-hover:scale-105 transition-transform duration-500", alt: "Training programmes" %>
+            <%= image_tag "/training.png", class: "w-full h-full object-cover group-hover:scale-105 transition-transform duration-500", alt: "Training programmes" %>
           </div>
           <div class="p-6">
             <h3 class="text-lg font-bold text-gray-900 uppercase tracking-wide">Training</h3>
@@ -155,7 +155,7 @@
         <!-- Card 3: Discipleship -->
         <div class="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group border border-gray-100">
           <div class="h-56 overflow-hidden">
-            <%= image_tag "/about_3.png", class: "w-full h-full object-cover group-hover:scale-105 transition-transform duration-500", alt: "Discipleship programmes" %>
+            <%= image_tag "/discipleship.png", class: "w-full h-full object-cover group-hover:scale-105 transition-transform duration-500", alt: "Discipleship programmes" %>
           </div>
           <div class="p-6">
             <h3 class="text-lg font-bold text-gray-900 uppercase tracking-wide">Discipleship</h3>
@@ -168,6 +168,8 @@
       </div>
     </div>
   </div>
+
+  <%= render "home/funfacts_section" %>
 
   <!-- ═══════════════════════════════════════════════════ -->
   <!-- SECTION 4: UPCOMING EVENTS                         -->
