@@ -1,0 +1,184 @@
+/* ── VOLUNTEER & SCRIPTURE SECTION STYLES ────────────────────────── */
+:root {
+  --leaf-text: #16a34a;
+  /* leaf-600 */
+  --leaf-dark: #15803d;
+  /* leaf-700 */
+  --stone-white: #fafaf9;
+  /* stone-50 */
+  --leaf-divider: #dcfce7;
+  /* leaf-100 */
+}
+
+/* ── SECTION 1 — VOLUNTEER CTA ───────────────────────────── */
+.volunteer-section {
+  position: relative;
+  min-height: 440px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+}
+
+/* Background image with high contrast overlay */
+.volunteer-bg {
+  position: absolute;
+  inset: 0;
+  background-image: url('/bckgrnd.jpg');
+  background-size: cover;
+  background-position: center 30%;
+  filter: brightness(0.35);
+  z-index: 0;
+}
+
+.volunteer-section::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, transparent 30%, rgba(0, 0, 0, 0.4) 100%);
+  z-index: 1;
+}
+
+.volunteer-content {
+  position: relative;
+  z-index: 2;
+  padding: 80px 24px;
+  max-width: 720px;
+}
+
+.volunteer-content h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.2rem, 5vw, 3.2rem);
+  font-weight: 700;
+  color: white;
+  line-height: 1.15;
+  margin-bottom: 24px;
+  letter-spacing: -0.02em;
+}
+
+.volunteer-content p {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 1.05rem;
+  line-height: 1.7;
+  max-width: 540px;
+  margin: 0 auto 42px;
+}
+
+.btn-volunteer-join {
+  display: inline-block;
+  background: #16a34a;
+  color: white;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 18px 48px;
+  border-radius: 4px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 8px 24px rgba(22, 163, 74, 0.3);
+}
+
+.btn-volunteer-join:hover {
+  background: #15803d;
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(22, 163, 74, 0.45);
+}
+
+/* ── SECTION 2 — ANCHOR SCRIPTURE ────────────────────────── */
+.scripture-section {
+  background: white;
+  text-align: center;
+  padding: 100px 24px 110px;
+  position: relative;
+}
+
+.scripture-label {
+  font-family: 'Caveat', cursive;
+  color: #16a34a;
+  font-size: 1.3rem;
+  letter-spacing: 0.1em;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.scripture-ref {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.4rem, 6vw, 3.8rem);
+  font-weight: 700;
+  color: #171717;
+  /* neutral-900 */
+  line-height: 1;
+  margin-bottom: 32px;
+  letter-spacing: -0.03em;
+}
+
+.scripture-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 36px;
+}
+
+.scripture-divider span {
+  display: block;
+  height: 1.5px;
+  width: 80px;
+  background: #dcfce7;
+  /* leaf-100 */
+}
+
+.scripture-divider i {
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #16a34a;
+}
+
+.scripture-verse {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1.1rem;
+  color: #525252;
+  /* neutral-600 */
+  line-height: 1.8;
+  max-width: 600px;
+  margin: 0 auto;
+  font-style: italic;
+  font-weight: 400;
+}
+
+/* ── ENTRANCE ANIMATIONS ─────────────────────────────────── */
+/* Triggered when element enters viewport or on load */
+.fade-up-item {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.fade-up-item.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Fallback for users who don't have JS or if the class isn't added */
+@media (prefers-reduced-motion: reduce) {
+  .fade-up-item {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* ── RESPONSIVE ──────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .volunteer-content {
+    padding: 64px 20px;
+  }
+
+  .scripture-section {
+    padding: 80px 24px;
+  }
+}

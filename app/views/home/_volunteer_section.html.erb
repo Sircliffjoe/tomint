@@ -1,0 +1,71 @@
+<div class="volunteer-wrapper overflow-hidden">
+  <!-- ─── SECTION 1: VOLUNTEER CTA ─────────────────────── -->
+  <section class="volunteer-section">
+    <div class="volunteer-bg"></div>
+    <div class="volunteer-content">
+      <h2 class="fade-up-item transition-delay-100">Become A Proud Volunteer</h2>
+      <p class="fade-up-item transition-delay-200">
+        Join us in shaping lives—your time and passion can make
+        a lasting impact on teenagers.
+      </p>
+      <div class="fade-up-item transition-delay-300">
+        <%= link_to "Join Now", new_user_registration_path, class: "btn-volunteer-join" %>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── SECTION 2: ANCHOR SCRIPTURE ──────────────────── -->
+  <section class="scripture-section">
+    <div class="mx-auto max-w-4xl">
+      <span class="scripture-label fade-up-item transition-delay-100 uppercase tracking-widest">Anchor Scripture</span>
+      <h2 class="scripture-ref fade-up-item transition-delay-200">1 Timothy 4:12</h2>
+      
+      <div class="scripture-divider fade-up-item transition-delay-300">
+        <span></span><i></i><span></span>
+      </div>
+      
+      <div class="scripture-verse fade-up-item transition-delay-400">
+        <p>
+          "Let no one despise your youth, but be an example to the believers
+          in word, in conduct, in love, in spirit, in faith, in purity."
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<style>
+  .transition-delay-100 { transition-delay: 100ms !important; }
+  .transition-delay-200 { transition-delay: 200ms !important; }
+  .transition-delay-300 { transition-delay: 300ms !important; }
+  .transition-delay-400 { transition-delay: 400ms !important; }
+  .transition-delay-500 { transition-delay: 500ms !important; }
+</style>
+
+<script>
+  (function() {
+    function initFadeUp() {
+      const items = document.querySelectorAll('.fade-up-item');
+      if (!items.length) return;
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            // Once visible, we can stop observing this specific item
+            observer.unobserve(entry.target);
+          }
+        });
+      }, {
+        threshold: 0.15,
+        rootMargin: '0px 0px -50px 0px'
+      });
+
+      items.forEach(item => observer.observe(item));
+    }
+
+    // Initialize on both DOM load and Turbo load
+    initFadeUp();
+    document.addEventListener('turbo:load', initFadeUp);
+  })();
+</script>
