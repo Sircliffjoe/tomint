@@ -13,6 +13,24 @@
       <%= @training.description %>
     </div>
 
+    <div class="mt-10 rounded-2xl border border-green-100 bg-green-50 p-6">
+      <h2 class="text-2xl font-bold tracking-tight text-gray-900">Register for this training</h2>
+      <p class="mt-2 text-sm text-gray-600">You can register as a guest. No account is required.</p>
+
+      <%= form_with model: [@training, @training_registration], url: training_training_registrations_path(@training), class: "mt-5 grid gap-4" do |form| %>
+        <% if @training_registration.errors.any? %>
+          <div class="rounded-lg bg-red-50 p-3 text-sm text-red-700">
+            <%= @training_registration.errors.full_messages.to_sentence %>
+          </div>
+        <% end %>
+
+        <%= form.text_field :guest_name, placeholder: "Full name", class: "tom-input", aria: { label: "Full name" } %>
+        <%= form.email_field :guest_email, placeholder: "Email address", class: "tom-input", aria: { label: "Email address" } %>
+        <%= form.telephone_field :guest_phone, placeholder: "Phone number", class: "tom-input", aria: { label: "Phone number" } %>
+        <%= form.submit "Register for Training", class: "tom-btn tom-btn-primary", style: "border:0;cursor:pointer;" %>
+      <% end %>
+    </div>
+
     <h2 class="mt-16 text-2xl font-bold tracking-tight text-gray-900">Modules</h2>
     <div class="mt-6 bg-white shadow overflow-hidden sm:rounded-md">
       <ul role="list" class="divide-y divide-gray-200">

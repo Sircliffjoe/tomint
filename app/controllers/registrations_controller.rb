@@ -1,9 +1,18 @@
 class RegistrationsController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_user!, except: :create
   before_action :set_event
 
   def create
-    @registration = @event.registrations.find_or_initialize_by(user: current_user)
+    unless @event.registration_open?
+      redirect_to event_path(@event), alert: "Registration is closed for this event."
+      return
+    end
+
+    @registration = if user_signed_in?
+      @event.registrations.find_or_initialize_by(user: current_user)
+    else
+      @event.registrations.build(registration_params)
+    end
 
     if @registration.persisted?
       redirect_to event_registration_path(@event, @registration), notice: "You are already registered for this event."
@@ -21,17 +30,17 @@ class RegistrationsController < ApplicationController
       @registration.payment_reference = "PAY-#{SecureRandom.hex(8)}" # Placeholder
 
       if @registration.save
-        redirect_to event_registration_path(@event, @registration), notice: "Registration successful! (Payment simulated)"
+        redirect_after_registration("Registration successful! (Payment simulated)")
       else
-        redirect_to event_path(@event), alert: "Unable to register. Please try again."
+        render_registration_error
       end
     else
       # Free event
       @registration.status = :confirmed
       if @registration.save
-        redirect_to event_registration_path(@event, @registration), notice: "Successfully registered for #{@event.title}!"
+        redirect_after_registration("Successfully registered for #{@event.title}!")
       else
-        redirect_to event_path(@event), alert: "Unable to register. Please try again."
+        render_registration_error
       end
     end
   end
@@ -68,5 +77,25 @@ class RegistrationsController < ApplicationController
 
   def set_event
     @event = Event.find(params[:event_id])
+  end
+
+  def registration_params
+    params.fetch(:registration, {}).permit(:guest_name, :guest_email, :guest_phone)
+  end
+
+  def redirect_after_registration(message)
+    if user_signed_in?
+      redirect_to event_registration_path(@event, @registration), notice: message
+    else
+      redirect_to event_path(@event), notice: "#{message} Please check your email for follow-up details."
+    end
+  end
+
+  def render_registration_error
+    if user_signed_in?
+      redirect_to event_path(@event), alert: "Unable to register. Please try again."
+    else
+      render "events/show", status: :unprocessable_entity
+    end
   end
 end

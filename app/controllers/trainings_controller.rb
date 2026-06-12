@@ -1,9 +1,6 @@
 class TrainingsController < ApplicationController
-  layout :determine_layout
+  layout "public"
 
-  def determine_layout
-    (user_signed_in? && admin_area?) ? "application" : "public"
-  end
   def index
     @categories = Training.distinct.pluck(:category)
     @trainings_by_category = policy_scope(Training).all.group_by(&:category)
@@ -11,5 +8,10 @@ class TrainingsController < ApplicationController
 
   def show
     @training = Training.find(params[:id])
+    @training_registration = @training.training_registrations.build
+    if user_signed_in?
+      @training_registration.guest_name = current_user.full_name
+      @training_registration.guest_email = current_user.email
+    end
   end
 end

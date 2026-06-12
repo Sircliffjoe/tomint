@@ -1,58 +1,62 @@
-<header class="absolute inset-x-0 top-0 z-50">
-  <nav class="flex items-center justify-between p-6 lg:px-8 bg-leaf-950 shadow-sm" aria-label="Global">
+<header class="fixed inset-x-0 top-0 z-50 tom-site-header">
+  <nav class="mx-auto mt-3 flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8 tom-nav-glass" aria-label="Global">
     <div class="flex lg:flex-1">
       <a href="<%= root_path %>" class="-m-1.5 p-1.5">
-        <%= image_tag "logo-2.png", class: "h-10 w-18" %>
+        <%= image_tag "logo-2.png", class: "h-10 w-auto", alt: "TOM Int." %>
       </a>
     </div>
     <div class="flex lg:hidden">
-      <button type="button" id="mobile-menu-open" class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-white">
+      <button type="button" id="mobile-menu-open" class="-m-2.5 inline-flex items-center justify-center rounded-full p-2.5 text-white hover:bg-white/10">
         <span class="sr-only">Open main menu</span>
         <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
         </svg>
       </button>
     </div>
-    <div class="hidden lg:flex lg:gap-x-8">
-      <%= link_to "Home", root_path, class: "text-sm font-semibold leading-6 text-white hover:text-green-200 transition-colors" %>
-      <%= link_to "About", about_path, class: "text-sm font-semibold leading-6 text-white hover:text-green-200 transition-colors" %>
-      <%= link_to "Events", events_path, class: "text-sm font-semibold leading-6 text-white hover:text-green-200 transition-colors" %>
-      <%= link_to "Training", trainings_path, class: "text-sm font-semibold leading-6 text-white hover:text-green-200 transition-colors" %>
-      <%= link_to "Blog", blog_index_path, class: "text-sm font-semibold leading-6 text-white hover:text-green-200 transition-colors" %>
+    <div class="hidden lg:flex lg:gap-x-7">
+      <%= link_to "Home", root_path, class: "tom-nav-link" %>
+      <%= link_to "About", about_path, class: "tom-nav-link" %>
+      <%= link_to "Programmes", programmes_path, class: "tom-nav-link" %>
+      <%= link_to "Events", events_path, class: "tom-nav-link" %>
+      <%= link_to "Training", trainings_path, class: "tom-nav-link" %>
+      <%= link_to "Blog", blog_index_path, class: "tom-nav-link" %>
       <% if Page.exists?(slug: "contact") %>
-        <%= link_to "Contact", contact_path, class: "text-sm font-semibold leading-6 text-white hover:text-green-200 transition-colors" %>
+        <%= link_to "Contact", contact_path, class: "tom-nav-link" %>
       <% end %>
     </div>
-    <div class="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-x-4 items-center">
+    <div class="hidden lg:flex lg:flex-1 lg:justify-end items-center">
       <% if user_signed_in? %>
-        <%= link_to profile_path, class: "flex items-center gap-x-2 text-sm font-semibold leading-6 text-white hover:text-green-200" do %>
-          <% if current_user.avatar.attached? %>
-            <%= image_tag current_user.avatar, class: "h-8 w-8 rounded-full object-cover ring-2 ring-white/20" %>
-          <% else %>
-            <div class="h-8 w-8 rounded-full bg-green-500 flex items-center justify-center text-[10px] font-bold text-white">
-              <%= current_user.initials %>
-            </div>
-          <% end %>
-          <span>Profile</span>
-        <% end %>
-        <span class="text-green-800">|</span>
-        <%= link_to "Dashboard", dashboard_path, class: "text-sm font-semibold leading-6 text-white hover:text-green-200" %>
-        <span class="text-green-800">|</span>
-        <%= button_to "Log out", destroy_user_session_path, method: :delete, class: "text-sm font-semibold leading-6 text-white hover:text-green-200 bg-transparent border-0 cursor-pointer" %>
+        <div class="tom-account-menu" data-account-menu>
+          <button type="button" class="tom-account-trigger" data-account-menu-trigger aria-haspopup="true" aria-expanded="false" aria-label="Open account menu">
+            <% if current_user.avatar.attached? %>
+              <%= image_tag current_user.avatar, class: "tom-account-avatar", alt: current_user.full_name.presence || "User avatar" %>
+            <% else %>
+              <span class="tom-account-avatar tom-account-avatar-fallback" aria-hidden="true"><%= current_user.initials %></span>
+            <% end %>
+          </button>
+
+          <%= link_to "Donate", new_donation_path, class: "tom-btn tom-btn-light" %>
+
+          <div class="tom-account-dropdown" data-account-menu-panel hidden>
+            <%= link_to "Dashboard", dashboard_path, class: "tom-account-dropdown-link" %>
+            <%= link_to "Profile", profile_path, class: "tom-account-dropdown-link" %>
+            <%= button_to "Logout", destroy_user_session_path, method: :delete, form_class: "tom-account-dropdown-form", class: "tom-account-dropdown-link tom-account-dropdown-button" %>
+          </div>
+        </div>
       <% else %>
-        <%= link_to "Log in", new_user_session_path, class: "text-sm font-semibold leading-6 text-white hover:text-green-200" %>
-        <%= link_to "Donate", new_donation_path, class: "rounded-full bg-white px-4 py-2 text-sm font-semibold text-leaf-900 shadow-sm hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white transition-all font-medium" %>
+        <%= link_to "Log in", new_user_session_path, class: "tom-nav-link mr-2" %>
+        <%= link_to "Donate", new_donation_path, class: "tom-btn tom-btn-light" %>
       <% end %>
     </div>
   </nav>
 
   <!-- Mobile menu panel -->
   <div id="mobile-menu-panel" class="lg:hidden fixed inset-0 z-50" style="display:none;">
-    <div id="mobile-menu-backdrop" class="fixed inset-0 bg-black/40"></div>
-    <div class="fixed inset-y-0 right-0 w-full max-w-sm bg-leaf-950 px-6 py-6 overflow-y-auto shadow-xl">
+    <div id="mobile-menu-backdrop" class="fixed inset-0 bg-black/40 backdrop-blur-sm"></div>
+    <div class="fixed inset-y-0 right-0 w-full max-w-sm bg-leaf-950/95 px-6 py-6 overflow-y-auto shadow-xl backdrop-blur-xl">
       <div class="flex items-center justify-between mb-8">
         <a href="<%= root_path %>" class="-m-1.5 p-1.5">
-          <%= image_tag "logo-2.png", class: "h-10 w-18" %>
+          <%= image_tag "logo-2.png", class: "h-10 w-auto", alt: "TOM Int." %>
         </a>
         <button type="button" id="mobile-menu-close" class="-m-2.5 rounded-md p-2.5 text-white">
           <span class="sr-only">Close menu</span>
@@ -62,19 +66,21 @@
         </button>
       </div>
       <div class="space-y-1">
-        <%= link_to "Home", root_path, class: "block rounded-lg px-3 py-3 text-base font-semibold text-white hover:bg-white/10" %>
-        <%= link_to "About", about_path, class: "block rounded-lg px-3 py-3 text-base font-semibold text-white hover:bg-white/10" %>
-        <%= link_to "Events", events_path, class: "block rounded-lg px-3 py-3 text-base font-semibold text-white hover:bg-white/10" %>
-        <%= link_to "Training", trainings_path, class: "block rounded-lg px-3 py-3 text-base font-semibold text-white hover:bg-white/10" %>
-        <%= link_to "Blog", blog_index_path, class: "block rounded-lg px-3 py-3 text-base font-semibold text-white hover:bg-white/10" %>
+        <%= link_to "Home", root_path, class: "block rounded-full px-4 py-3 text-base font-semibold text-white hover:bg-white/10" %>
+        <%= link_to "About", about_path, class: "block rounded-full px-4 py-3 text-base font-semibold text-white hover:bg-white/10" %>
+        <%= link_to "Programmes", programmes_path, class: "block rounded-full px-4 py-3 text-base font-semibold text-white hover:bg-white/10" %>
+        <%= link_to "Events", events_path, class: "block rounded-full px-4 py-3 text-base font-semibold text-white hover:bg-white/10" %>
+        <%= link_to "Training", trainings_path, class: "block rounded-full px-4 py-3 text-base font-semibold text-white hover:bg-white/10" %>
+        <%= link_to "Blog", blog_index_path, class: "block rounded-full px-4 py-3 text-base font-semibold text-white hover:bg-white/10" %>
         <% if Page.exists?(slug: "contact") %>
-          <%= link_to "Contact", contact_path, class: "block rounded-lg px-3 py-3 text-base font-semibold text-white hover:bg-white/10" %>
+          <%= link_to "Contact", contact_path, class: "block rounded-full px-4 py-3 text-base font-semibold text-white hover:bg-white/10" %>
         <% end %>
       </div>
       <div class="mt-8 pt-6 border-t border-white/20 space-y-3">
         <% if user_signed_in? %>
           <%= link_to "Dashboard", dashboard_path, class: "block rounded-lg px-3 py-3 text-base font-semibold text-white hover:bg-white/10" %>
-          <%= button_to "Log out", destroy_user_session_path, method: :delete, class: "w-full text-left rounded-lg px-3 py-3 text-base font-semibold text-white hover:bg-white/10 bg-transparent border-0 cursor-pointer" %>
+          <%= link_to "Profile", profile_path, class: "block rounded-lg px-3 py-3 text-base font-semibold text-white hover:bg-white/10" %>
+          <%= button_to "Logout", destroy_user_session_path, method: :delete, class: "w-full text-left rounded-lg px-3 py-3 text-base font-semibold text-white hover:bg-white/10 bg-transparent border-0 cursor-pointer" %>
         <% else %>
           <%= link_to "Log in", new_user_session_path, class: "block rounded-lg px-3 py-3 text-base font-semibold text-white hover:bg-white/10" %>
           <%= link_to "Donate", new_donation_path, class: "block text-center rounded-full bg-white px-4 py-3 text-sm font-semibold text-leaf-900 shadow-sm hover:bg-gray-100 mt-4" %>
@@ -92,10 +98,44 @@
       var panel = document.getElementById('mobile-menu-panel');
       var backdrop = document.getElementById('mobile-menu-backdrop');
       if (!openBtn || !panel) return;
+      if (openBtn.dataset.menuBound) return;
+      openBtn.dataset.menuBound = '1';
       openBtn.addEventListener('click', function() { panel.style.display = ''; });
       if (closeBtn) closeBtn.addEventListener('click', function() { panel.style.display = 'none'; });
       if (backdrop) backdrop.addEventListener('click', function() { panel.style.display = 'none'; });
+
+      document.querySelectorAll('[data-account-menu]').forEach(function(menu) {
+        var trigger = menu.querySelector('[data-account-menu-trigger]');
+        var accountPanel = menu.querySelector('[data-account-menu-panel]');
+        if (!trigger || !accountPanel || trigger.dataset.accountMenuBound) return;
+        trigger.dataset.accountMenuBound = '1';
+
+        function closeMenu() {
+          accountPanel.hidden = true;
+          trigger.setAttribute('aria-expanded', 'false');
+        }
+
+        trigger.addEventListener('click', function(event) {
+          event.stopPropagation();
+          var willOpen = accountPanel.hidden;
+          document.querySelectorAll('[data-account-menu-panel]').forEach(function(otherPanel) {
+            otherPanel.hidden = true;
+          });
+          accountPanel.hidden = !willOpen;
+          trigger.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+        });
+
+        accountPanel.addEventListener('click', function(event) {
+          event.stopPropagation();
+        });
+
+        document.addEventListener('click', closeMenu);
+        document.addEventListener('keydown', function(event) {
+          if (event.key === 'Escape') closeMenu();
+        });
+      });
     }
     if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); } else { init(); }
+    document.addEventListener('turbo:load', init);
   })();
 </script>

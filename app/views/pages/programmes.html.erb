@@ -1,0 +1,145 @@
+<% content_for :title, "Programmes" %>
+
+<section class="tom-page-hero">
+  <div class="tom-container">
+    <div class="tom-page-panel" data-reveal>
+      <span class="tom-eyebrow" style="color:var(--tom-yellow);">Home / Programmes</span>
+      <h1>Our Programmes</h1>
+      <p style="margin-top:1rem;line-height:1.75;">
+        TOM fulfils its vision through three major strategies: Outreach, Discipleship, and Training.
+        Together, they help teenagers hear the gospel, grow into maturity, and receive support from equipped workers.
+      </p>
+      <%= link_to "Explore Programmes", "#outreach", class: "tom-btn tom-btn-primary", style: "margin-top:1.2rem;" %>
+    </div>
+  </div>
+</section>
+
+<section class="tom-section tom-divided-section">
+  <div class="tom-container">
+    <div class="tom-section-ribbon" data-reveal>
+      <span>Three Strategies</span>
+    </div>
+    <div class="tom-section-title" data-reveal>
+      <div>
+        <span class="tom-eyebrow">Programme Pillars</span>
+        <h2>Reaching teenagers where they are, then walking with them.</h2>
+      </div>
+      <p>Each programme pillar is practical, relational, and focused on transforming today's teenager into tomorrow's Christ-centered adult.</p>
+    </div>
+
+    <div class="tom-programme-feature-grid">
+      <% [
+        ["Outreach", "Share the gospel through Teenagers' Clubs, vacation camps, school seminars, and community engagement.", "#outreach", "WhatsApp-Image-2025-04-26-at-3.23.07-AM.jpeg", "var(--tom-teal)"],
+        ["Discipleship", "Guide teenagers toward Christ-centred maturity through Bible teaching, retreats, missions exposure, and fellowship.", "#discipleship", "Slider-new4.png", "var(--tom-purple)"],
+        ["Training", "Equip volunteers, leaders, parents, teachers, and youth workers to serve teenagers with skill and conviction.", "#training", "TOM-Kwali-Bible-Reading4-scaled-1.jpg", "var(--tom-yellow)"]
+      ].each do |title, text, path, image, accent| %>
+        <%= link_to path, class: "tom-programme-feature-card", style: "--accent:#{accent};", data: { reveal: true } do %>
+          <%= image_tag image, alt: "#{title} programme", loading: "lazy" %>
+          <div>
+            <small>Programme</small>
+            <h3><%= title %></h3>
+            <p><%= text %></p>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<section id="outreach" class="tom-feature-band tom-divided-section">
+  <div class="tom-container tom-feature-split">
+    <div class="tom-section-ribbon" data-reveal>
+      <span>Outreach</span>
+    </div>
+    <div class="tom-copy" data-reveal>
+      <span class="tom-eyebrow">Outreach Programmes</span>
+      <h2>Sharing the gospel with teenagers in their everyday environments.</h2>
+      <p>Outreach programmes are designed primarily to share the gospel with teenagers through flexible, lively, and accessible ministry expressions.</p>
+      <p>These include Teenagers' Clubs, vacation camps, school seminars, and reformatory-home ministry initiatives.</p>
+      <%= link_to "View Events", events_path, class: "tom-btn tom-btn-primary", style: "margin-top:1rem;" %>
+    </div>
+    <div class="tom-media" data-reveal>
+      <%= image_tag "WhatsApp-Image-2025-04-26-at-3.22.54-AM.jpeg", alt: "Teenagers outreach gathering", loading: "lazy" %>
+    </div>
+  </div>
+</section>
+
+<section id="discipleship" class="tom-section tom-soft-section tom-divided-section">
+  <div class="tom-container">
+    <div class="tom-section-ribbon" data-reveal>
+      <span>Discipleship</span>
+    </div>
+    <div class="tom-section-title" data-reveal>
+      <div>
+        <span class="tom-eyebrow">Discipleship Programmes</span>
+        <h2>Helping teens become Christ-centred and balanced adults.</h2>
+      </div>
+      <p>Discipleship keeps teenagers growing beyond attendance into maturity, character, service, and a living Christian faith.</p>
+    </div>
+
+    <div class="tom-resource-grid tom-programme-grid">
+      <% [
+        ["Bible Teaching", "Bible teachings, discussions, and occasional retreats through clubs.", "var(--tom-teal)"],
+        ["Bible Institute", "Teenagers' Bible Institute programmes run from time to time.", "var(--tom-yellow)"],
+        ["Missions Exposure", "Exposure to missions and social work projects that build responsibility.", "var(--tom-purple)"],
+        ["Social Fellowship", "Games, outreach parties, picnics, Christmas dinners, and healthy community.", "var(--tom-blue)"],
+        ["The TomMAG", "A quarterly magazine through which TOM ministers to teenagers.", "var(--tom-green-700)"],
+        ["Retreats", "Focused environments for reflection, teaching, prayer, and spiritual growth.", "var(--tom-orange)"]
+      ].each do |title, text, accent| %>
+        <article class="tom-resource-card" style="--accent:<%= accent %>;" data-reveal>
+          <small>Discipleship</small>
+          <h3><%= title %></h3>
+          <p style="margin-top:.75rem;color:var(--tom-muted);line-height:1.55;"><%= text %></p>
+        </article>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<section id="training" class="tom-dark-feature">
+  <div class="tom-container tom-training-layout">
+    <div class="tom-copy" data-reveal>
+      <span class="tom-eyebrow" style="color:var(--tom-yellow);">Training Programme</span>
+      <h2 style="color:white;">No one can do well what he or she has not been trained to do.</h2>
+      <p>TOM holds regular training for full-time and volunteer staff, youth workers, parents, teachers, club leaders, and ministry partners.</p>
+      <%= link_to "View Trainings", trainings_path, class: "tom-btn tom-btn-light", style: "margin-top:1rem;" %>
+    </div>
+    <div class="tom-training-collage" data-reveal>
+      <%= image_tag "TOM-Kwali-Bible-Reading4-scaled-1.jpg", alt: "Training session", loading: "lazy", class: "is-tilt-left" %>
+      <%= image_tag "Slider-new3.png", alt: "Outdoor ministry training", loading: "lazy", class: "is-tilt-right" %>
+      <%= image_tag "WhatsApp-Image-2025-04-26-at-3.23.18-AM.jpeg", alt: "Teen workers training", loading: "lazy", class: "is-tilt-soft" %>
+    </div>
+  </div>
+</section>
+
+<section class="tom-section bg-white tom-divided-section">
+  <div class="tom-container">
+    <div class="tom-section-ribbon" data-reveal>
+      <span>Training Paths</span>
+    </div>
+    <div class="tom-resource-grid tom-programme-grid">
+      <% [
+        ["Workers Convention", "Experienced teen workers and ministers equip and challenge teenagers' workers.", "var(--tom-teal)"],
+        ["Certificate Course", "A course in Teenagers' Ministry for club leaders, youth pastors, parents, and workers.", "var(--tom-yellow)"],
+        ["Teen Handlers' Seminar", "A six-hour seminar to sharpen the skills of teenagers' workers.", "var(--tom-purple)"],
+        ["Parents Seminar", "Teaching and resources that strengthen parent-teen relationships.", "var(--tom-orange)"],
+        ["Teachers Seminar", "Equipping Christian secondary school teachers for lasting impact.", "var(--tom-blue)"],
+        ["Staff Training", "Regular equipping for full-time staff and volunteer teams.", "var(--tom-green-700)"]
+      ].each do |title, text, accent| %>
+        <article class="tom-resource-card" style="--accent:<%= accent %>;" data-reveal>
+          <small>Training</small>
+          <h3><%= title %></h3>
+          <p style="margin-top:.75rem;color:var(--tom-muted);line-height:1.55;"><%= text %></p>
+        </article>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<section class="tom-band" style="padding-block:4rem;text-align:center;">
+  <div class="tom-container" data-reveal>
+    <p style="color:rgba(255,255,255,.82);font-weight:800;">Teenagers' Outreach Ministries International</p>
+    <h2 style="color:white;margin-top:.5rem;">This generation of teenagers must be reached for Christ.</h2>
+    <%= link_to "Partner With Us", new_donation_path, class: "tom-btn tom-btn-primary", style: "margin-top:1.25rem;" %>
+  </div>
+</section>

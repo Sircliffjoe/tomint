@@ -3,6 +3,9 @@ class PagesController < ApplicationController
   def about
   end
 
+  def programmes
+  end
+
   def show
     @page = Page.find_by!(slug: params[:slug])
   rescue ActiveRecord::RecordNotFound

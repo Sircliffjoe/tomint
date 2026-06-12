@@ -61,11 +61,12 @@ Rails.application.routes.draw do
   end
 
   resources :trainings, only: [ :index, :show ] do
+    resources :training_registrations, only: [ :create ], path: "registrations"
     resources :training_sessions, only: [ :show ], path: "sessions"
   end
 
   resources :events, only: [ :index, :show ] do
-    resources :registrations, only: [ :create, :destroy ]
+    resources :registrations, only: [ :create, :show, :destroy ]
   end
 
   # Health check
@@ -73,9 +74,11 @@ Rails.application.routes.draw do
 
   # Public pages
   root "home#index"
+  get "search", to: "home#search", as: :search
 
   # CMS Pages with named routes to maintain helpers
   get "about", to: "pages#about"
+  get "programmes", to: "pages#programmes", as: :programmes
   get "contact", to: "pages#show", defaults: { slug: "contact" }, as: :contact
   get "privacy", to: "pages#show", defaults: { slug: "privacy" }, as: :privacy
   get "terms", to: "pages#show", defaults: { slug: "terms" }, as: :terms

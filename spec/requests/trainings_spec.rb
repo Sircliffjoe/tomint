@@ -1,18 +1,44 @@
 require 'rails_helper'
 
 RSpec.describe "Trainings", type: :request do
-  describe "GET /index" do
+  include Devise::Test::IntegrationHelpers
+
+  describe "GET /trainings" do
     it "returns http success" do
-      get "/trainings/index"
+      get trainings_path
+
       expect(response).to have_http_status(:success)
+    end
+
+    it "uses the public layout when a user is signed in" do
+      user = User.create!(
+        first_name: "Signed",
+        last_name: "User",
+        email: "signed-trainings@example.com",
+        password: "password"
+      )
+
+      sign_in user
+      get trainings_path
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include("tom-public")
+      expect(response.body).to include("tom-site-header")
+      expect(response.body).to include("Training Resources")
     end
   end
 
-  describe "GET /show" do
+  describe "GET /trainings/:id" do
     it "returns http success" do
-      get "/trainings/show"
+      training = Training.create!(
+        title: "Foundations of Leadership",
+        category: "Leadership",
+        description: "Worker formation"
+      )
+
+      get training_path(training)
+
       expect(response).to have_http_status(:success)
     end
   end
-
 end

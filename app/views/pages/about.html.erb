@@ -1,133 +1,280 @@
 <% content_for :title, "About TOM" %>
 
-<div class="bg-white">
-  <!-- Hero Section (Retained as requested) -->
-  <div class="relative overflow-hidden" style="padding-top: 180px; padding-bottom: 80px;">
-    <div class="mx-auto max-w-7xl px-6 lg:px-8">
-      <div class="grid grid-cols-1 gap-y-12 lg:grid-cols-2 lg:gap-x-12 lg:items-center">
-        <!-- Left Content -->
-        <div class="max-w-2xl lg:max-w-none">
-          <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl leading-tight">
-            Raising Leaders, <br>
-            <span class="text-leaf-600">Impacting Generations.</span>
-          </h1>
-          <p class="mt-6 text-lg leading-7 text-gray-600">
-            For over three decades, teenagers involved with TOM Int. represent a generation of young people who are vibrant, articulate, and poised to take their world for Christ. We are more than a ministry; we are a movement.
-          </p>
-          <div class="mt-8 flex gap-x-4">
-             <a href="#history" class="rounded-full bg-leaf-600 px-6 py-3 text-sm font-semibold text-white shadow-md hover:bg-leaf-500 hover:shadow-lg transition-all">
-              Our Story
-            </a>
+<section class="tom-page-hero">
+  <div class="tom-container">
+    <div class="tom-page-panel" data-reveal>
+      <span class="tom-eyebrow" style="color:var(--tom-yellow);">Home / About</span>
+      <h1>Who We Are</h1>
+      <p style="margin-top:1rem;line-height:1.75;">
+        Teenagers’ Outreach Ministries (TOM) Inc. is a faith-based, interdenominational, and non-sectarian organization committed to reaching, discipling, and empowering teenagers to live out their faith boldly.
+      </p>
+      <%= link_to "Our Story", "#history", class: "tom-btn tom-btn-primary", style: "margin-top:1.2rem;" %>
+    </div>
+  </div>
+</section>
+
+<section id="history" class="tom-feature-band tom-divided-section">
+  <div class="tom-container tom-feature-split">
+    <div class="tom-section-ribbon" data-reveal>
+      <span>Our Story</span>
+    </div>
+    <div class="tom-copy" data-reveal>
+      <span class="tom-eyebrow">Established 1992</span>
+      <h2>Our History</h2>
+      <p>Founded on July 1, 1992, by Ihezie O. U. Imo and other passionate 
+      Christians, TOM was birthed from a deep burden for teenagers facing 
+      increasing societal pressures. With our international headquarters in 
+      Kwali, FCT, Abuja, Nigeria, we have expanded our impact across 24+ 
+      states in Nigeria and beyond.</p>
+
+      <span class="tom-eyebrow mt-4">Our Vision</span>
+      <p>To share the gospel of Christ with teenagers of all nations and 
+      disciple them to maturity in the Christian faith.</p>
+
+      <span class="tom-eyebrow mt-4">Our Conviction</span>
+      <p>Through a flexible, dynamic fellowship like the Teenagers’ Club, free 
+      from denominational traditions, we equip today’s teenagers to stand firm 
+      against negative societal pressures and be exemplary Christians — just 
+      as <strong>1 Timothy 4:12</strong> encourages:</p>
+      <i>"Let no one despise your youth, but be an example to the believers in word, in conduct, in love, in spirit, in faith, in purity."</i>
+    </div>
+    <div class="tom-media" data-reveal>
+      <%= image_tag "Slider-new2-scaled.png", alt: "Teen ministry fellowship moment", loading: "lazy" %>
+    </div>
+  </div>
+</section>
+
+<section class="tom-section tom-soft-section tom-divided-section">
+  <div class="tom-container">
+    <div class="tom-section-ribbon" data-reveal>
+      <span>Milestones</span>
+    </div>
+    <div class="tom-resource-grid">
+      <% [
+        ["1992", "Teenagers' Outreach Ministries International began.", "var(--tom-orange)"],
+        ["Today", "A multi-national ministry affecting thousands of lives across the continent.", "var(--tom-teal)"],
+        ["Future", "Teenagers leading revivals, transforming their communities, and standing as pillars of truth.", "var(--tom-purple)"],
+        ["Vision", "To share the gospel of Christ with teenagers of all Nations and disciple them unto maturity in the Christian faith.", "var(--tom-yellow)"]
+      ].each do |title, text, accent| %>
+        <article class="tom-resource-card" style="--accent:<%= accent %>;" data-reveal>
+          <small>Milestone</small>
+          <h3><%= title %></h3>
+          <p style="margin-top:.75rem;color:var(--tom-muted);line-height:1.55;"><%= text %></p>
+        </article>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<section class="tom-feature-band tom-divided-section">
+  <div class="tom-container tom-feature-split is-reverse">
+    <div class="tom-section-ribbon" data-reveal>
+      <span>Our Purpose</span>
+    </div>
+    <div class="tom-media" data-reveal>
+      <%= image_tag "WhatsApp-Image-2025-04-26-at-3.23.07-AM.jpeg", alt: "Our Mission", loading: "lazy" %>
+    </div>
+    <div class="tom-copy" data-reveal>
+      <span class="tom-eyebrow">Our Purpose</span>
+      <h2>Our Mission</h2>
+      <p>Our mission is clear: to reach out to teenagers everywhere with the gospel of our Lord Jesus Christ.</p>
+      <p><strong>Evangelism:</strong> Sharing the life-transforming message of Jesus.</p>
+      <p><strong>Discipleship:</strong> Guiding them unto maturity in the faith.</p>
+      <p><strong>Responsibility:</strong> Raising adults who impact their generation.</p>
+    </div>
+  </div>
+</section>
+
+<section class="tom-dark-feature">
+  <div class="tom-container tom-feature-split">
+    <div class="tom-copy" data-reveal>
+      <span class="tom-eyebrow" style="color:var(--tom-yellow);">Future Focus</span>
+      <h2 style="color:white;">Our Vision</h2>
+      <p>We envision a world where teenagers are leading revivals, transforming their communities, and standing as pillars of truth in every sector of society.</p>
+      <p>Our vision is to raise leaders who do not just survive the challenges of the modern world but thrive and impact generations to come.</p>
+    </div>
+    <div class="tom-card" style="padding:1.2rem;background:rgba(255,255,255,.92);" data-reveal>
+      <%= image_tag "WhatsApp-Image-2025-04-26-at-3.23.18-AM.jpeg", alt: "Future Vision", loading: "lazy", style: "width:100%;height:270px;object-fit:cover;border-radius:8px;" %>
+    </div>
+  </div>
+</section>
+
+<section class="tom-section tom-divided-section">
+  <div class="tom-container">
+    <div class="tom-section-ribbon" data-reveal>
+      <span>Programmes</span>
+    </div>
+    <div class="tom-section-title" data-reveal>
+      <div>
+        <span class="tom-eyebrow">Our Programmes</span>
+        <h2>Outreach. Discipleship. Training.</h2>
+      </div>
+      <p>Three major strategies help TOM reach teenagers, mature them in Christ, and equip the adults who serve them.</p>
+    </div>
+
+    <div class="tom-programme-feature-grid">
+      <% [
+        ["Outreach", "Designed primarily to share the gospel with teenagers through clubs, camps, school seminars, and community engagement.", programmes_path(anchor: "outreach"), "WhatsApp-Image-2025-04-26-at-3.23.07-AM.jpeg", "var(--tom-teal)"],
+        ["Discipleship", "Programmes that help teenagers become Christ centred and balanced adults through Bible teaching, retreats, missions, and fellowship.", programmes_path(anchor: "discipleship"), "Slider-new4.png", "var(--tom-purple)"],
+        ["Training", "Regular training for full-time staff, volunteers, youth workers, parents, teachers, and club leaders.", programmes_path(anchor: "training"), "TOM-Kwali-Bible-Reading4-scaled-1.jpg", "var(--tom-yellow)"]
+      ].each do |title, text, path, image, accent| %>
+        <%= link_to path, class: "tom-programme-feature-card", style: "--accent:#{accent};", data: { reveal: true } do %>
+          <%= image_tag image, alt: "#{title} programme", loading: "lazy" %>
+          <div>
+            <small>A TOM Programme</small>
+            <h3><%= title %></h3>
+            <p><%= text %></p>
           </div>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<section id="leadership" class="tom-section tom-divided-section">
+  <div class="tom-container">
+    <div class="tom-section-ribbon" data-reveal>
+      <span>Leadership</span>
+    </div>
+    <div class="tom-section-title" data-reveal>
+      <div>
+        <span class="tom-eyebrow">Leadership</span>
+        <h2>People serving teenagers with conviction.</h2>
+      </div>
+      <p>A committed team helping TOM reach, disciple, and equip teenagers across communities.</p>
+    </div>
+
+    <% team_members = [
+      ["Ihezie O. U. Imo", "International President", "team/Ihezie O. U. Imo - International President.png", "Provides spiritual and strategic leadership for TOM, keeping the ministry aligned with its vision to reach and disciple teenagers across nations.", "Vision, national direction, mentorship, ministry partnerships", true],
+      ["Onochie Ukeme", "Assistant National Director", "team/Onochie Ukeme - Assistant National Director.png", "Supports the International President in coordinating leaders, strengthening communication, and ensuring ministry priorities move with clarity.", "Executive coordination, pastoral support, leadership follow-up", false],
+      ["Uche John Chukwu", "Director of Administration", "team/Uche John Chukwu - Director of Administration.png", "Oversees administrative structures that keep TOM organized, accountable, and responsive across chapters and ministry teams.", "Operations, documentation, planning, chapter records", false],
+      ["Mike Kalu", "Director of Finance", "team/Mike Kalu - Director of Finance.png", "Guides financial stewardship, reporting, and resource planning so the ministry can serve teenagers with transparency and sustainability.", "Finance systems, donations, budgets, reporting", false],
+      ["Adi Iche-Okoro Aduche", "Media Director", "team/Adi Iche-Okoro Aduche - Media Director.png", "Leads storytelling and communications that share testimonies, programme updates, and ministry resources with clarity and excellence.", "Media, publications, digital platforms, creative direction", false],
+      ["Emmanuel Ayogbemi", "Director of Mobilization", "team/Emmanuel Ayogbemi - Director of Mobilization.png", "Builds volunteer energy and helps mobilize people, churches, and communities around TOM's mission to reach teenagers.", "Volunteer mobilisation, chapter growth, field engagement", false],
+      ["Abel Evuakpo", "Director of Outreaches", "team/Abel Evuakpo - Director of Outreaches.png", "Coordinates outreach programmes that bring the gospel to teenagers through clubs, camps, schools, and community expressions.", "Teenagers' Clubs, camps, school seminars, community outreach", false],
+      ["Lydia Yakubu", "Director of Welfare", "team/Lydia Yakubu - Director of Welfare.png", "Helps care for the wellbeing of ministry teams and teenagers through thoughtful welfare support and people-centred coordination.", "Welfare support, care coordination, team wellbeing", false],
+      ["Olusegun Oke", "Prayer Director", "team/Olusegun Oke - Prayer Director.png", "Leads prayer covering for the ministry, workers, teenagers, and programmes across TOM's fields of impact.", "Prayer networks, intercession, spiritual support", false],
+      ["Goodluck Ikenyiri", "Building & Projects Director", "team/Goodluck Ikenyiri - Building & Projects Director.png", "Coordinates building efforts, special initiatives, and project execution that support TOM's long-term ministry growth.", "Projects, facilities, missions support, ministry initiatives", false],
+      ["Gbenga Abodurin", "Training Director", "team/Gbenga Abodurin - Training Director.png", "Develops training pathways that equip workers, parents, teachers, and youth leaders for effective teenagers' ministry.", "Training, curriculum, worker development, discipleship systems", false]
+    ] %>
+
+    <% president = team_members.find { |member| member.last } %>
+    <% other_team_members = team_members.reject { |member| member.last } %>
+
+    <% if president %>
+      <% name, title, image, bio, focus, = president %>
+      <% modal_id = "team-#{name.parameterize}" %>
+      <%= link_to "##{modal_id}", class: "tom-team-card tom-team-feature-card", data: { reveal: true } do %>
+        <%= image_tag image, alt: name, loading: "lazy" %>
+        <div>
+          <span class="tom-eyebrow">International Leadership</span>
+          <h3><%= name %></h3>
+          <p class="tom-team-card-title"><%= title %></p>
+          <p style="margin-top:.85rem;color:var(--tom-muted);line-height:1.65;"><%= bio %></p>
+          <span class="tom-team-card-action">View details</span>
         </div>
-        
-        <!-- Right Image Grid -->
-        <div class="relative lg:-mr-16">
-            <div class="grid grid-cols-2 gap-4">
-                <div class="relative rounded-xl bg-gray-100 overflow-hidden shadow-lg">
-                    <%= image_tag "/about_1.png", class: "w-full h-56 object-cover hover:scale-105 transition-transform duration-500", alt: "Youth Worship" %>
-                </div>
-                <div class="relative rounded-xl bg-gray-100 overflow-hidden shadow-lg">
-                    <%= image_tag "/about_2.png", class: "w-full h-56 object-cover hover:scale-105 transition-transform duration-500", alt: "Mentoring Students" %>
-                </div>
-                <div class="col-span-2 relative rounded-xl bg-gray-100 overflow-hidden shadow-lg">
-                    <%= image_tag "/about_3.png", class: "w-full h-40 object-cover hover:scale-105 transition-transform duration-500", alt: "Community Outreach" %>
-                </div>
+      <% end %>
+    <% end %>
+
+    <div class="tom-team-grid">
+      <% other_team_members.each do |name, title, image, bio, focus, _featured| %>
+        <% modal_id = "team-#{name.parameterize}" %>
+        <%= link_to "##{modal_id}", class: "tom-team-card", data: { reveal: true } do %>
+          <%= image_tag image, alt: name, loading: "lazy" %>
+          <div>
+            <h3><%= name %></h3>
+            <p class="tom-team-card-title"><%= title %></p>
+            <p style="margin-top:.55rem;color:var(--tom-muted);line-height:1.55;"><%= bio.truncate(86) %></p>
+            <span class="tom-team-card-action">View details</span>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+
+    <% team_members.each do |name, title, image, bio, focus, _featured| %>
+      <% modal_id = "team-#{name.parameterize}" %>
+      <div id="<%= modal_id %>" class="tom-team-popup" aria-labelledby="<%= modal_id %>-name">
+        <%= link_to "", "#leadership", class: "tom-team-popup-backdrop", aria: { label: "Close team member details" } %>
+        <div class="tom-team-modal-layout tom-team-popup-panel" role="dialog" aria-modal="true">
+          <%= link_to "&times;".html_safe, "#leadership", class: "tom-team-modal-close", aria: { label: "Close team member details" } %>
+          <%= image_tag image, alt: name, loading: "lazy" %>
+          <div>
+            <span class="tom-eyebrow">Leadership</span>
+            <h3 id="<%= modal_id %>-name"><%= name %></h3>
+            <p class="tom-team-modal-role"><%= title %></p>
+            <p class="tom-team-modal-bio"><%= bio %></p>
+            <div class="tom-team-modal-focus">
+              <strong>Focus Areas</strong>
+              <p><%= focus %></p>
             </div>
-             <!-- Soft decorative blobs -->
-            <div class="absolute -top-12 -right-12 -z-10 w-64 h-64 bg-yellow-50 rounded-full blur-3xl opacity-60"></div>
-            <div class="absolute -bottom-12 -left-12 -z-10 w-64 h-64 bg-green-50 rounded-full blur-3xl opacity-60"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Section 1: History (Text Left, Image Right) -->
-  <div id="history" class="overflow-hidden bg-white py-24 sm:py-32">
-    <div class="mx-auto max-w-7xl px-6 lg:px-8">
-      <div class="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-2">
-        <div class="lg:pr-8 lg:pt-4">
-          <div class="lg:max-w-lg">
-            <h2 class="text-base font-semibold leading-7 text-leaf-600">Established 1992</h2>
-            <p class="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Our History</p>
-            <p class="mt-6 text-lg leading-8 text-gray-600">
-              Founded in 1992, Teenagers' Outreach Ministries International began with a simple burden: to see teenagers saved and established in the faith.
-            </p>
-            <p class="mt-6 text-lg leading-8 text-gray-600">
-              From a small fellowship, we have grown into a multi-national ministry affecting thousands of lives across the continent. Our journey is a testament to God's faithfulness and the power of dedicated discipleship.
-            </p>
-          </div>
-        </div>
-        <div class="relative">
-             <%= image_tag "/about_1.png", class: "w-full max-w-none rounded-xl shadow-xl ring-1 ring-gray-400/10 sm:w-[57rem] md:-ml-4 lg:-ml-0 object-cover h-[28rem]", alt: "History of TOM Int." %>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Section 2: Mission (Image Left, Text Right) -->
-  <div class="overflow-hidden bg-leaf-50 py-24 sm:py-32">
-    <div class="mx-auto max-w-7xl px-6 lg:px-8">
-      <div class="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-2 lg:items-center">
-        <!-- Image (Order 2 on mobile, Order 1 on Desktop) -->
-        <div class="relative order-last lg:order-first">
-             <%= image_tag "/about_2.png", class: "w-full max-w-none rounded-xl shadow-xl ring-1 ring-gray-400/10 sm:w-[57rem] md:-ml-4 lg:-ml-0 object-cover h-[28rem]", alt: "Our Mission" %>
-        </div>
-        
-        <div class="lg:pl-8 lg:pt-4 order-first lg:order-last">
-          <div class="lg:max-w-lg">
-            <h2 class="text-base font-semibold leading-7 text-leaf-600">Our Purpose</h2>
-            <p class="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Our Mission</p>
-            <p class="mt-6 text-lg leading-8 text-gray-600">
-              Our mission is clear: to reach out to teenagers everywhere with the gospel of our Lord Jesus Christ.
-            </p>
-            <ul role="list" class="mt-8 space-y-8 text-gray-600">
-                <li class="flex gap-x-3">
-                  <svg class="mt-1 h-5 w-5 flex-none text-leaf-600" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" />
-                  </svg>
-                  <span><strong>Evangelism:</strong> Sharing the life-transforming message of Jesus.</span>
-                </li>
-                 <li class="flex gap-x-3">
-                  <svg class="mt-1 h-5 w-5 flex-none text-leaf-600" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" />
-                  </svg>
-                  <span><strong>Discipleship:</strong> Guiding them unto maturity in the faith.</span>
-                </li>
-                 <li class="flex gap-x-3">
-                  <svg class="mt-1 h-5 w-5 flex-none text-leaf-600" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" />
-                  </svg>
-                  <span><strong>Responsibility:</strong> Raising adults who impact their generation.</span>
-                </li>
-            </ul>
           </div>
         </div>
       </div>
-    </div>
+    <% end %>
   </div>
+</section>
 
-  <!-- Section 3: Vision (Text Left, Image Right) -->
-   <div class="overflow-hidden bg-white py-24 sm:py-32">
-    <div class="mx-auto max-w-7xl px-6 lg:px-8">
-      <div class="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-2">
-        <div class="lg:pr-8 lg:pt-4">
-          <div class="lg:max-w-lg">
-            <h2 class="text-base font-semibold leading-7 text-leaf-600">Future Focus</h2>
-            <p class="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Our Vision</p>
-            <p class="mt-6 text-lg leading-8 text-gray-600">
-              We envision a world where teenagers are leading revivals, transforming their communities, and standing as pillars of truth in every sector of society.
-            </p>
-            <p class="mt-6 text-lg leading-8 text-gray-600">
-              Our vision is to raise leaders who do not just survive the challenges of the modern world but thrive and impact generations to come.
-            </p>
-          </div>
-        </div>
-        <div class="relative">
-             <%= image_tag "/about_3.png", class: "w-full max-w-none rounded-xl shadow-xl ring-1 ring-gray-400/10 sm:w-[57rem] md:-ml-4 lg:-ml-0 object-cover h-[28rem]", alt: "Future Vision" %>
-        </div>
+<section class="tom-section bg-white tom-divided-section tom-soft-section">
+  <div class="tom-container">
+    <div class="tom-section-ribbon" data-reveal>
+      <span>Core Values</span>
+    </div>
+    <div class="tom-section-title" data-reveal>
+      <div>
+        <span class="tom-eyebrow">Core Values</span>
+        <h2>Faith-filled. Youth-focused. Accountable.</h2>
+      </div>
+      <p>Values that keep the ministry warm, trustworthy, and focused on teenagers.</p>
+    </div>
+    <div class="tom-values-shell tom-values-color-tabs tom-css-tabs">
+      <% [
+        ["gospel", "Gospel"],
+        ["discipleship", "Discipleship"],
+        ["leadership", "Leadership"],
+        ["purity", "Purity"],
+        ["service", "Service"],
+        ["training", "Training"]
+      ].each_with_index do |(key, _value), index| %>
+        <input type="radio" name="core_value_tab" id="core-value-<%= key %>" <%= "checked" if index.zero? %>>
+      <% end %>
+
+      <div class="tom-tabs-list" role="tablist" aria-label="Core values">
+      <% [
+        ["gospel", "Gospel", "var(--tom-teal)"],
+        ["discipleship", "Discipleship", "var(--tom-purple)"],
+        ["leadership", "Leadership", "var(--tom-green-700)"],
+        ["purity", "Purity", "var(--tom-orange)"],
+        ["service", "Service", "var(--tom-blue)"],
+        ["training", "Training", "var(--tom-yellow)"]
+      ].each do |key, value, accent| %>
+        <label class="tom-btn" style="--accent:<%= accent %>;" for="core-value-<%= key %>" role="tab"><%= value %></label>
+      <% end %>
+      </div>
+
+      <div class="tom-value-panel">
+        <% {
+          "gospel" => ["Gospel", "We keep the message of Jesus Christ at the centre of every outreach, club, camp, article, and training experience."],
+          "discipleship" => ["Discipleship", "We do not stop at attendance. TOM walks with teenagers toward maturity, character, and a living Christian faith."],
+          "leadership" => ["Leadership", "We raise teenagers who can take responsibility, serve with excellence, and impact their generation."],
+          "purity" => ["Purity", "We call teenagers to be examples in word, conduct, love, spirit, faith, and purity."],
+          "service" => ["Service", "We believe every volunteer, worker, and teenager has a meaningful part to play in transforming communities."],
+          "training" => ["Training", "We equip workers and leaders because no one can do well what he or she has not been trained to do."]
+        }.each do |key, (title, body)| %>
+          <article class="tom-tab-panel" data-tab-panel="<%= key %>">
+            <span class="tom-eyebrow">Core Value</span>
+            <h3 style="margin-top:.75rem;font-size:clamp(1.6rem,3vw,2.4rem);"><%= title %></h3>
+            <p style="margin-top:1rem;color:var(--tom-muted);line-height:1.75;"><%= body %></p>
+          </article>
+        <% end %>
       </div>
     </div>
   </div>
+</section>
 
-</div>
+<section class="tom-band" style="padding-block:4rem;text-align:center;">
+  <div class="tom-container" data-reveal>
+    <h2 style="color:white;">Become A Volunteer</h2>
+    <p style="max-width:620px;margin:1rem auto 0;color:rgba(255,255,255,.84);">Reach out to learn how your time and passion can make a lasting impact on teenagers.</p>
+    <%= link_to "Contact Us", contact_path, class: "tom-btn tom-btn-primary", style: "margin-top:1.25rem;" %>
+  </div>
+</section>

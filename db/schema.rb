@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_27_172500) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_12_150100) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -119,11 +119,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_27_172500) do
     t.decimal "amount_paid"
     t.datetime "created_at", null: false
     t.bigint "event_id", null: false
+    t.string "guest_email"
+    t.string "guest_name"
+    t.string "guest_phone"
     t.string "payment_reference"
     t.string "qr_code_token"
     t.integer "status"
     t.datetime "updated_at", null: false
-    t.bigint "user_id", null: false
+    t.bigint "user_id"
     t.index ["event_id"], name: "index_registrations_on_event_id"
     t.index ["user_id"], name: "index_registrations_on_user_id"
   end
@@ -166,6 +169,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_27_172500) do
     t.datetime "updated_at", null: false
     t.integer "year_created"
     t.bigint "zone_id"
+  end
+
+  create_table "training_registrations", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "guest_email", null: false
+    t.string "guest_name", null: false
+    t.string "guest_phone"
+    t.bigint "training_id", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id"
+    t.index ["training_id"], name: "index_training_registrations_on_training_id"
+    t.index ["user_id"], name: "index_training_registrations_on_user_id"
   end
 
   create_table "training_sessions", force: :cascade do |t|
@@ -228,6 +243,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_27_172500) do
   add_foreign_key "reports", "report_categories"
   add_foreign_key "reports", "states"
   add_foreign_key "reports", "users"
+  add_foreign_key "training_registrations", "trainings"
+  add_foreign_key "training_registrations", "users"
   add_foreign_key "training_sessions", "trainings"
   add_foreign_key "trainings", "states"
 end

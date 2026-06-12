@@ -1,49 +1,72 @@
 <% content_for :title, "Upcoming Events" %>
 
-<div class="bg-white <%= (user_signed_in? && admin_area?) ? 'py-8' : 'py-24 sm:py-32' %>">
-  <div class="mx-auto max-w-7xl px-6 lg:px-8">
-    <div class="mx-auto max-w-2xl text-center">
-      <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Upcoming Events</h2>
-      <p class="mt-2 text-lg leading-8 text-gray-600">Join us for our upcoming outreaches, training sessions, and conferences.</p>
-    </div>
-    <div class="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-3">
-      <% @events.each do |event| %>
-        <article class="flex flex-col items-start justify-between">
-          <div class="relative w-full">
-            <% if event.image.attached? %>
-              <%= image_tag event.image, class: "aspect-[16/9] w-full rounded-2xl bg-gray-100 object-cover sm:aspect-[2/1] lg:aspect-[3/2]" %>
-            <% else %>
-              <div class="aspect-[16/9] w-full rounded-2xl bg-gray-100 object-cover sm:aspect-[2/1] lg:aspect-[3/2] flex items-center justify-center text-gray-400">
-                <svg class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-              </div>
-            <% end %>
-            <div class="absolute inset-0 rounded-2xl ring-1 ring-inset ring-gray-900/10"></div>
-          </div>
-          <div class="max-w-xl">
-            <div class="mt-8 flex items-center gap-x-4 text-xs">
-              <time datetime="<%= event.start_time %>" class="text-gray-500"><%= event.start_time.strftime("%b %d, %Y") %></time>
-              <% if event.state %>
-                <span class="relative z-10 rounded-full bg-gray-50 px-3 py-1.5 font-medium text-gray-600 hover:bg-gray-100"><%= event.state.name %></span>
-              <% else %>
-                <span class="relative z-10 rounded-full bg-green-50 px-3 py-1.5 font-medium text-green-600 hover:bg-green-100">National</span>
-              <% end %>
-            </div>
-            <div class="group relative">
-              <h3 class="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-600">
-                <%= link_to event do %>
-                  <span class="absolute inset-0"></span>
-                  <%= event.title %>
-                <% end %>
-              </h3>
-              <div class="mt-5 line-clamp-3 text-sm leading-6 text-gray-600">
-                <%= event.description %>
-              </div>
-            </div>
-          </div>
-        </article>
-      <% end %>
+<section class="tom-page-hero">
+  <div class="tom-container">
+    <div class="tom-page-panel" data-reveal>
+      <span class="tom-eyebrow" style="color:var(--tom-yellow);">Home / Events</span>
+      <h1>Upcoming Events</h1>
+      <p style="margin-top:1rem;line-height:1.75;">Join us for our upcoming outreaches, training sessions, and conferences.</p>
     </div>
   </div>
-</div>
+</section>
+
+<section class="tom-section bg-white" data-filter-group data-default-filter="all">
+  <div class="tom-container">
+    <div class="tom-filter-row" role="tablist" aria-label="Event filters" data-reveal>
+      <% [["all", "All"], ["upcoming", "Upcoming"], ["camp", "Camps"], ["training", "Training"], ["past", "Past"]].each do |key, label| %>
+        <button type="button" class="tom-btn" data-filter-button="<%= key %>" role="tab"><%= label %></button>
+      <% end %>
+    </div>
+
+    <% spotlight = @events.first %>
+    <% if spotlight %>
+      <%= link_to event_path(spotlight), class: "tom-card", style: "display:block;overflow:hidden;margin-top:2rem;text-decoration:none;", data: { reveal: true, filter_item: "all upcoming spotlight" } do %>
+        <div class="tom-feature-split" style="gap:0;">
+          <div class="tom-media" style="border-radius:0;box-shadow:none;">
+            <% if spotlight.image.attached? %>
+              <%= image_tag spotlight.image, alt: spotlight.title, loading: "lazy" %>
+            <% else %>
+              <%= image_tag "/outreach.png", alt: spotlight.title, loading: "lazy" %>
+            <% end %>
+          </div>
+          <div style="padding:2rem;">
+            <span class="tom-eyebrow">Spotlight Event</span>
+            <h2 style="margin-top:.7rem;color:var(--tom-ink);"><%= spotlight.title %></h2>
+            <p style="margin-top:1rem;color:var(--tom-muted);"><%= spotlight.start_time.strftime("%B %d, %Y") %> <%= spotlight.location.present? ? "• #{spotlight.location}" : "" %></p>
+            <div style="margin-top:1rem;color:var(--tom-muted);line-height:1.65;"><%= spotlight.description %></div>
+            <span class="tom-btn tom-btn-primary" style="margin-top:1.25rem;">Register</span>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+
+    <div class="tom-section-title" style="margin-top:3rem;" data-reveal>
+      <div>
+        <span class="tom-eyebrow">Events Grid</span>
+        <h2>Ministry gatherings</h2>
+      </div>
+    </div>
+
+    <div class="tom-three-grid">
+      <% [ [@events, "upcoming"], [@past_events, "past"] ].each do |collection, status| %>
+        <% collection.each_with_index do |event, index| %>
+          <% plain_description = event.description.to_plain_text rescue "" %>
+          <% corpus = "#{event.title} #{plain_description}".downcase %>
+          <% tags = [status] %>
+          <% tags << "camp" if corpus.include?("camp") %>
+          <% tags << "training" if corpus.include?("training") || corpus.include?("course") || corpus.include?("workshop") %>
+          <% accent = ["var(--tom-teal)", "var(--tom-orange)", "var(--tom-yellow)", "var(--tom-purple)"][index % 4] %>
+          <article class="tom-resource-card" style="--accent:<%= accent %>;" data-reveal data-filter-item="<%= tags.join(' ') %>">
+            <small><%= event.start_time.strftime("%b %d, %Y") %> • <%= status.titleize %></small>
+            <h3><%= link_to event.title, event_path(event) %></h3>
+            <div style="margin-top:.75rem;color:var(--tom-muted);line-height:1.55;font-size:.92rem;"><%= event.description %></div>
+            <p style="margin-top:.8rem;color:var(--tom-muted);font-size:.9rem;"><%= event.location.presence || event.state&.name || "Location TBA" %></p>
+            <%= link_to "Register", event_path(event), class: "tom-btn tom-btn-primary", style: "margin-top:1rem;" %>
+          </article>
+        <% end %>
+      <% end %>
+    </div>
+
+    <div class="tom-filter-empty" data-filter-empty hidden>No events found for this filter yet.</div>
+  </div>
+</section>

@@ -1,9 +1,6 @@
 class EventsController < ApplicationController
-  layout :determine_layout
+  layout "public"
 
-  def determine_layout
-    (user_signed_in? && admin_area?) ? "application" : "public"
-  end
   def index
     @events = policy_scope(Event).where("start_time >= ?", Time.current).order(start_time: :asc)
     @past_events = policy_scope(Event).where("start_time < ?", Time.current).order(start_time: :desc).limit(5)
@@ -11,8 +8,11 @@ class EventsController < ApplicationController
 
   def show
     @event = Event.find(params[:id])
+    @registration = Registration.new
     if user_signed_in?
-      @registration = Registration.find_by(user: current_user, event: @event)
+      @existing_registration = Registration.find_by(user: current_user, event: @event)
+      @registration.guest_name = current_user.full_name
+      @registration.guest_email = current_user.email
     end
   end
 end

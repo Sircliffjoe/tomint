@@ -95,11 +95,11 @@ end
 puts "Created #{State.count} states."
 
 # Super Admin User
-admin_email = "admin@tomint.org"
+admin_email = "tommediang@gmail.com"
 User.find_or_create_by!(email: admin_email) do |user|
   user.first_name = "Super"
   user.last_name = "Admin"
-  user.phone = "0000000000"
+  user.phone = "+234 803 086 9716"
   user.password = "password123"
   user.password_confirmation = "password123"
   user.role = :super_admin
@@ -132,7 +132,6 @@ Event.find_or_create_by!(title: "National Youth Conference 2026") do |event|
   event.end_time = DateTime.new(2026, 8, 17, 17, 0, 0)
   event.location = "Camp Ground, Lagos-Ibadan Expressway"
   event.state = nil # National
-  event.registration_open = true
   event.description = "<div><strong>Theme: The Rising Generation</strong><br>Join thousands of teenagers from across the nation for 3 days of intense worship, word, and workshops.</div>"
 end
 
@@ -141,7 +140,6 @@ Event.find_or_create_by!(title: "Lagos State Workers Retreat") do |event|
   event.end_time = DateTime.new(2026, 3, 10, 16, 0, 0)
   event.location = "Lagos State Secretariat"
   event.state = State.find_by(name: "Lagos")
-  event.registration_open = true
   event.description = "<div>Annual retreat for all TOM workers in Lagos State. A time of refreshing and strategic planning.</div>"
 end
 

@@ -13,6 +13,14 @@ class Event < ApplicationRecord
   validates :price, presence: true, if: :paid?
   validates :currency, presence: true, if: :paid?
 
+  def upcoming?
+    start_time.present? && start_time >= Time.current
+  end
+
+  def registration_open?
+    upcoming?
+  end
+
   def free?
     event_type == "free"
   end

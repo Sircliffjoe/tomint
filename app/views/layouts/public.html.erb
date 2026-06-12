@@ -14,16 +14,17 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Playfair+Display:ital,wght@0,700;1,600&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Poppins:wght@600;700;800;900&display=swap" rel="stylesheet">
 
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "mobile_forms", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "funfacts", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "volunteer", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="bg-stone-50 font-sans text-gray-900 antialiased selection:bg-leaf-100 selection:text-leaf-900 min-h-screen flex flex-col">
+  <body class="tom-public bg-stone-50 font-sans text-gray-900 antialiased selection:bg-leaf-100 selection:text-leaf-900 min-h-screen flex flex-col">
     <%= render "shared/public_header" %>
 
     <main class="isolate flex-auto">
@@ -42,6 +43,10 @@
     </main>
 
     <%= render "shared/footer" %>
+
+    <button type="button" class="tom-back-top" aria-label="Back to top" data-back-to-top>
+      <span aria-hidden="true">&uarr;</span>
+    </button>
 
     <script>
       (function() {

@@ -1,5 +1,5 @@
 class Registration < ApplicationRecord
-  belongs_to :user
+  belongs_to :user, optional: true
   belongs_to :event
 
   enum :status, {
@@ -10,8 +10,18 @@ class Registration < ApplicationRecord
   }, default: :confirmed
 
   validates :qr_code_token, uniqueness: true, allow_nil: true
+  validates :guest_name, :guest_email, presence: true, unless: :user_id?
+  validates :guest_email, format: { with: URI::MailTo::EMAIL_REGEXP }, allow_blank: true
 
   before_create :generate_qr_code_token
+
+  def attendee_name
+    user&.full_name.presence || guest_name
+  end
+
+  def attendee_email
+    user&.email.presence || guest_email
+  end
 
   private
 

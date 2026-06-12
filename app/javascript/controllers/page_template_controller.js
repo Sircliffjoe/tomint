@@ -11,7 +11,7 @@ export default class extends Controller {
         <h2>Privacy Policy</h2>
         <p>Your privacy is important to us. This policy explains how Teenagers' Outreach Ministries (TOM) Inc. collects, uses, and protects your personal information.</p>
         <h3>Information We Collect</h3>
-        <p>We collect information you provide when registering for events, signing up for an account, or contacting us.</p>
+        <p>We collect information you provide when registering for events, contacting us, or using ministry services.</p>
         <h3>How We Use Your Information</h3>
         <p>We use your information solely to provide our services, communicate with you about events, and improve our ministry outreach.</p>
       </div>`,
@@ -39,4 +39,3 @@ export default class extends Controller {
     }
   }
 }
-

@@ -1,56 +1,88 @@
 <% content_for :title, "Support Our Mission" %>
 
-<div class="bg-white py-24 sm:py-32">
-  <div class="mx-auto max-w-7xl px-6 lg:px-8">
-    <div class="mx-auto max-w-2xl text-center">
-      <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Support Our Mission</h2>
-      <p class="mt-2 text-lg leading-8 text-gray-600">Your generosity helps us reach more teenagers with the gospel and raise effective leaders.</p>
+<section class="tom-page-hero">
+  <div class="tom-container">
+    <div class="tom-page-panel" data-reveal>
+      <span class="tom-eyebrow" style="color:var(--tom-yellow);">Home / Donate</span>
+      <h1>Your Gift Changes a Life</h1>
+      <p style="margin-top:1rem;line-height:1.75;">Your generosity helps us reach more teenagers with the gospel and raise effective leaders.</p>
+    </div>
+  </div>
+</section>
+
+<section class="tom-section bg-white">
+  <div class="tom-container tom-feature-split" style="align-items:start;">
+    <div class="tom-copy" data-reveal>
+      <span class="tom-eyebrow">Opportunity To Give</span>
+      <h2>Partner with TOM to reach the rising generation.</h2>
+      <p>Your giving supports outreaches, teen clubs, trainings, camps, and discipleship follow-up across communities.</p>
+      <div class="tom-donation-image-card" data-reveal>
+        <%= image_tag "donation-giving-cause.png", alt: "Hands giving toward a community cause", loading: "lazy" %>
+      </div>
     </div>
 
-    <div class="mx-auto mt-16 max-w-xl sm:mt-20">
-      <%= form_with(model: @donation, class: "space-y-6") do |f| %>
+    <div class="tom-card" style="padding:1.5rem;" data-reveal>
+      <h2>Give Now</h2>
+      <p style="margin-top:.6rem;color:var(--tom-muted);line-height:1.6;">Enter your amount and choose what you are giving toward.</p>
+
+      <%= form_with(model: @donation, style: "display:grid;gap:1rem;margin-top:1.3rem;") do |f| %>
         <% if @donation.errors.any? %>
-          <div class="rounded-md bg-red-50 p-4">
-            <div class="flex">
-              <div class="ml-3">
-                <h3 class="text-sm font-medium text-red-800">There were errors with your submission</h3>
-                <div class="mt-2 text-sm text-red-700">
-                  <ul role="list" class="list-disc space-y-1 pl-5">
-                    <% @donation.errors.full_messages.each do |msg| %>
-                      <li><%= msg %></li>
-                    <% end %>
-                  </ul>
-                </div>
-              </div>
-            </div>
+          <div style="border-radius:8px;background:#fff1f1;padding:1rem;color:#b42318;">
+            <h3>There were errors with your submission</h3>
+            <ul style="margin-top:.5rem;padding-left:1rem;">
+              <% @donation.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+              <% end %>
+            </ul>
           </div>
         <% end %>
 
         <div>
-          <%= f.label :amount, "Amount (NGN)", class: "block text-sm font-medium leading-6 text-gray-900" %>
-          <div class="mt-2">
-            <%= f.number_field :amount, step: "100", class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6", placeholder: "5000" %>
-          </div>
+          <%= f.label :amount, "Amount (NGN)", style: "display:block;font-weight:800;margin-bottom:.45rem;" %>
+          <%= f.number_field :amount, step: "100", class: "tom-input", placeholder: "5000" %>
         </div>
 
         <div>
-           <%= f.label :donor_email, "Email Address", class: "block text-sm font-medium leading-6 text-gray-900" %>
-          <div class="mt-2">
-            <%= f.email_field :donor_email, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6" %>
-          </div>
+          <%= f.label :donor_email, "Email Address", style: "display:block;font-weight:800;margin-bottom:.45rem;margin-top:.50rem;" %>
+          <%= f.email_field :donor_email, class: "tom-input", placeholder: "you@example.com" %>
         </div>
 
         <div>
-          <%= f.label :purpose, "Purpose (Optional)", class: "block text-sm font-medium leading-6 text-gray-900" %>
-          <div class="mt-2">
-            <%= f.select :purpose, ["General Support", "Mission Support", "Conference Sponsorship", "Projects"], {}, class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6" %>
-          </div>
+          <%= f.label :purpose, "Giving Category", style: "display:block;font-weight:800;margin-bottom:.45rem;margin-top:.50rem;" %>
+          <%= f.select :purpose, ["General Support", "Outreach", "Teenagers' Clubs", "Training", "Camp Sponsorship", "Event Giving", "Programme Support", "Projects"], {}, class: "tom-input" %>
         </div>
 
-        <div>
-          <%= f.submit "Donate Now", class: "flex w-full justify-center rounded-md bg-green-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600" %>
+        <%= f.submit "Donate Now", class: "tom-btn tom-btn-primary", style: "width:100%;border:0;cursor:pointer;margin-top:.80rem;" %>
+      <% end %>
+
+      <div style="margin-top:1.5rem;border-radius:8px;background:#f1faf5;padding:1rem;">
+        <h3>Bank Details</h3>
+        <p style="margin-top:.65rem;color:var(--tom-muted);line-height:1.65;">Account Name: Teenagers' Outreach Ministries<br>Bank: First Bank<br>Account Number: 2006864196</p>
+      </div>
+      <div style="margin-top:1.5rem;border-radius:8px;background:#f1faf5;padding:1rem;">
+        <p style="margin-top:.65rem;color:var(--tom-muted);line-height:1.65;">Account Name: Teenagers' Outreach Ministries<br>Bank: First Bank<br>Account Number: 2008599317</p>
+      </div>
+      <div style="margin-top:1.5rem;border-radius:8px;background:#f1faf5;padding:1rem;">
+        <p style="font-weight:800;">Building Project</p>
+        <p style="margin-top:.65rem;color:var(--tom-muted);line-height:1.65;">Account Name: Teenagers' Outreach Ministries<br>Bank: Zenith Bank<br>Account Number: 1016869906</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="tom-band" style="padding-block:4rem;">
+  <div class="tom-container">
+    <div class="tom-info-grid">
+      <% [
+        ["Transparency", "Clear purpose-based giving."],
+        ["Impact", "Every gift supports teenagers and workers."],
+        ["Accountability", "Donation records and receipts are part of the platform vision."]
+      ].each do |title, text| %>
+        <div class="tom-card" style="padding:1.4rem;" data-reveal>
+          <h3><%= title %></h3>
+          <p style="margin-top:.7rem;color:var(--tom-muted);line-height:1.6;"><%= text %></p>
         </div>
       <% end %>
     </div>
   </div>
-</div>
+</section>

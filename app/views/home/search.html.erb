@@ -1,0 +1,91 @@
+<% content_for :title, @query.present? ? "Search results for #{@query}" : "Search events and trainings" %>
+
+<section class="tom-page-hero">
+  <div class="tom-container">
+    <div class="tom-page-panel" data-reveal>
+      <span class="tom-eyebrow" style="color:var(--tom-yellow);">Home / Search</span>
+      <h1>Search Results</h1>
+      <% if @query.present? %>
+        <p style="margin-top:1rem;line-height:1.75;">Showing upcoming events and training programmes matching "<%= @query %>".</p>
+      <% else %>
+        <p style="margin-top:1rem;line-height:1.75;">Search for upcoming events, training sessions, camps, workshops, or leadership programmes.</p>
+      <% end %>
+
+      <%= form_with url: search_path, method: :get, class: "tom-hero-search", local: true do |form| %>
+        <%= form.search_field :q, value: @query, placeholder: "Search events or trainings", aria: { label: "Search events and trainings" }, class: "tom-hero-search-input" %>
+        <%= form.submit "Search", class: "tom-btn tom-btn-primary" %>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<section class="tom-section bg-white">
+  <div class="tom-container">
+    <% if @query.blank? %>
+      <div class="tom-card" style="padding:1.5rem;text-align:center;">
+        <h2>What would you like to find?</h2>
+        <p style="margin-top:.75rem;color:var(--tom-muted);">Enter a keyword above to find relevant upcoming events and training programmes.</p>
+      </div>
+    <% elsif @upcoming_events.blank? && @trainings.blank? %>
+      <div class="tom-card" style="padding:1.5rem;text-align:center;">
+        <h2>No results found</h2>
+        <p style="margin-top:.75rem;color:var(--tom-muted);">Try another keyword, or browse all events and training resources.</p>
+        <div style="display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap;margin-top:1rem;">
+          <%= link_to "All Events", events_path, class: "tom-btn tom-btn-outline" %>
+          <%= link_to "All Trainings", trainings_path, class: "tom-btn tom-btn-primary" %>
+        </div>
+      </div>
+    <% else %>
+      <div class="tom-section-title" data-reveal>
+        <div>
+          <span class="tom-eyebrow">Upcoming Events</span>
+          <h2><%= pluralize(@upcoming_events.size, "event") %> found</h2>
+        </div>
+      </div>
+
+      <% if @upcoming_events.present? %>
+        <div class="tom-three-grid">
+          <% @upcoming_events.each_with_index do |event, index| %>
+            <% accent = ["var(--tom-teal)", "var(--tom-orange)", "var(--tom-yellow)", "var(--tom-purple)"][index % 4] %>
+            <article class="tom-resource-card" style="--accent:<%= accent %>;" data-reveal>
+              <small><%= event.start_time.strftime("%b %d, %Y") %> • Upcoming</small>
+              <h3><%= link_to event.title, event_path(event) %></h3>
+              <div style="margin-top:.75rem;color:var(--tom-muted);line-height:1.55;font-size:.92rem;"><%= event.description %></div>
+              <p style="margin-top:.8rem;color:var(--tom-muted);font-size:.9rem;"><%= event.location.presence || event.state&.name || "Location TBA" %></p>
+              <%= link_to "Register", event_path(event), class: "tom-btn tom-btn-primary", style: "margin-top:1rem;" %>
+            </article>
+          <% end %>
+        </div>
+      <% else %>
+        <p style="color:var(--tom-muted);">No upcoming events matched this search.</p>
+      <% end %>
+
+      <div class="tom-section-title" style="margin-top:3rem;" data-reveal>
+        <div>
+          <span class="tom-eyebrow">Training Programmes</span>
+          <h2><%= pluralize(@trainings.size, "training") %> found</h2>
+        </div>
+      </div>
+
+      <% if @trainings.present? %>
+        <div class="tom-three-grid">
+          <% @trainings.each_with_index do |training, index| %>
+            <% accent = ["var(--tom-teal)", "var(--tom-yellow)", "var(--tom-orange)", "var(--tom-purple)"][index % 4] %>
+            <article class="tom-resource-card" style="--accent:<%= accent %>;" data-reveal>
+              <small><%= training.category.presence || "Training" %> • <%= pluralize(training.training_sessions.count, "Session") %></small>
+              <h3><%= link_to training.title, training_path(training) %></h3>
+              <% if training.description.present? %>
+                <div style="margin-top:.75rem;color:var(--tom-muted);line-height:1.55;font-size:.92rem;"><%= training.description %></div>
+              <% else %>
+                <p style="margin-top:.75rem;color:var(--tom-muted);line-height:1.55;font-size:.92rem;">Expandable topics and session media are available inside the course.</p>
+              <% end %>
+              <%= link_to "View Training", training_path(training), class: "tom-btn tom-btn-primary", style: "margin-top:1rem;" %>
+            </article>
+          <% end %>
+        </div>
+      <% else %>
+        <p style="color:var(--tom-muted);">No training programmes matched this search.</p>
+      <% end %>
+    <% end %>
+  </div>
+</section>

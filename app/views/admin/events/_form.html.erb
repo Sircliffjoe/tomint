@@ -108,12 +108,9 @@
       </div>
 
       <div class="field-group">
-        <div class="checkbox-row">
-          <%= form.check_box :registration_open, class: "checkbox-input" %>
-          <div>
-            <%= form.label :registration_open, "Open Registration", class: "checkbox-label" %>
-            <p class="checkbox-desc">Allow users to register for this event immediately upon saving.</p>
-          </div>
+        <div class="event-status-note">
+          <strong>Registration status is automatic</strong>
+          <p>Upcoming events are open for registration. Once the event date has passed, registration is closed.</p>
         </div>
       </div>
     </div>
@@ -159,6 +156,9 @@
   .upload-label a { color:#16a34a; font-weight:600; text-decoration:none; cursor:pointer; }
   .upload-label a:hover { color:#15803d; }
   .upload-hint { font-size:.75rem; color:#9ca3af; margin-top:.375rem; font-style:italic; }
+  .event-status-note { padding:1rem 1.25rem; background:#f0fdf4; border-radius:10px; border:1.5px solid #bbf7d0; }
+  .event-status-note strong { display:block; font-size:.875rem; color:#166534; margin-bottom:.25rem; }
+  .event-status-note p { font-size:.8rem; color:#15803d; font-style:italic; line-height:1.5; }
   .checkbox-row { display:flex; align-items:flex-start; gap:.875rem; padding:1rem 1.25rem; background:#f9fafb; border-radius:10px; border:1.5px solid #e5e7eb; transition:border-color .18s ease,background .18s ease; }
   .checkbox-row:hover { background:#fff; border-color:#bbf7d0; }
   .checkbox-input { width:1.1rem; height:1.1rem; margin-top:2px; accent-color:#16a34a; cursor:pointer; flex-shrink:0; }
