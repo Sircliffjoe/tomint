@@ -67,7 +67,7 @@
 <section class="tom-feature-band tom-divided-section">
   <div class="tom-container tom-feature-split">
     <div class="tom-section-ribbon" data-reveal>
-      <span>Our Story</span>
+      
     </div>
     <div class="tom-copy" data-reveal>
       <span class="tom-eyebrow">Who We Are</span>
@@ -120,7 +120,7 @@
 <section class="tom-section tom-divided-section">
   <div class="tom-container">
     <div class="tom-section-ribbon" data-reveal>
-      <span>Programmes</span>
+      
     </div>
     <div class="tom-section-title" data-reveal>
       <div>
@@ -212,7 +212,7 @@
             <small><%= event.start_time.strftime("%b %d, %Y") %></small>
             <h3><%= event.title %></h3>
             <p style="margin-top:.75rem;color:var(--tom-muted);font-size:.92rem;"><%= event.location.presence || event.state&.name || "National" %></p>
-            <span class="tom-btn tom-btn-primary" style="margin-top:1rem;">Register</span>
+            <span class="tom-btn tom-btn-primary" style="margin-top:1rem;"><%= event.information_only? ? "Learn More" : "View Details" %></span>
           <% end %>
         <% end %>
       <% else %>
@@ -229,7 +229,7 @@
 <section class="tom-section bg-white tom-divided-section">
   <div class="tom-container">
     <div class="tom-section-ribbon" data-reveal>
-      <span>Community Voices</span>
+      
     </div>
     <div class="tom-section-title" data-reveal>
       <div>
@@ -269,7 +269,7 @@
 <section class="tom-section bg-white tom-divided-section tom-soft-section">
   <div class="tom-container">
     <div class="tom-section-ribbon" data-reveal>
-      <span>Latest Stories</span>
+      
     </div>
     <div class="tom-section-title" data-reveal>
       <div>

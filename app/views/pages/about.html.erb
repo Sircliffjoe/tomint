@@ -16,7 +16,7 @@
 <section id="history" class="tom-feature-band tom-divided-section">
   <div class="tom-container tom-feature-split">
     <div class="tom-section-ribbon" data-reveal>
-      <span>Our Story</span>
+      
     </div>
     <div class="tom-copy" data-reveal>
       <span class="tom-eyebrow">Established 1992</span>
@@ -47,7 +47,7 @@
 <section class="tom-section tom-soft-section tom-divided-section">
   <div class="tom-container">
     <div class="tom-section-ribbon" data-reveal>
-      <span>Milestones</span>
+      
     </div>
     <div class="tom-resource-grid">
       <% [
@@ -69,7 +69,7 @@
 <section class="tom-feature-band tom-divided-section">
   <div class="tom-container tom-feature-split is-reverse">
     <div class="tom-section-ribbon" data-reveal>
-      <span>Our Purpose</span>
+      
     </div>
     <div class="tom-media" data-reveal>
       <%= image_tag "WhatsApp-Image-2025-04-26-at-3.23.07-AM.jpeg", alt: "Our Mission", loading: "lazy" %>
@@ -102,7 +102,7 @@
 <section class="tom-section tom-divided-section">
   <div class="tom-container">
     <div class="tom-section-ribbon" data-reveal>
-      <span>Programmes</span>
+      
     </div>
     <div class="tom-section-title" data-reveal>
       <div>
@@ -134,7 +134,7 @@
 <section id="leadership" class="tom-section tom-divided-section">
   <div class="tom-container">
     <div class="tom-section-ribbon" data-reveal>
-      <span>Leadership</span>
+      
     </div>
     <div class="tom-section-title" data-reveal>
       <div>
@@ -164,7 +164,7 @@
     <% if president %>
       <% name, title, image, bio, focus, = president %>
       <% modal_id = "team-#{name.parameterize}" %>
-      <%= link_to "##{modal_id}", class: "tom-team-card tom-team-feature-card", data: { reveal: true } do %>
+      <%= link_to "##{modal_id}", class: "tom-team-card tom-team-feature-card", data: { reveal: true, team_popup_open: modal_id } do %>
         <%= image_tag image, alt: name, loading: "lazy" %>
         <div>
           <span class="tom-eyebrow">International Leadership</span>
@@ -179,13 +179,12 @@
     <div class="tom-team-grid">
       <% other_team_members.each do |name, title, image, bio, focus, _featured| %>
         <% modal_id = "team-#{name.parameterize}" %>
-        <%= link_to "##{modal_id}", class: "tom-team-card", data: { reveal: true } do %>
+        <%= link_to "##{modal_id}", class: "tom-team-card", data: { reveal: true, team_popup_open: modal_id } do %>
           <%= image_tag image, alt: name, loading: "lazy" %>
           <div>
             <h3><%= name %></h3>
             <p class="tom-team-card-title"><%= title %></p>
-            <p style="margin-top:.55rem;color:var(--tom-muted);line-height:1.55;"><%= bio.truncate(86) %></p>
-            <span class="tom-team-card-action">View details</span>
+            <p style="margin-top:.55rem;color:var(--tom-muted);line-height:1.55;"><%#= bio.truncate(86) %></p>
           </div>
         <% end %>
       <% end %>
@@ -194,9 +193,9 @@
     <% team_members.each do |name, title, image, bio, focus, _featured| %>
       <% modal_id = "team-#{name.parameterize}" %>
       <div id="<%= modal_id %>" class="tom-team-popup" aria-labelledby="<%= modal_id %>-name">
-        <%= link_to "", "#leadership", class: "tom-team-popup-backdrop", aria: { label: "Close team member details" } %>
+        <%= link_to "", "#leadership", class: "tom-team-popup-backdrop", data: { team_popup_close: true }, aria: { label: "Close team member details" } %>
         <div class="tom-team-modal-layout tom-team-popup-panel" role="dialog" aria-modal="true">
-          <%= link_to "&times;".html_safe, "#leadership", class: "tom-team-modal-close", aria: { label: "Close team member details" } %>
+          <%= link_to "&times;".html_safe, "#leadership", class: "tom-team-modal-close", data: { team_popup_close: true }, aria: { label: "Close team member details" } %>
           <%= image_tag image, alt: name, loading: "lazy" %>
           <div>
             <span class="tom-eyebrow">Leadership</span>
@@ -217,7 +216,7 @@
 <section class="tom-section bg-white tom-divided-section tom-soft-section">
   <div class="tom-container">
     <div class="tom-section-ribbon" data-reveal>
-      <span>Core Values</span>
+      
     </div>
     <div class="tom-section-title" data-reveal>
       <div>

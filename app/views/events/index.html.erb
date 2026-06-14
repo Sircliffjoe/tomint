@@ -18,23 +18,24 @@
       <% end %>
     </div>
 
-    <% spotlight = @events.first %>
+    <% spotlight = @events.find(&:spotlight?) || @events.first %>
     <% if spotlight %>
+      <% spotlight_summary = spotlight.description.to_plain_text.squish.truncate(220) rescue strip_tags(spotlight.description.to_s).squish.truncate(220) %>
       <%= link_to event_path(spotlight), class: "tom-card", style: "display:block;overflow:hidden;margin-top:2rem;text-decoration:none;", data: { reveal: true, filter_item: "all upcoming spotlight" } do %>
-        <div class="tom-feature-split" style="gap:0;">
-          <div class="tom-media" style="border-radius:0;box-shadow:none;">
+        <div class="tom-feature-split" style="gap:0;align-items:stretch;">
+          <div class="tom-media" style="border-radius:0;box-shadow:none;min-height:280px;">
             <% if spotlight.image.attached? %>
               <%= image_tag spotlight.image, alt: spotlight.title, loading: "lazy" %>
             <% else %>
               <%= image_tag "/outreach.png", alt: spotlight.title, loading: "lazy" %>
             <% end %>
           </div>
-          <div style="padding:2rem;">
+          <div style="padding:2rem;display:flex;flex-direction:column;justify-content:center;">
             <span class="tom-eyebrow">Spotlight Event</span>
             <h2 style="margin-top:.7rem;color:var(--tom-ink);"><%= spotlight.title %></h2>
             <p style="margin-top:1rem;color:var(--tom-muted);"><%= spotlight.start_time.strftime("%B %d, %Y") %> <%= spotlight.location.present? ? "• #{spotlight.location}" : "" %></p>
-            <div style="margin-top:1rem;color:var(--tom-muted);line-height:1.65;"><%= spotlight.description %></div>
-            <span class="tom-btn tom-btn-primary" style="margin-top:1.25rem;">Register</span>
+            <p style="margin-top:1rem;color:var(--tom-muted);line-height:1.65;"><%= spotlight_summary %></p>
+            <span class="tom-btn tom-btn-primary" style="margin-top:1.25rem;"><%= spotlight.information_only? ? "Learn More" : "View Details" %></span>
           </div>
         </div>
       <% end %>
@@ -50,6 +51,7 @@
     <div class="tom-three-grid">
       <% [ [@events, "upcoming"], [@past_events, "past"] ].each do |collection, status| %>
         <% collection.each_with_index do |event, index| %>
+          <% next if spotlight && event == spotlight %>
           <% plain_description = event.description.to_plain_text rescue "" %>
           <% corpus = "#{event.title} #{plain_description}".downcase %>
           <% tags = [status] %>
@@ -59,9 +61,9 @@
           <article class="tom-resource-card" style="--accent:<%= accent %>;" data-reveal data-filter-item="<%= tags.join(' ') %>">
             <small><%= event.start_time.strftime("%b %d, %Y") %> • <%= status.titleize %></small>
             <h3><%= link_to event.title, event_path(event) %></h3>
-            <div style="margin-top:.75rem;color:var(--tom-muted);line-height:1.55;font-size:.92rem;"><%= event.description %></div>
+            <p style="margin-top:.75rem;color:var(--tom-muted);line-height:1.55;font-size:.92rem;"><%= plain_description.squish.truncate(150) %></p>
             <p style="margin-top:.8rem;color:var(--tom-muted);font-size:.9rem;"><%= event.location.presence || event.state&.name || "Location TBA" %></p>
-            <%= link_to "Register", event_path(event), class: "tom-btn tom-btn-primary", style: "margin-top:1rem;" %>
+            <%= link_to(event.information_only? ? "Learn More" : "View Details", event_path(event), class: "tom-btn tom-btn-primary", style: "margin-top:1rem;") %>
           </article>
         <% end %>
       <% end %>

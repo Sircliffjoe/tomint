@@ -1419,7 +1419,15 @@ html {
   padding: 1rem;
 }
 
+body.tom-modal-open {
+  overflow: hidden;
+}
+
 .tom-team-popup:target {
+  display: grid;
+}
+
+.tom-team-popup.is-open {
   display: grid;
 }
 

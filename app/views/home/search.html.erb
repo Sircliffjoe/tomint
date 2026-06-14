@@ -50,9 +50,10 @@
             <article class="tom-resource-card" style="--accent:<%= accent %>;" data-reveal>
               <small><%= event.start_time.strftime("%b %d, %Y") %> • Upcoming</small>
               <h3><%= link_to event.title, event_path(event) %></h3>
-              <div style="margin-top:.75rem;color:var(--tom-muted);line-height:1.55;font-size:.92rem;"><%= event.description %></div>
+              <% event_summary = event.description.to_plain_text.squish.truncate(150) rescue strip_tags(event.description.to_s).squish.truncate(150) %>
+              <p style="margin-top:.75rem;color:var(--tom-muted);line-height:1.55;font-size:.92rem;"><%= event_summary %></p>
               <p style="margin-top:.8rem;color:var(--tom-muted);font-size:.9rem;"><%= event.location.presence || event.state&.name || "Location TBA" %></p>
-              <%= link_to "Register", event_path(event), class: "tom-btn tom-btn-primary", style: "margin-top:1rem;" %>
+              <%= link_to(event.information_only? ? "Learn More" : "View Details", event_path(event), class: "tom-btn tom-btn-primary", style: "margin-top:1rem;") %>
             </article>
           <% end %>
         </div>

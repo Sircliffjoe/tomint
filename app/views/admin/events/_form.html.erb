@@ -1,5 +1,5 @@
 <div class="form-card">
-  <%= form_with(model: [:admin, event], class: "directorate-form") do |form| %>
+  <%= form_with(model: [:admin, event], class: "directorate-form", data: { controller: "event-type" }) do |form| %>
     <% if event.errors.any? %>
       <div class="error-banner">
         <div class="error-icon-wrap">
@@ -65,12 +65,12 @@
 
         <div class="field-group">
           <%= form.label :event_type, class: "field-label" %>
-          <div class="field-hint">Determines whether registration fees apply</div>
+          <div class="field-hint">Choose paid/free registration, or information-only when no registration is needed</div>
           <%= form.select :event_type,
               Event.event_types.keys.map { |t| [t.humanize, t] },
               {},
               class: "field-input field-select",
-              data: { controller: "event-type", action: "change->event-type#togglePrice" } %>
+              data: { action: "change->event-type#togglePrice" } %>
         </div>
       </div>
 
@@ -118,7 +118,7 @@
       <div class="field-group">
         <div class="event-status-note">
           <strong>Registration status is automatic</strong>
-          <p>Upcoming events are open for registration. Once the event date has passed, registration is closed.</p>
+          <p>Upcoming free and paid events are open for registration. Information-only events never show registration or pricing.</p>
         </div>
       </div>
     </div>

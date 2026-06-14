@@ -172,6 +172,38 @@ function initPublicSite() {
     });
   }
 
+  document.querySelectorAll("[data-team-popup-open]").forEach((trigger) => {
+    if (trigger.dataset.teamPopupBound) return;
+    trigger.dataset.teamPopupBound = "true";
+
+    trigger.addEventListener("click", (event) => {
+      const popup = document.getElementById(trigger.dataset.teamPopupOpen);
+      if (!popup) return;
+
+      event.preventDefault();
+      document.querySelectorAll(".tom-team-popup.is-open").forEach((openPopup) => {
+        openPopup.classList.remove("is-open");
+      });
+      popup.classList.add("is-open");
+      document.body.classList.add("tom-modal-open");
+      history.replaceState(null, "", `#${popup.id}`);
+    });
+  });
+
+  document.querySelectorAll("[data-team-popup-close]").forEach((trigger) => {
+    if (trigger.dataset.teamPopupCloseBound) return;
+    trigger.dataset.teamPopupCloseBound = "true";
+
+    trigger.addEventListener("click", (event) => {
+      event.preventDefault();
+      document.querySelectorAll(".tom-team-popup.is-open").forEach((popup) => {
+        popup.classList.remove("is-open");
+      });
+      document.body.classList.remove("tom-modal-open");
+      history.replaceState(null, "", "#leadership");
+    });
+  });
+
   const globalModal = document.querySelector("[data-global-modal]");
   if (globalModal) {
     const openGlobalModal = () => {
@@ -225,6 +257,11 @@ function initPublicSite() {
 }
 
 document.addEventListener("turbo:before-cache", () => {
+  document.querySelectorAll(".tom-team-popup.is-open").forEach((popup) => {
+    popup.classList.remove("is-open");
+  });
+  document.body.classList.remove("tom-modal-open");
+
   document.querySelectorAll("[data-global-modal]").forEach((globalModal) => {
     if (typeof globalModal.close === "function") {
       if (globalModal.open) globalModal.close();
@@ -233,6 +270,17 @@ document.addEventListener("turbo:before-cache", () => {
       globalModal.remove();
     }
   });
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key !== "Escape") return;
+
+  const openTeamPopup = document.querySelector(".tom-team-popup.is-open");
+  if (!openTeamPopup) return;
+
+  openTeamPopup.classList.remove("is-open");
+  document.body.classList.remove("tom-modal-open");
+  history.replaceState(null, "", "#leadership");
 });
 
 document.addEventListener("turbo:load", initPublicSite);

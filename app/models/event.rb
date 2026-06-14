@@ -5,7 +5,9 @@ class Event < ApplicationRecord
   has_one_attached :image
   has_rich_text :description
 
-  enum :event_type, { free: 0, paid: 1 }, default: :free
+  enum :event_type, { free: 0, paid: 1, information: 2 }, default: :free
+
+  before_validation :clear_pricing_for_information_events
 
   validates :title, presence: true
   validates :start_time, presence: true
@@ -18,7 +20,7 @@ class Event < ApplicationRecord
   end
 
   def registration_open?
-    upcoming?
+    !information? && upcoming?
   end
 
   def free?
@@ -27,5 +29,18 @@ class Event < ApplicationRecord
 
   def paid?
     event_type == "paid"
+  end
+
+  def information_only?
+    event_type == "information"
+  end
+
+  private
+
+  def clear_pricing_for_information_events
+    return unless information?
+
+    self.price = nil
+    self.currency = nil
   end
 end

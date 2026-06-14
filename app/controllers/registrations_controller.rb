@@ -3,6 +3,11 @@ class RegistrationsController < ApplicationController
   before_action :set_event
 
   def create
+    if @event.information_only?
+      redirect_to event_path(@event), alert: "Registration is not required for this event."
+      return
+    end
+
     unless @event.registration_open?
       redirect_to event_path(@event), alert: "Registration is closed for this event."
       return
