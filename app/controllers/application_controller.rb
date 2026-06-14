@@ -10,8 +10,28 @@ class ApplicationController < ActionController::Base
   stale_when_importmap_changes
   helper_method :admin_area?
 
+  before_action :load_global_modal_content
+
   def admin_area?
     self.class.name.start_with?("Admin::", "Directorates::", "States::") ||
     %w[dashboard reports events trainings profiles].include?(controller_name)
+  end
+
+  private
+
+  def load_global_modal_content
+    return if admin_area? # Don't show modal in admin areas
+    return unless controller_path == "home" && action_name == "index"
+
+    active_announcement = Announcement.where('created_at >= ?', 7.days.ago).order(created_at: :desc).first
+    spotlight_event = Event.where(spotlight: true).where('start_time >= ?', Time.current).order(created_at: :desc).first
+
+    if active_announcement&.priority?
+      @global_modal_item = active_announcement
+    elsif spotlight_event
+      @global_modal_item = spotlight_event
+    elsif active_announcement
+      @global_modal_item = active_announcement
+    end
   end
 end

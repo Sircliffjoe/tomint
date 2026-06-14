@@ -1,6 +1,6 @@
 <div class="form-card">
-  <%= form_with(model: [:admin, event], class: "directorate-form") do |form| %>
-    <% if event.errors.any? %>
+  <%= form_with(model: [:admin, announcement], class: "directorate-form") do |form| %>
+    <% if announcement.errors.any? %>
       <div class="error-banner">
         <div class="error-icon-wrap">
           <svg class="error-icon" viewBox="0 0 20 20" fill="currentColor">
@@ -8,9 +8,9 @@
           </svg>
         </div>
         <div class="error-body">
-          <h3 class="error-title"><%= pluralize(event.errors.count, "error") %> detected</h3>
+          <h3 class="error-title"><%= pluralize(announcement.errors.count, "error") %> detected</h3>
           <ul class="error-list">
-            <% event.errors.full_messages.each do |message| %>
+            <% announcement.errors.full_messages.each do |message| %>
               <li><%= message %></li>
             <% end %>
           </ul>
@@ -21,75 +21,27 @@
     <div class="form-fields">
       <div class="field-group">
         <%= form.label :title, class: "field-label" %>
-        <div class="field-hint">The official name or headline of this event</div>
-        <%= form.text_field :title, placeholder: "e.g. National Youth Conference 2026", class: "field-input" %>
+        <div class="field-hint">The title of the announcement</div>
+        <%= form.text_field :title, placeholder: "e.g. Important Update for all Members", class: "field-input" %>
       </div>
 
       <div class="field-group">
         <%= form.label :description, class: "field-label" %>
-        <div class="field-hint">A full description of the event — supports rich text formatting</div>
-        <div class="rich-text-wrap">
-          <%= form.rich_text_area :description, class: "field-richtext", style: "min-height: 200px;" %>
-        </div>
+        <div class="field-hint">A short description of the announcement</div>
+        <%= form.text_area :description, class: "field-input", style: "min-height: 120px;" %>
       </div>
 
-      <div class="form-row">
-        <div class="field-group">
-          <%= form.label :start_time, class: "field-label" %>
-          <div class="field-hint">When the event begins</div>
-          <%= form.datetime_field :start_time, class: "field-input" %>
-        </div>
-        <div class="field-group">
-          <%= form.label :end_time, class: "field-label" %>
-          <div class="field-hint">When the event concludes</div>
-          <%= form.datetime_field :end_time, class: "field-input" %>
+      <div class="checkbox-row" style="margin-bottom: 2rem;">
+        <%= form.check_box :priority, class: "checkbox-input" %>
+        <div>
+          <%= form.label :priority, "Announcement Priority", class: "checkbox-label" %>
+          <div class="checkbox-desc">When both an announcement and a spotlight event are active, check this to make the announcement take priority.</div>
         </div>
       </div>
 
       <div class="field-group">
-        <%= form.label :location, class: "field-label" %>
-        <div class="field-hint">Physical or virtual venue for this event</div>
-        <%= form.text_field :location, placeholder: "e.g. Lagos Secretariat, Ikeja", class: "field-input" %>
-      </div>
-
-      <div class="form-row">
-        <% if current_user.super_admin? %>
-          <div class="field-group">
-            <%= form.label :state_id, "State (Optional)", class: "field-label" %>
-            <div class="field-hint">Scope to a state, or leave blank for a national event</div>
-            <%= form.collection_select :state_id, State.order(:name), :id, :name,
-                { include_blank: "National Event" },
-                { class: "field-input field-select" } %>
-          </div>
-        <% end %>
-
-        <div class="field-group">
-          <%= form.label :event_type, class: "field-label" %>
-          <div class="field-hint">Determines whether registration fees apply</div>
-          <%= form.select :event_type,
-              Event.event_types.keys.map { |t| [t.humanize, t] },
-              {},
-              class: "field-input field-select",
-              data: { controller: "event-type", action: "change->event-type#togglePrice" } %>
-        </div>
-      </div>
-
-      <div class="form-row" data-event-type-target="priceField">
-        <div class="field-group">
-          <%= form.label :price, class: "field-label" %>
-          <div class="field-hint">Registration fee amount (if paid event)</div>
-          <%= form.number_field :price, step: "0.01", placeholder: "0.00", class: "field-input" %>
-        </div>
-        <div class="field-group" data-event-type-target="currencyField">
-          <%= form.label :currency, class: "field-label" %>
-          <div class="field-hint">Currency code for the fee</div>
-          <%= form.text_field :currency, value: "NGN", class: "field-input" %>
-        </div>
-      </div>
-
-      <div class="field-group">
-        <%= form.label :image, "Event Banner / Image", class: "field-label" %>
-        <div class="field-hint">Upload a banner or cover image for this event (PNG, JPG, GIF — up to 10MB)</div>
+        <%= form.label :image, "Announcement Image", class: "field-label" %>
+        <div class="field-hint">Upload an image for this announcement (PNG, JPG, GIF — up to 10MB)</div>
         <div class="upload-zone">
           <div class="upload-zone-inner">
             <svg class="upload-icon" stroke="currentColor" fill="none" viewBox="0 0 48 48">
@@ -107,30 +59,22 @@
         </div>
       </div>
 
-      <div class="checkbox-row" style="margin-bottom: 2rem;">
-        <%= form.check_box :spotlight, class: "checkbox-input" %>
-        <div>
-          <%= form.label :spotlight, "Spotlight Event", class: "checkbox-label" %>
-          <div class="checkbox-desc">Show this event in the site-wide modal (takes priority over announcements).</div>
-        </div>
-      </div>
-
       <div class="field-group">
         <div class="event-status-note">
-          <strong>Registration status is automatic</strong>
-          <p>Upcoming events are open for registration. Once the event date has passed, registration is closed.</p>
+          <strong>Announcement Duration</strong>
+          <p>Announcements are automatically displayed in the site-wide modal for 7 days after creation.</p>
         </div>
       </div>
     </div>
 
     <div class="form-actions">
-      <%= link_to admin_events_path, class: "btn-cancel" do %>
+      <%= link_to admin_announcements_path, class: "btn-cancel" do %>
         <svg viewBox="0 0 20 20" fill="currentColor" class="btn-icon">
           <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
         </svg>
         Cancel
       <% end %>
-      <%= form.submit event.new_record? ? "Create Event" : "Update Event", class: "btn-submit" %>
+      <%= form.submit announcement.new_record? ? "Create Announcement" : "Update Announcement", class: "btn-submit" %>
     </div>
   <% end %>
 </div>
@@ -143,8 +87,6 @@
   .error-title { font-size:.8125rem; font-weight:700; color:#991b1b; margin:0 0 .375rem; letter-spacing:.01em; }
   .error-list { margin:0; padding-left:1.125rem; font-size:.8125rem; color:#b91c1c; line-height:1.6; }
   .form-fields { display:flex; flex-direction:column; gap:2rem; }
-  .form-row { display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; }
-  @media(max-width:540px){ .form-row { grid-template-columns:1fr; } }
   .field-group { display:flex; flex-direction:column; }
   .field-label { display:block; font-size:.6875rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#374151; margin-bottom:.375rem; }
   .field-hint { font-size:.8rem; color:#9ca3af; margin-bottom:.75rem; font-style:italic; font-family:'Georgia',serif; line-height:1.4; }
@@ -152,10 +94,6 @@
   .field-input::placeholder { color:#b0bec5; font-style:italic; }
   .field-input:hover { border-color:#16a34a; background:#fff; }
   .field-input:focus { background:#fff; border-color:#16a34a; box-shadow:0 0 0 4px rgba(34,197,94,.1); }
-  .field-select { cursor:pointer; }
-  .rich-text-wrap { border:1.5px solid #22c55e; border-radius:10px; background:#f9fafb; overflow:hidden; transition:border-color .18s ease,box-shadow .18s ease; }
-  .rich-text-wrap:focus-within { border-color:#16a34a; background:#fff; box-shadow:0 0 0 4px rgba(34,197,94,.1); }
-  .field-richtext { border:none !important; box-shadow:none !important; background:transparent !important; padding:.75rem 1rem; }
   .upload-zone { display:flex; justify-content:center; padding:2rem 1.5rem; border:2px dashed #22c55e; border-radius:10px; background:#f9fafb; cursor:pointer; transition:border-color .18s ease,background .18s ease; }
   .upload-zone:hover { border-color:#16a34a; background:#fff; }
   .upload-zone-inner { text-align:center; }
@@ -175,10 +113,6 @@
   .form-actions { display:flex; align-items:center; justify-content:flex-end; gap:.875rem; margin-top:2.5rem; padding-top:2rem; border-top:1px solid #f3f4f6; }
   .btn-cancel { display:inline-flex; align-items:center; gap:.4rem; padding:.65rem 1.375rem; font-size:.8375rem; font-weight:600; letter-spacing:.02em; color:#6b7280; background:transparent; border:1.5px solid #e5e7eb; border-radius:9px; text-decoration:none; cursor:pointer; transition:all .18s ease; font-family:inherit; }
   .btn-cancel:hover { color:#374151; background:#f9fafb; border-color:#d1d5db; }
-  .btn-cancel:active { transform:scale(.98); }
-  .btn-icon { width:14px; height:14px; opacity:.7; }
   .btn-submit { display:inline-flex; align-items:center; padding:.7rem 1.75rem; font-size:.8375rem; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:#fff; background:linear-gradient(135deg,#22c55e 0%,#16a34a 100%); border:none; border-radius:9px; box-shadow:0 2px 8px rgba(22,163,74,.3),0 1px 2px rgba(0,0,0,.08); cursor:pointer; transition:all .18s ease; font-family:inherit; }
   .btn-submit:hover { background:linear-gradient(135deg,#16a34a 0%,#15803d 100%); box-shadow:0 4px 14px rgba(22,163,74,.4),0 2px 4px rgba(0,0,0,.1); transform:translateY(-1px); }
-  .btn-submit:active { transform:scale(.98) translateY(0); box-shadow:0 1px 4px rgba(22,163,74,.3); }
-  .btn-submit:focus { outline:none; box-shadow:0 0 0 4px rgba(34,197,94,.25),0 2px 8px rgba(22,163,74,.3); }
 </style>

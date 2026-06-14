@@ -1,0 +1,42 @@
+<% if @global_modal_item.present? %>
+  <div data-global-modal class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/60 p-4 backdrop-blur-sm" role="presentation">
+    <div data-global-modal-panel class="relative w-full overflow-hidden rounded-2xl bg-white shadow-2xl flex flex-col" style="width: min(92vw, 24rem); max-height: calc(100vh - 2rem);" role="dialog" aria-modal="true" aria-labelledby="global-modal-title">
+      <button type="button" data-global-modal-close onclick="this.closest('[data-global-modal]').remove()" class="absolute top-4 right-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-gray-500 hover:text-gray-700 hover:bg-white backdrop-blur-md transition-all">
+        <span class="sr-only">Close</span>
+        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+
+      <% if @global_modal_item.image.attached? %>
+        <div class="w-full h-56 bg-gray-100 relative shrink-0">
+          <%= image_tag @global_modal_item.image, class: "w-full h-full object-cover" %>
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+        </div>
+      <% end %>
+
+      <div class="p-6 flex-1 flex flex-col overflow-y-auto">
+        <% is_event = @global_modal_item.is_a?(Event) %>
+        <div class="mb-3">
+          <span class="inline-flex items-center rounded-md <%= is_event ? 'bg-green-50 text-green-700 ring-green-600/20' : 'bg-blue-50 text-blue-700 ring-blue-600/20' %> px-2 py-1 text-xs font-medium ring-1 ring-inset">
+            <%= is_event ? "Spotlight Event" : "Announcement" %>
+          </span>
+        </div>
+        
+        <h3 id="global-modal-title" class="text-xl font-bold text-gray-900 mb-2"><%= @global_modal_item.title %></h3>
+        
+        <div class="text-sm text-gray-600 mb-6 flex-1 line-clamp-3">
+          <% if @global_modal_item.is_a?(Event) %>
+            <%= strip_tags(@global_modal_item.description.to_s).truncate(150) %>
+          <% else %>
+            <%= strip_tags(@global_modal_item.description).truncate(150) %>
+          <% end %>
+        </div>
+
+        <div class="mt-auto">
+          <%= link_to "Learn More", is_event ? event_path(@global_modal_item) : announcement_path(@global_modal_item), class: "block w-full rounded-xl bg-green-600 px-3 py-3 text-center text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 transition-colors" %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

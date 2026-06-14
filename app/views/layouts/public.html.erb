@@ -66,5 +66,6 @@
         document.addEventListener('turbo:render', fade);
       })();
     </script>
+    <%= render "shared/global_modal" if !admin_area? %>
   </body>
 </html>

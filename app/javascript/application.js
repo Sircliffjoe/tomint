@@ -171,7 +171,69 @@ function initPublicSite() {
       if (clickedBackdrop) closeModal();
     });
   }
+
+  const globalModal = document.querySelector("[data-global-modal]");
+  if (globalModal) {
+    const openGlobalModal = () => {
+      if (globalModal.open) return;
+
+      if (typeof globalModal.showModal === "function") {
+        try {
+          globalModal.showModal();
+          return;
+        } catch (_error) {
+          globalModal.setAttribute("open", "");
+        }
+      } else {
+        globalModal.hidden = false;
+      }
+    };
+
+    setTimeout(openGlobalModal, 100);
+
+    if (globalModal.dataset.modalBound) return;
+    globalModal.dataset.modalBound = "true";
+
+    const closeBtn = globalModal.querySelector("[data-global-modal-close]");
+
+    function closeGlobalModal() {
+      if (typeof globalModal.close === "function") {
+        globalModal.close();
+      } else {
+        globalModal.remove();
+      }
+    }
+
+    if (closeBtn) closeBtn.addEventListener("click", closeGlobalModal);
+
+    globalModal.addEventListener("click", (event) => {
+      if (event.target === globalModal) {
+        closeGlobalModal();
+        return;
+      }
+
+      const dialogBox = globalModal.getBoundingClientRect();
+      const clickedBackdrop =
+        event.clientX < dialogBox.left ||
+        event.clientX > dialogBox.right ||
+        event.clientY < dialogBox.top ||
+        event.clientY > dialogBox.bottom;
+
+      if (clickedBackdrop) closeGlobalModal();
+    });
+  }
 }
+
+document.addEventListener("turbo:before-cache", () => {
+  document.querySelectorAll("[data-global-modal]").forEach((globalModal) => {
+    if (typeof globalModal.close === "function") {
+      if (globalModal.open) globalModal.close();
+    } else {
+      globalModal.removeAttribute("open");
+      globalModal.remove();
+    }
+  });
+});
 
 document.addEventListener("turbo:load", initPublicSite);
 document.addEventListener("DOMContentLoaded", initPublicSite);

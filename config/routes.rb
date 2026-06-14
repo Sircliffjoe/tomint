@@ -26,6 +26,7 @@ Rails.application.routes.draw do
     resources :blog_posts
     resources :donations
     resources :pages
+    resources :announcements
   end
 
 
@@ -68,6 +69,8 @@ Rails.application.routes.draw do
   resources :events, only: [ :index, :show ] do
     resources :registrations, only: [ :create, :show, :destroy ]
   end
+
+  resources :announcements, only: [ :show ]
 
   # Health check
   get "up" => "rails/health#show", as: :rails_health_check

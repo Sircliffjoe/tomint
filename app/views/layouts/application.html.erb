@@ -66,5 +66,6 @@
 
       <%= yield %>
     </main>
+    <%= render "shared/global_modal" if !admin_area? %>
   </body>
 </html>
