@@ -2,16 +2,16 @@
 // Run that command whenever you add a new controller or create them with
 // ./bin/rails generate stimulus controllerName
 
-import { application } from "./application"
+import { application } from "controllers/application"
 
-import EventTypeController from "./event_type_controller"
+import EventTypeController from "controllers/event_type_controller"
 application.register("event-type", EventTypeController)
 
-import HelloController from "./hello_controller"
+import HelloController from "controllers/hello_controller"
 application.register("hello", HelloController)
 
-import PageTemplateController from "./page_template_controller"
+import PageTemplateController from "controllers/page_template_controller"
 application.register("page-template", PageTemplateController)
 
-import ReportFormController from "./report_form_controller"
+import ReportFormController from "controllers/report_form_controller"
 application.register("report-form", ReportFormController)

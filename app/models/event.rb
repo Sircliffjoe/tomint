@@ -1,6 +1,6 @@
 class Event < ApplicationRecord
   belongs_to :state, optional: true
-  has_many :registrations
+  has_many :registrations, dependent: :destroy
 
   has_one_attached :image
   has_rich_text :description
