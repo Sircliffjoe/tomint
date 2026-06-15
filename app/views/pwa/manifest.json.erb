@@ -1,22 +1,65 @@
 {
-  "name": "Tomint",
+  "name": "Teenagers' Outreach Ministries International",
+  "short_name": "TOM Int.",
+  "description": "Teenagers' Outreach Ministries International - raising leaders and impacting generations.",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#14532d",
+  "background_color": "#f0fdf4",
+  "categories": ["education", "lifestyle", "productivity"],
   "icons": [
     {
-      "src": "/icon.png",
+      "src": "/pwa/icon-192.png",
       "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "192x192",
+      "purpose": "any"
     },
     {
-      "src": "/icon.png",
+      "src": "/pwa/maskable-icon-512.png",
       "type": "image/png",
       "sizes": "512x512",
       "purpose": "maskable"
+    },
+    {
+      "src": "/pwa/apple-touch-icon.png",
+      "type": "image/png",
+      "sizes": "180x180",
+      "purpose": "any"
     }
   ],
-  "start_url": "/",
-  "display": "standalone",
-  "scope": "/",
-  "description": "Tomint.",
-  "theme_color": "red",
-  "background_color": "red"
+  "screenshots": [
+    {
+      "src": "/pwa/screens/home-wide.png",
+      "type": "image/png",
+      "sizes": "1280x720",
+      "form_factor": "wide",
+      "label": "TOM homepage on desktop"
+    },
+    {
+      "src": "/pwa/screens/home-mobile.png",
+      "type": "image/png",
+      "sizes": "390x844",
+      "form_factor": "narrow",
+      "label": "TOM homepage on mobile"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Events",
+      "short_name": "Events",
+      "description": "View upcoming TOM events.",
+      "url": "/events",
+      "icons": [{ "src": "/pwa/icon-192.png", "type": "image/png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Training",
+      "short_name": "Training",
+      "description": "Explore TOM training resources.",
+      "url": "/trainings",
+      "icons": [{ "src": "/pwa/icon-192.png", "type": "image/png", "sizes": "192x192" }]
+    }
+  ]
 }

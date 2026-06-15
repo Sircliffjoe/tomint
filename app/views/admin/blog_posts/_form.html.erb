@@ -26,6 +26,56 @@
       </div>
 
       <div class="field-group">
+        <%= form.label :main_image, "Main Blog Image", class: "field-label" %>
+        <div class="field-hint">This is the primary image shown on the blog index and at the top of the post</div>
+        <% if blog_post.main_image.attached? %>
+          <div class="image-preview">
+            <%= image_tag blog_post.main_image, alt: blog_post.title.presence || "Blog main image" %>
+          </div>
+        <% end %>
+        <div class="upload-zone">
+          <div class="upload-zone-inner">
+            <svg class="upload-icon" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+              <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            <div class="upload-label">
+              <label class="relative cursor-pointer">
+                <a>Upload main image</a>
+                <%= form.file_field :main_image, class: "sr-only", accept: "image/png,image/jpeg,image/webp,image/gif" %>
+              </label>
+              &nbsp;PNG, JPG, WebP, or GIF
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <%= form.label :gallery_images, "Optional Gallery Images", class: "field-label" %>
+        <div class="field-hint">Upload up to 3 supporting images displayed inside the post</div>
+        <% if blog_post.gallery_images.attached? %>
+          <div class="gallery-preview">
+            <% blog_post.gallery_images.each do |image| %>
+              <%= image_tag image, alt: "Blog gallery image" %>
+            <% end %>
+          </div>
+        <% end %>
+        <div class="upload-zone">
+          <div class="upload-zone-inner">
+            <svg class="upload-icon" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+              <path d="M4 16l10-10 10 10M14 6v28m12-18l8-8 10 10M34 8v34" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            <div class="upload-label">
+              <label class="relative cursor-pointer">
+                <a>Upload gallery images</a>
+                <%= form.file_field :gallery_images, multiple: true, class: "sr-only", accept: "image/png,image/jpeg,image/webp,image/gif" %>
+              </label>
+              &nbsp;choose up to 3 images
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="field-group">
         <%= form.label :body, "Content / Body", class: "field-label" %>
         <div class="field-hint">The full body of the blog post — supports rich text formatting</div>
         <div class="prose prose-green max-w-none rich-text-wrap">
@@ -35,8 +85,8 @@
 
       <div class="field-group">
         <%= form.label :published_at, "Publication Date", class: "field-label" %>
-        <div class="field-hint">Schedule a publish date and time, or leave blank to save as a private draft</div>
-        <%= form.datetime_field :published_at, class: "field-input" %>
+        <div class="field-hint">Choose the publication date, or leave blank to save as a private draft</div>
+        <%= form.date_field :published_at, value: blog_post.published_at&.to_date, class: "field-input" %>
       </div>
     </div>
 
@@ -84,6 +134,16 @@
   .field-input::placeholder { color: #b0bec5; font-style: italic; }
   .field-input:hover { border-color: #16a34a; background: #ffffff; }
   .field-input:focus { background: #ffffff; border-color: #16a34a; box-shadow: 0 0 0 4px rgba(34,197,94,0.1); }
+  .image-preview { overflow: hidden; border-radius: 12px; border: 1px solid #e5e7eb; margin-bottom: .9rem; max-height: 260px; }
+  .image-preview img { width: 100%; height: 260px; object-fit: cover; display: block; }
+  .gallery-preview { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .75rem; margin-bottom: .9rem; }
+  .gallery-preview img { width: 100%; height: 150px; object-fit: cover; border-radius: 10px; border: 1px solid #e5e7eb; }
+  .upload-zone { display:flex; justify-content:center; padding:2rem 1.5rem; border:2px dashed #22c55e; border-radius:10px; background:#f9fafb; cursor:pointer; transition:border-color .18s ease,background .18s ease; }
+  .upload-zone:hover { border-color:#16a34a; background:#fff; }
+  .upload-zone-inner { text-align:center; }
+  .upload-icon { width:2.5rem; height:2.5rem; color:#d1d5db; margin:0 auto .75rem; }
+  .upload-label { font-size:.8375rem; color:#6b7280; }
+  .upload-label a { color:#16a34a; font-weight:600; text-decoration:none; cursor:pointer; }
   /* Rich text area — border applied to wrapper */
   .rich-text-wrap {
     border: 1.5px solid #22c55e;

@@ -4,13 +4,19 @@
     <title><%= content_for(:title) || "TOM Int. - Raise Leaders, Impact Generations" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="TOM Int.">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#14532d">
+    <meta name="apple-mobile-web-app-title" content="TOM Int.">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
     <%= yield :head %>
 
-    <link rel="icon" href="<%= image_path 'logo.png' %>" type="image/png">
-    <link rel="apple-touch-icon" href="<%= image_path 'logo.png' %>">
+    <%= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
+
+    <link rel="icon" href="/pwa/icon-192.png" type="image/png">
+    <link rel="apple-touch-icon" href="/pwa/apple-touch-icon.png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

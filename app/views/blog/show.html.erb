@@ -1,24 +1,86 @@
 <% content_for :title, @post.title %>
 
-<div class="bg-white px-6 py-32 lg:px-8">
-  <div class="mx-auto max-w-3xl text-base leading-7 text-gray-700">
+<% author_name = @post.author.full_name %>
+<% reading_minutes = (@post.body.to_plain_text.split.size / 200.0).ceil.clamp(1, 12) %>
+
+<div class="min-h-screen bg-gray-50" style="padding-top: 180px;">
+  <div class="mx-auto max-w-5xl px-4 pb-20 sm:px-6 lg:px-8">
     <div class="mb-8">
-      <%= link_to "← Back to Blog", blog_index_path, class: "text-sm font-semibold leading-6 text-green-600 hover:text-green-500" %>
-    </div>
-    
-    <p class="text-base font-semibold leading-7 text-green-600"><%= @post.published_at.strftime("%B %d, %Y") %></p>
-    <h1 class="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl"><%= @post.title %></h1>
-    
-    <div class="mt-6 flex items-center gap-x-4">
-      <div class="text-sm leading-6">
-        <p class="font-semibold text-gray-900">
-          By <%= @post.author.first_name %> <%= @post.author.last_name %>
-        </p>
-      </div>
+      <%= link_to blog_index_path, class: "inline-flex items-center gap-2 text-sm font-semibold text-leaf-700 transition-colors hover:text-leaf-900" do %>
+        <svg style="width:16px;height:16px;" fill="none" viewBox="0 0 24 24" stroke-width="1.7" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+        </svg>
+        Back to Blog
+      <% end %>
     </div>
 
-    <div class="mt-10 prose prose-lg text-gray-500">
-      <%= @post.body %>
-    </div>
+    <article class="overflow-hidden rounded-[28px] border border-gray-200 bg-white shadow-[0_24px_80px_rgba(15,23,42,0.08)]">
+      <% if @post.main_image.attached? %>
+        <div class="overflow-hidden border-b border-gray-200 bg-gray-100">
+          <%= image_tag @post.main_image, class: "block h-[240px] w-full object-cover object-center sm:h-[320px] lg:h-[420px]", alt: @post.title %>
+        </div>
+      <% else %>
+        <div class="bg-gradient-to-br from-leaf-950 via-leaf-800 to-emerald-700 px-6 py-16 sm:px-10 sm:py-20">
+          <span class="inline-flex rounded-full bg-white/12 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.18em] text-white ring-1 ring-white/20">TOM Blog</span>
+          <h1 class="mt-6 max-w-4xl text-3xl font-black tracking-tight text-white sm:text-5xl" style="line-height: 1.08;">
+            <%= @post.title %>
+          </h1>
+        </div>
+      <% end %>
+
+      <div class="px-5 py-8 sm:px-8 lg:px-12 lg:py-12">
+        <div class="mx-auto max-w-4xl">
+          <div class="flex flex-wrap items-center gap-3">
+            <span class="inline-flex rounded-full bg-leaf-50 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.18em] text-leaf-700 ring-1 ring-leaf-100">Blog Update</span>
+            <span class="text-sm font-semibold text-gray-500"><%= @post.published_at.strftime("%B %d, %Y") %></span>
+            <span class="hidden text-gray-300 sm:inline">•</span>
+            <span class="text-sm font-semibold text-gray-500"><%= pluralize(reading_minutes, "minute") %> read</span>
+          </div>
+
+          <% if @post.main_image.attached? %>
+            <h1 class="mt-5 text-3xl font-black tracking-tight text-gray-950 sm:text-5xl" style="line-height: 1.08;">
+              <%= @post.title %>
+            </h1>
+          <% end %>
+
+          <div class="mt-6 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-gray-200 bg-gray-50 px-4 py-4 sm:px-5">
+            <div class="flex items-center gap-3">
+              <div class="flex h-12 w-12 items-center justify-center rounded-full bg-leaf-700 text-sm font-black text-white shadow-sm">
+                <%= @post.author.initials.presence || "T" %>
+              </div>
+              <div>
+                <p class="text-sm font-bold text-gray-950">By <%= author_name %></p>
+                <p class="text-sm text-gray-500">Published for the TOM community</p>
+              </div>
+            </div>
+
+            <%= link_to blog_index_path, class: "inline-flex items-center justify-center rounded-xl bg-leaf-700 px-4 py-3 text-sm font-bold text-white shadow-sm transition-colors hover:bg-leaf-800" do %>
+              More Posts
+            <% end %>
+          </div>
+
+          <div class="mt-10 prose prose-lg prose-green max-w-none text-gray-700" style="line-height: 1.85;">
+            <%= @post.body %>
+          </div>
+
+          <% if @post.gallery_images.attached? %>
+            <section class="mt-12 border-t border-gray-100 pt-8">
+              <div class="mb-5">
+                <span class="text-[11px] font-bold uppercase tracking-[0.18em] text-leaf-700">More Images</span>
+                <h2 class="mt-2 text-2xl font-black text-gray-950">Gallery</h2>
+              </div>
+
+              <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                <% @post.gallery_images.attachments.first(3).each do |image| %>
+                  <div class="overflow-hidden rounded-2xl border border-gray-200 bg-gray-100 shadow-sm">
+                    <%= image_tag image, class: "block h-56 w-full object-cover object-center", alt: @post.title %>
+                  </div>
+                <% end %>
+              </div>
+            </section>
+          <% end %>
+        </div>
+      </div>
+    </article>
   </div>
 </div>

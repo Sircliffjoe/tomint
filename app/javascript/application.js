@@ -4,6 +4,12 @@ import "controllers"
 
 // Trix and ActionText are loaded via CDN in the layout
 
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/service-worker.js").catch(() => {});
+  });
+}
+
 function initPublicSite() {
   const revealItems = document.querySelectorAll("[data-reveal]");
   if ("IntersectionObserver" in window && revealItems.length) {
