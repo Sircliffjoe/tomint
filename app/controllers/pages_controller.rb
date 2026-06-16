@@ -6,6 +6,9 @@ class PagesController < ApplicationController
   def programmes
   end
 
+  def contact
+  end
+
   def show
     @page = Page.find_by!(slug: params[:slug])
   rescue ActiveRecord::RecordNotFound

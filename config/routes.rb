@@ -86,7 +86,7 @@ Rails.application.routes.draw do
   # CMS Pages with named routes to maintain helpers
   get "about", to: "pages#about"
   get "programmes", to: "pages#programmes", as: :programmes
-  get "contact", to: "pages#show", defaults: { slug: "contact" }, as: :contact
+  get "contact", to: "pages#contact", as: :contact
   get "privacy", to: "pages#show", defaults: { slug: "privacy" }, as: :privacy
   get "terms", to: "pages#show", defaults: { slug: "terms" }, as: :terms
 

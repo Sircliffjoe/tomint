@@ -20,9 +20,7 @@
       <%= link_to "Events", events_path, class: "tom-nav-link" %>
       <%= link_to "Training", trainings_path, class: "tom-nav-link" %>
       <%= link_to "Blog", blog_index_path, class: "tom-nav-link" %>
-      <% if Page.exists?(slug: "contact") %>
-        <%= link_to "Contact", contact_path, class: "tom-nav-link" %>
-      <% end %>
+      <%= link_to "Contact", contact_path, class: "tom-nav-link" %>
     </div>
     <div class="hidden lg:flex lg:flex-1 lg:justify-end items-center">
       <% if user_signed_in? %>
@@ -72,9 +70,7 @@
         <%= link_to "Events", events_path, class: "block rounded-full px-4 py-3 text-base font-semibold text-white hover:bg-white/10" %>
         <%= link_to "Training", trainings_path, class: "block rounded-full px-4 py-3 text-base font-semibold text-white hover:bg-white/10" %>
         <%= link_to "Blog", blog_index_path, class: "block rounded-full px-4 py-3 text-base font-semibold text-white hover:bg-white/10" %>
-        <% if Page.exists?(slug: "contact") %>
-          <%= link_to "Contact", contact_path, class: "block rounded-full px-4 py-3 text-base font-semibold text-white hover:bg-white/10" %>
-        <% end %>
+        <%= link_to "Contact", contact_path, class: "block rounded-full px-4 py-3 text-base font-semibold text-white hover:bg-white/10" %>
       </div>
       <div class="mt-8 pt-6 border-t border-white/20 space-y-3">
         <% if user_signed_in? %>

@@ -1,0 +1,69 @@
+<% content_for :title, "Contact Us — TOM Int." %>
+
+<section class="tom-page-hero">
+  <div class="tom-container">
+    <div class="tom-page-panel" data-reveal>
+      <span class="tom-eyebrow" style="color:var(--tom-yellow);">Home / Contact</span>
+      <h1>We'd love to hear from you</h1>
+      <div style="margin-top:1rem;line-height:1.75;">
+        <p>Reach out through any of the channels below. We're here to serve you.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="tom-section bg-white">
+  <div class="tom-container">
+    <div class="tom-info-grid">
+      <% [["Address", "Plot 85, Ladi Kwali Extension Layout, FCT, Abuja, Nigeria", "var(--tom-teal)"], ["Phone", "+234 803 086 9716", "var(--tom-orange)"], ["Email", "tommediang@gmail.com", "var(--tom-purple)"]].each do |label, value, accent| %>
+        <div class="tom-resource-card" style="--accent:<%= accent %>;" data-reveal>
+          <small>Contact</small>
+          <h3><%= label %></h3>
+          <p style="margin-top:.75rem;color:var(--tom-muted);line-height:1.55;"><%= value %></p>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="tom-feature-split" style="align-items:start;margin-top:3rem;">
+      <div class="tom-card" style="padding:1.5rem;" data-reveal>
+        <h2>Send a Message</h2>
+        <form style="display:grid;gap:1rem;margin-top:1.3rem;">
+          <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;">
+            <input class="tom-input" type="text" placeholder="Name" aria-label="Name">
+            <input class="tom-input" type="email" placeholder="Email" aria-label="Email">
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;">
+            <input class="tom-input" type="tel" placeholder="Phone" aria-label="Phone">
+            <select class="tom-input" aria-label="Subject">
+              <option>General enquiry</option>
+              <option>Events</option>
+              <option>Training</option>
+              <option>Donation</option>
+            </select>
+          </div>
+          <textarea class="tom-input" style="min-height:150px;" placeholder="Message" aria-label="Message"></textarea>
+          <button type="submit" class="tom-btn tom-btn-primary" style="width:100%;border:0;">Send Message</button>
+        </form>
+      </div>
+
+      <div style="display:grid;gap:1rem;">
+        <div class="tom-card" style="overflow:hidden;" data-reveal>
+          <iframe
+            title="TOM Headquarters Map"
+            src="https://www.google.com/maps?q=Kwali%2C%20Federal%20Capital%20Territory%2C%20Abuja%2C%20Nigeria&output=embed"
+            style="width:100%;height:320px;border:0;"
+            loading="lazy"></iframe>
+        </div>
+        <div class="tom-card" style="padding:1.25rem;" data-reveal>
+          <h3>Office Hours</h3>
+          <p style="margin-top:.75rem;color:var(--tom-muted);">Monday - Friday, 9:00 AM - 5:00 PM</p>
+          <div style="display:flex;gap:.65rem;margin-top:1rem;">
+            <% ["IG", "FB", "WA", "YT"].each do |label| %>
+              <a href="#" class="tom-social" style="background:var(--tom-navy);" aria-label="<%= label %>"><%= label %></a>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
