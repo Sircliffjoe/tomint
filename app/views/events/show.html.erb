@@ -32,16 +32,16 @@
           <!-- Calendar icon block -->
           <div class="flex-shrink-0 rounded-xl bg-white border border-gray-200 text-center shadow-sm overflow-hidden" style="width:56px;">
             <div class="bg-leaf-600 text-white text-[10px] font-bold uppercase tracking-wider py-1">
-              <%= @event.start_time.strftime("%b") %>
+              <%= @event.calendar_month_label %>
             </div>
             <div class="py-2">
-              <span class="text-xl font-extrabold text-gray-900 leading-none"><%= @event.start_time.strftime("%d") %></span>
+              <span class="text-xl font-extrabold text-gray-900 leading-none"><%= @event.calendar_day_label %></span>
             </div>
           </div>
           <div>
-            <p class="text-sm font-semibold text-gray-900"><%= @event.start_time.strftime("%A, %B %d") %></p>
+            <p class="text-sm font-semibold text-gray-900"><%= @event.long_date_label %></p>
             <p class="text-sm text-gray-500 mt-0.5">
-              <%= @event.start_time.strftime("%I:%M %p") %> – <%= @event.end_time.strftime("%I:%M %p") %>
+              <%= @event.time_label %>
             </p>
           </div>
         </div>
@@ -70,6 +70,10 @@
           </div>
         </div>
 
+        <% if @event.camp_information_event? %>
+          <%= render "camp_state_details", event: @event, camp_details: @event.camp_details %>
+        <% end %>
+
         <!-- Back link -->
         <div class="mb-bb mt-12">
           <%= link_to events_path, class: "inline-flex items-center gap-2 text-sm font-medium text-gray-500 hover:text-leaf-600 transition-colors" do %>
@@ -93,7 +97,7 @@
                 </div>
               <% elsif @event.paid? %>
                 <div class="flex items-baseline gap-1">
-                  <span class="text-2xl font-bold text-gray-900"><%= @event.currency %> <%= number_with_delimiter(@event.price.to_i) %></span>
+                  <span class="text-2xl font-bold text-gray-900"><%= @event.display_price %></span>
                   <span class="text-sm text-gray-500">/ person</span>
                 </div>
               <% else %>
@@ -142,9 +146,9 @@
                         <%= @registration.errors.full_messages.to_sentence %>
                       </div>
                     <% end %>
-                    <%= form.text_field :guest_name, placeholder: "Full name", class: "tom-input", aria: { label: "Full name" } %>
-                    <%= form.email_field :guest_email, placeholder: "Email address", class: "tom-input", aria: { label: "Email address" } %>
-                    <%= form.telephone_field :guest_phone, placeholder: "Phone number", class: "tom-input", aria: { label: "Phone number" } %>
+                    <%= form.text_field :guest_name, placeholder: "Full name", class: "mb-2 tom-input", aria: { label: "Full name" } %>
+                    <%= form.email_field :guest_email, placeholder: "Email address", class: "mb-2 tom-input", aria: { label: "Email address" } %>
+                    <%= form.telephone_field :guest_phone, placeholder: "Phone number", class: "mb-2 tom-input", aria: { label: "Phone number" } %>
                     <%= form.submit(@event.paid? ? "Pay & Register" : "Register", class: "block w-full text-center rounded-xl bg-leaf-600 px-4 py-3.5 text-sm font-bold text-white shadow-sm hover:bg-leaf-500 transition-all", style: "border:0;cursor:pointer;") %>
                   <% end %>
 

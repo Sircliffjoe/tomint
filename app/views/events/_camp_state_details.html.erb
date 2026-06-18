@@ -1,0 +1,64 @@
+<% details_by_state = camp_details.group_by(&:state_name) %>
+
+<section class="tom-camp-details" data-camp-details>
+  <div class="tom-camp-details__heading">
+    <span class="tom-eyebrow">State Camp Details</span>
+    <h2>Choose Your State</h2>
+  </div>
+
+  <div class="tom-camp-grid" role="list" aria-label="TOM Camp states and FCT">
+    <% Event::CAMP_STATE_NAMES.each do |state_name| %>
+      <% state_details = (details_by_state[state_name] || []).select(&:public_content?) %>
+      <% locations = state_details.map do |detail|
+        notes = detail.custom_notes? ? detail.notes : "Camp details will be updated soon."
+        {
+          area: detail.area_label,
+          notes: notes,
+          registrationLink: detail.registration_link,
+          flyerImage: detail.flyer.attached? ? url_for(detail.flyer) : nil
+        }
+      end %>
+      <% state_payload = {
+        state: state_name,
+        locations: locations
+      } %>
+      <button
+        type="button"
+        class="tom-camp-state"
+        role="listitem"
+        data-camp-state="<%= json_escape(state_payload.to_json) %>">
+        <%= state_name %>
+      </button>
+    <% end %>
+
+    <% (42 - Event::CAMP_STATE_NAMES.size).times do %>
+      <span class="tom-camp-state tom-camp-state--empty" aria-hidden="true"></span>
+    <% end %>
+  </div>
+
+  <dialog class="tom-camp-modal" data-camp-modal aria-labelledby="camp-modal-title">
+    <button type="button" class="tom-camp-modal__close" data-camp-modal-close aria-label="Close camp details">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.4 5 5 6.4 10.6 12 5 17.6 6.4 19 12 13.4 17.6 19 19 17.6 13.4 12 19 6.4 17.6 5 12 10.6 6.4 5z"/></svg>
+    </button>
+
+    <div class="tom-camp-modal__media">
+      <img data-camp-modal-image alt="" hidden>
+      <div class="tom-camp-modal__placeholder" data-camp-modal-placeholder>
+        <span>TOM Camp</span>
+      </div>
+    </div>
+
+    <div class="tom-camp-modal__body">
+      <span class="tom-eyebrow">Camp Information</span>
+      <h3 id="camp-modal-title" data-camp-modal-state></h3>
+
+      <div class="tom-camp-modal__areas" data-camp-modal-areas></div>
+
+      <p data-camp-modal-notes></p>
+
+      <a class="tom-camp-modal__link" data-camp-modal-link target="_blank" rel="noopener" hidden>
+        Register
+      </a>
+    </div>
+  </dialog>
+</section>

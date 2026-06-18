@@ -210,6 +210,169 @@ function initPublicSite() {
     });
   });
 
+  document.querySelectorAll("[data-camp-details]").forEach((campDetails) => {
+    if (campDetails.dataset.campDetailsBound) return;
+    campDetails.dataset.campDetailsBound = "true";
+
+    const modal = campDetails.querySelector("[data-camp-modal]");
+    if (!modal) return;
+
+    const closeButton = modal.querySelector("[data-camp-modal-close]");
+    const image = modal.querySelector("[data-camp-modal-image]");
+    const placeholder = modal.querySelector("[data-camp-modal-placeholder]");
+    const state = modal.querySelector("[data-camp-modal-state]");
+    const areas = modal.querySelector("[data-camp-modal-areas]");
+    const notes = modal.querySelector("[data-camp-modal-notes]");
+    const link = modal.querySelector("[data-camp-modal-link]");
+
+    function closeCampModal() {
+      if (typeof modal.close === "function") {
+        modal.close();
+      } else {
+        modal.hidden = true;
+        modal.removeAttribute("open");
+      }
+      document.body.classList.remove("tom-modal-open");
+    }
+
+    function activateLocation(location, stateName) {
+      notes.textContent = location.notes || "Camp details will be updated soon.";
+
+      if (location.registrationLink) {
+        link.href = location.registrationLink;
+        link.hidden = false;
+      } else {
+        link.removeAttribute("href");
+        link.hidden = true;
+      }
+
+      if (location.flyerImage) {
+        image.src = location.flyerImage;
+        image.alt = `${stateName} ${location.area || "camp"} flyer`;
+        image.hidden = false;
+        placeholder.hidden = true;
+      } else {
+        image.removeAttribute("src");
+        image.alt = "";
+        image.hidden = true;
+        placeholder.hidden = false;
+      }
+    }
+
+    function openCampModal(detail) {
+      const stateName = detail.state || "State";
+      const locations = Array.isArray(detail.locations) ? detail.locations : [];
+
+      state.textContent = `${stateName} Camp`;
+      areas.innerHTML = "";
+
+      if (!locations.length) {
+        notes.textContent = "No Camp details have been published for this state yet.";
+        link.removeAttribute("href");
+        link.hidden = true;
+        image.removeAttribute("src");
+        image.alt = "";
+        image.hidden = true;
+        placeholder.hidden = false;
+
+        document.body.classList.add("tom-modal-open");
+        if (typeof modal.showModal === "function") {
+          modal.showModal();
+        } else {
+          modal.hidden = false;
+          modal.setAttribute("open", "");
+        }
+        return;
+      }
+
+      locations.forEach((location, index) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "tom-camp-modal__area";
+        button.textContent = location.area || `Location ${index + 1}`;
+        button.setAttribute("aria-pressed", index === 0 ? "true" : "false");
+        button.addEventListener("click", () => {
+          areas.querySelectorAll(".tom-camp-modal__area").forEach((areaButton) => {
+            areaButton.setAttribute("aria-pressed", areaButton === button ? "true" : "false");
+          });
+          activateLocation(location, stateName);
+        });
+        areas.appendChild(button);
+      });
+
+      activateLocation(locations[0], stateName);
+
+      document.body.classList.add("tom-modal-open");
+      if (typeof modal.showModal === "function") {
+        modal.showModal();
+      } else {
+        modal.hidden = false;
+        modal.setAttribute("open", "");
+      }
+    }
+
+    campDetails.querySelectorAll("[data-camp-state]").forEach((button) => {
+      button.addEventListener("click", () => {
+        try {
+          openCampModal(JSON.parse(button.dataset.campState || "{}"));
+        } catch (_error) {
+          openCampModal({ state: button.textContent.trim() });
+        }
+      });
+    });
+
+    if (closeButton) closeButton.addEventListener("click", closeCampModal);
+
+    modal.addEventListener("click", (event) => {
+      if (event.target === modal) closeCampModal();
+    });
+  });
+
+  document.querySelectorAll("[data-camp-admin-editor]").forEach((editor) => {
+    if (editor.dataset.campAdminBound) return;
+    editor.dataset.campAdminBound = "true";
+
+    const tabs = editor.querySelectorAll("[data-camp-admin-tab]");
+    const panels = editor.querySelectorAll("[data-camp-admin-panel]");
+
+    function activate(stateKey) {
+      tabs.forEach((tab) => {
+        tab.setAttribute("aria-selected", tab.dataset.campAdminTab === stateKey ? "true" : "false");
+      });
+
+      panels.forEach((panel) => {
+        panel.hidden = panel.dataset.campAdminPanel !== stateKey;
+      });
+    }
+
+    tabs.forEach((tab) => {
+      tab.addEventListener("click", () => activate(tab.dataset.campAdminTab));
+    });
+
+    editor.querySelectorAll("[data-camp-add-area]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const stateKey = button.dataset.campAddArea;
+        const list = editor.querySelector(`[data-camp-area-list="${stateKey}"]`);
+        const template = editor.querySelector(`[data-camp-area-template="${stateKey}"]`);
+        if (!list || !template) return;
+
+        const uniqueId = `${Date.now()}-${Math.floor(Math.random() * 100000)}`;
+        const wrapper = document.createElement("div");
+        wrapper.innerHTML = template.innerHTML.replace(/NEW_RECORD/g, uniqueId);
+        list.append(...wrapper.childNodes);
+      });
+    });
+
+    editor.addEventListener("click", (event) => {
+      const removeButton = event.target.closest("[data-camp-remove-area]");
+      if (!removeButton) return;
+
+      removeButton.closest(".camp-admin-location")?.remove();
+    });
+
+    activate(tabs[0]?.dataset.campAdminTab || "");
+  });
+
   const globalModal = document.querySelector("[data-global-modal]");
   if (globalModal) {
     const openGlobalModal = () => {
@@ -276,17 +439,32 @@ document.addEventListener("turbo:before-cache", () => {
       globalModal.remove();
     }
   });
+
+  document.querySelectorAll("[data-camp-modal]").forEach((campModal) => {
+    if (typeof campModal.close === "function") {
+      if (campModal.open) campModal.close();
+    } else {
+      campModal.removeAttribute("open");
+      campModal.hidden = true;
+    }
+  });
 });
 
 document.addEventListener("keydown", (event) => {
   if (event.key !== "Escape") return;
 
   const openTeamPopup = document.querySelector(".tom-team-popup.is-open");
-  if (!openTeamPopup) return;
+  if (openTeamPopup) {
+    openTeamPopup.classList.remove("is-open");
+    document.body.classList.remove("tom-modal-open");
+    history.replaceState(null, "", "#leadership");
+  }
 
-  openTeamPopup.classList.remove("is-open");
-  document.body.classList.remove("tom-modal-open");
-  history.replaceState(null, "", "#leadership");
+  const openCampModal = document.querySelector("[data-camp-modal][open]");
+  if (openCampModal && typeof openCampModal.close === "function") {
+    openCampModal.close();
+    document.body.classList.remove("tom-modal-open");
+  }
 });
 
 document.addEventListener("turbo:load", initPublicSite);

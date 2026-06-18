@@ -28,7 +28,7 @@ module Admin
       authorize @event
 
       if @event.save
-        redirect_to admin_events_path, notice: "Event was successfully created."
+        redirect_to after_save_path(@event), notice: "Event was successfully created."
       else
         render :new, status: :unprocessable_entity
       end
@@ -37,7 +37,7 @@ module Admin
     def update
       authorize @event
       if @event.update(event_params)
-        redirect_to admin_events_path, notice: "Event was successfully updated."
+        redirect_to after_save_path(@event), notice: "Event was successfully updated."
       else
         render :edit, status: :unprocessable_entity
       end
@@ -56,7 +56,43 @@ module Admin
     end
 
     def event_params
-      params.require(:event).permit(:title, :description, :start_time, :end_time, :location, :state_id, :price, :currency, :event_type, :image, :spotlight)
+      permitted = params.require(:event).permit(
+        :title,
+        :description,
+        :start_time,
+        :end_time,
+        :location,
+        :state_id,
+        :price,
+        :currency,
+        :event_type,
+        :image,
+        :spotlight,
+        camp_details_attributes: [
+          :id,
+          :state_name,
+          :area_id,
+          :notes,
+          :registration_link,
+          :position,
+          :flyer,
+          :_destroy
+        ]
+      )
+
+      unless camp_params?(permitted)
+        permitted.delete(:camp_details_attributes)
+      end
+
+      permitted
+    end
+
+    def camp_params?(permitted)
+      permitted[:event_type] == "information" && permitted[:title].to_s.match?(/\bcamp\b/i)
+    end
+
+    def after_save_path(event)
+      event.camp_information_event? ? edit_admin_event_path(event) : admin_events_path
     end
 
     def authorize_admin!

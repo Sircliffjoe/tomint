@@ -209,9 +209,9 @@
         <% @upcoming_events.first(3).each_with_index do |event, index| %>
           <% accent = ["var(--tom-teal)", "var(--tom-orange)", "var(--tom-yellow)", "var(--tom-purple)"][index % 4] %>
           <%= link_to event_path(event), class: "tom-resource-card", style: "--accent: #{accent};", data: { reveal: true } do %>
-            <small><%= event.start_time.strftime("%b %d, %Y") %></small>
+            <small><%= event.date_label %></small>
             <h3><%= event.title %></h3>
-            <p style="margin-top:.75rem;color:var(--tom-muted);font-size:.92rem;"><%= event.location.presence || event.state&.name || "National" %></p>
+            <p style="margin-top:.75rem;color:var(--tom-muted);font-size:.92rem;"><%= event.location_label %></p>
             <span class="tom-btn tom-btn-primary" style="margin-top:1rem;"><%= event.information_only? ? "Learn More" : "View Details" %></span>
           <% end %>
         <% end %>

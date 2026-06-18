@@ -33,7 +33,7 @@
           <div style="padding:2rem;display:flex;flex-direction:column;justify-content:center;">
             <span class="tom-eyebrow">Spotlight Event</span>
             <h2 style="margin-top:.7rem;color:var(--tom-ink);"><%= spotlight.title %></h2>
-            <p style="margin-top:1rem;color:var(--tom-muted);"><%= spotlight.start_time.strftime("%B %d, %Y") %> <%= spotlight.location.present? ? "• #{spotlight.location}" : "" %></p>
+            <p style="margin-top:1rem;color:var(--tom-muted);"><%= spotlight.date_label %> <%= spotlight.location.present? ? "• #{spotlight.location}" : "" %></p>
             <p style="margin-top:1rem;color:var(--tom-muted);line-height:1.65;"><%= spotlight_summary %></p>
             <span class="tom-btn tom-btn-primary" style="margin-top:1.25rem;"><%= spotlight.information_only? ? "Learn More" : "View Details" %></span>
           </div>
@@ -59,10 +59,10 @@
           <% tags << "training" if corpus.include?("training") || corpus.include?("course") || corpus.include?("workshop") %>
           <% accent = ["var(--tom-teal)", "var(--tom-orange)", "var(--tom-yellow)", "var(--tom-purple)"][index % 4] %>
           <article class="tom-resource-card" style="--accent:<%= accent %>;" data-reveal data-filter-item="<%= tags.join(' ') %>">
-            <small><%= event.start_time.strftime("%b %d, %Y") %> • <%= status.titleize %></small>
+            <small><%= event.date_label %> • <%= status.titleize %></small>
             <h3><%= link_to event.title, event_path(event) %></h3>
             <p style="margin-top:.75rem;color:var(--tom-muted);line-height:1.55;font-size:.92rem;"><%= plain_description.squish.truncate(150) %></p>
-            <p style="margin-top:.8rem;color:var(--tom-muted);font-size:.9rem;"><%= event.location.presence || event.state&.name || "Location TBA" %></p>
+            <p style="margin-top:.8rem;color:var(--tom-muted);font-size:.9rem;"><%= event.location_label %></p>
             <%= link_to(event.information_only? ? "Learn More" : "View Details", event_path(event), class: "tom-btn tom-btn-primary", style: "margin-top:1rem;") %>
           </article>
         <% end %>

@@ -2,7 +2,7 @@ class EventsController < ApplicationController
   layout "public"
 
   def index
-    @events = policy_scope(Event).where("start_time >= ?", Time.current).order(start_time: :asc)
+    @events = policy_scope(Event).where("start_time IS NULL OR start_time >= ?", Time.current).order(Arel.sql("start_time IS NULL, start_time ASC"))
     @past_events = policy_scope(Event).where("start_time < ?", Time.current).order(start_time: :desc).limit(5)
   end
 

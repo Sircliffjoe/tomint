@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_14_200000) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_18_133000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -77,6 +77,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_14_200000) do
     t.string "title"
     t.datetime "updated_at", null: false
     t.index ["author_id"], name: "index_blog_posts_on_author_id"
+  end
+
+  create_table "camp_details", force: :cascade do |t|
+    t.bigint "area_id"
+    t.datetime "created_at", null: false
+    t.bigint "event_id", null: false
+    t.text "notes"
+    t.integer "position", default: 0, null: false
+    t.string "registration_link"
+    t.string "state_name", null: false
+    t.datetime "updated_at", null: false
+    t.index ["area_id"], name: "index_camp_details_on_area_id"
+    t.index ["event_id", "state_name", "position"], name: "index_camp_details_on_event_state_position"
+    t.index ["event_id"], name: "index_camp_details_on_event_id"
   end
 
   create_table "directorates", force: :cascade do |t|
@@ -365,6 +379,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_14_200000) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "areas", "states"
   add_foreign_key "blog_posts", "users", column: "author_id"
+  add_foreign_key "camp_details", "areas"
+  add_foreign_key "camp_details", "events"
   add_foreign_key "events", "states"
   add_foreign_key "registrations", "events"
   add_foreign_key "registrations", "users"

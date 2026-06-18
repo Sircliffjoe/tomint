@@ -41,5 +41,76 @@ RSpec.describe "Events", type: :request do
 
       expect(response).to have_http_status(:success)
     end
+
+    it "shows all state camp details for camp information events" do
+      event = Event.create!(
+        title: "TOM Camp 2026",
+        start_time: 1.week.from_now,
+        end_time: 1.week.from_now + 2.hours,
+        event_type: :information
+      )
+
+      get event_path(event)
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include("State Camp Details")
+      expect(response.body).to include("Choose Your State")
+      expect(response.body).to include("Abia")
+      expect(response.body).to include("Zamfara")
+      expect(response.body.scan("data-camp-state").size).to eq(37)
+    end
+
+    it "renders an event without schedule or location details" do
+      event = Event.create!(
+        title: "Undated Camp",
+        event_type: :information
+      )
+
+      get event_path(event)
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include("Date TBA")
+      expect(response.body).to include("Time TBA")
+    end
+
+    it "includes saved area camp details in the modal payload" do
+      state = State.create!(name: "Delta", code: "DEL", country: "Nigeria")
+      area = Area.create!(name: "Asaba Central", state: state)
+      event = Event.create!(
+        title: "TOM Camp 2026",
+        start_time: 1.week.from_now,
+        end_time: 1.week.from_now + 2.hours,
+        event_type: :information
+      )
+      event.camp_details.create!(
+        state_name: "Delta",
+        area: area,
+        registration_link: "https://example.com/delta-camp",
+        notes: "Bring your Bible.",
+        position: 9
+      )
+
+      get event_path(event)
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include("Asaba Central")
+      expect(response.body).to include("Bring your Bible.")
+      expect(response.body).to include("https://example.com/delta-camp")
+    end
+
+    it "does not show state camp details for other information events" do
+      event = Event.create!(
+        title: "National Awareness Briefing",
+        start_time: 1.week.from_now,
+        end_time: 1.week.from_now + 2.hours,
+        event_type: :information
+      )
+
+      get event_path(event)
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).not_to include("State Camp Details")
+      expect(response.body).not_to include("data-camp-state")
+    end
   end
 end

@@ -24,7 +24,7 @@ class ApplicationController < ActionController::Base
     return unless controller_path == "home" && action_name == "index"
 
     active_announcement = Announcement.where('created_at >= ?', 7.days.ago).order(created_at: :desc).first
-    spotlight_event = Event.where(spotlight: true).where('start_time >= ?', Time.current).order(created_at: :desc).first
+    spotlight_event = Event.where(spotlight: true).where('start_time IS NULL OR start_time >= ?', Time.current).order(created_at: :desc).first
 
     if active_announcement&.priority?
       @global_modal_item = active_announcement

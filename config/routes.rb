@@ -16,7 +16,7 @@ Rails.application.routes.draw do
     resources :directorates
     resources :zones
     resources :states do
-      resources :areas, only: [ :index, :show ]
+      resources :areas
     end
     resources :users
     resources :events

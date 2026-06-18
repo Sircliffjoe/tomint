@@ -1,5 +1,5 @@
 <div class="form-card">
-  <%= form_with(model: [:admin, event], class: "directorate-form", data: { controller: "event-type" }) do |form| %>
+  <%= form_with(model: [:admin, event], class: "directorate-form", html: { multipart: true }, data: { controller: "event-type" }) do |form| %>
     <% if event.errors.any? %>
       <div class="error-banner">
         <div class="error-icon-wrap">
@@ -36,19 +36,19 @@
       <div class="form-row">
         <div class="field-group">
           <%= form.label :start_time, class: "field-label" %>
-          <div class="field-hint">When the event begins</div>
+          <div class="field-hint">When the event begins, if this event has one central schedule</div>
           <%= form.datetime_field :start_time, class: "field-input" %>
         </div>
         <div class="field-group">
           <%= form.label :end_time, class: "field-label" %>
-          <div class="field-hint">When the event concludes</div>
+          <div class="field-hint">When the event concludes, if known</div>
           <%= form.datetime_field :end_time, class: "field-input" %>
         </div>
       </div>
 
       <div class="field-group">
         <%= form.label :location, class: "field-label" %>
-        <div class="field-hint">Physical or virtual venue for this event</div>
+        <div class="field-hint">Physical or virtual venue, if this event has one central location</div>
         <%= form.text_field :location, placeholder: "e.g. Lagos Secretariat, Ikeja", class: "field-input" %>
       </div>
 
@@ -77,13 +77,13 @@
       <div class="form-row" data-event-type-target="priceField">
         <div class="field-group">
           <%= form.label :price, class: "field-label" %>
-          <div class="field-hint">Registration fee amount (if paid event)</div>
+          <div class="field-hint">Registration fee amount, if shown on this event page</div>
           <%= form.number_field :price, step: "0.01", placeholder: "0.00", class: "field-input" %>
         </div>
         <div class="field-group" data-event-type-target="currencyField">
           <%= form.label :currency, class: "field-label" %>
           <div class="field-hint">Currency code for the fee</div>
-          <%= form.text_field :currency, value: "NGN", class: "field-input" %>
+          <%= form.text_field :currency, class: "field-input", placeholder: "NGN" %>
         </div>
       </div>
 
@@ -114,6 +114,186 @@
           <div class="checkbox-desc">Show this event in the site-wide modal (takes priority over announcements).</div>
         </div>
       </div>
+
+      <% if event.camp_information_event? %>
+        <div class="field-group">
+          <div class="camp-admin-heading">
+            <div>
+              <h2>State Camp Details</h2>
+              <p>Upload the flyer, add notes, and paste the registration link. Add an Area/location row when a state has more than one camp.</p>
+            </div>
+            <span><%= Event::CAMP_STATE_NAMES.size %> states/FCT</span>
+          </div>
+
+          <div class="camp-admin-save-note">
+            <strong>Remember to save</strong>
+            <span>After adding a flyer, notes, registration link, or Area row, click “Update Event” to publish those Camp details.</span>
+          </div>
+
+          <% camp_details_by_state = event.camp_details.group_by(&:state_name) %>
+          <% states_by_name = State.includes(:areas).index_by(&:name) %>
+          <% fct_state = State.includes(:areas).find_by(code: "FCT") %>
+          <div class="camp-admin-editor" data-camp-admin-editor>
+            <div class="camp-admin-tabs" role="tablist" aria-label="Camp state details">
+              <% Event::CAMP_STATE_NAMES.each_with_index do |state_name, state_index| %>
+                <% state_key = state_name.parameterize %>
+                <button
+                  type="button"
+                  class="camp-admin-tab"
+                  role="tab"
+                  aria-selected="<%= state_index.zero? ? "true" : "false" %>"
+                  aria-controls="camp-panel-<%= state_key %>"
+                  data-camp-admin-tab="<%= state_key %>">
+                  <%= state_name %>
+                </button>
+              <% end %>
+            </div>
+
+            <div class="camp-admin-panels">
+            <% Event::CAMP_STATE_NAMES.each_with_index do |state_name, state_index| %>
+              <% state_key = state_name.parameterize %>
+              <% state_record = state_name == "FCT" ? fct_state : states_by_name[state_name] %>
+              <% area_options = state_record&.areas&.order(:name) || [] %>
+              <section
+                id="camp-panel-<%= state_key %>"
+                class="camp-admin-panel"
+                role="tabpanel"
+                data-camp-admin-panel="<%= state_key %>"
+                <%= "hidden" unless state_index.zero? %>>
+                <div class="camp-admin-panel__head">
+                  <div>
+                    <h3><%= state_name %></h3>
+                    <p><%= area_options.any? ? pluralize(area_options.size, "Area") : "No Areas have been created for this state yet." %></p>
+                  </div>
+                  <div class="camp-admin-panel__actions">
+                    <% if state_record %>
+                      <%= link_to "Manage Areas", admin_state_areas_path(state_record), class: "camp-admin-manage", target: "_blank", rel: "noopener" %>
+                    <% end %>
+                    <button type="button" class="camp-admin-add" data-camp-add-area="<%= state_key %>">Add Area</button>
+                  </div>
+                </div>
+
+                <% details_for_state = camp_details_by_state[state_name].presence || [event.camp_details.build(state_name: state_name, position: state_index)] %>
+
+                <div class="camp-admin-locations" data-camp-area-list="<%= state_key %>">
+                  <% details_for_state.each_with_index do |camp_detail, detail_index| %>
+                    <%= form.fields_for :camp_details, camp_detail, child_index: (state_index * 100 + detail_index).to_s do |camp_form| %>
+                      <div class="camp-admin-location">
+                        <%= camp_form.hidden_field :id if camp_form.object.persisted? %>
+                        <%= camp_form.hidden_field :state_name %>
+                        <%= camp_form.hidden_field :position %>
+
+                        <div class="camp-admin-location__head">
+                          <strong><%= detail_index.zero? ? "Main camp" : "Area/location #{detail_index + 1}" %></strong>
+                          <% if camp_form.object.persisted? && detail_index.positive? %>
+                            <label>
+                              <%= camp_form.check_box :_destroy %>
+                              Remove
+                            </label>
+                          <% end %>
+                        </div>
+
+                        <div class="camp-admin-fields">
+                          <div>
+                            <%= camp_form.label :area_id, "Area / Location", class: "field-label" %>
+                            <% if area_options.any? %>
+                              <%= camp_form.collection_select :area_id, area_options, :id, :name,
+                                  { include_blank: "Main Camp / Statewide" },
+                                  { class: "field-input field-select" } %>
+                            <% else %>
+                              <%= camp_form.hidden_field :area_id %>
+                              <div class="camp-admin-empty-area">
+                                No Areas have been created for this state yet.
+                                <% if state_record %>
+                                  <%= link_to "Create Area", new_admin_state_area_path(state_record), target: "_blank", rel: "noopener" %>
+                                <% end %>
+                              </div>
+                            <% end %>
+                          </div>
+
+                          <div>
+                            <%= camp_form.label :flyer, "Flyer upload", class: "field-label" %>
+                            <%= camp_form.file_field :flyer, class: "field-input" %>
+                            <% if camp_form.object.flyer.attached? %>
+                              <p class="camp-admin-file">Current flyer: <%= camp_form.object.flyer.filename %></p>
+                            <% end %>
+                          </div>
+
+                          <div class="camp-admin-notes">
+                            <%= camp_form.label :registration_link, "Registration link", class: "field-label" %>
+                            <%= camp_form.url_field :registration_link, class: "field-input", placeholder: "https://example.com/register" %>
+                          </div>
+
+                          <div class="camp-admin-notes">
+                            <%= camp_form.label :notes, "Notes", class: "field-label" %>
+                            <%= camp_form.text_area :notes, class: "field-input", rows: 3, placeholder: "Short note shown beside the flyer" %>
+                          </div>
+                        </div>
+                      </div>
+                    <% end %>
+                  <% end %>
+                </div>
+
+                <template data-camp-area-template="<%= state_key %>">
+                  <%= form.fields_for :camp_details, CampDetail.new(state_name: state_name, position: state_index), child_index: "#{state_index}000NEW_RECORD" do |camp_form| %>
+                    <div class="camp-admin-location">
+                      <%= camp_form.hidden_field :state_name %>
+                      <%= camp_form.hidden_field :position %>
+
+                      <div class="camp-admin-location__head">
+                        <strong>New Area/location</strong>
+                        <button type="button" class="camp-admin-remove-new" data-camp-remove-area>Remove</button>
+                      </div>
+
+                      <div class="camp-admin-fields">
+                        <div>
+                          <%= camp_form.label :area_id, "Area / Location", class: "field-label" %>
+                          <% if area_options.any? %>
+                            <%= camp_form.collection_select :area_id, area_options, :id, :name,
+                                { include_blank: "Main Camp / Statewide" },
+                                { class: "field-input field-select" } %>
+                          <% else %>
+                            <%= camp_form.hidden_field :area_id %>
+                            <div class="camp-admin-empty-area">
+                              Create Areas for this state first if this camp is tied to a specific Area.
+                              <% if state_record %>
+                                <%= link_to "Create Area", new_admin_state_area_path(state_record), target: "_blank", rel: "noopener" %>
+                              <% end %>
+                            </div>
+                          <% end %>
+                        </div>
+
+                        <div>
+                          <%= camp_form.label :flyer, "Flyer upload", class: "field-label" %>
+                          <%= camp_form.file_field :flyer, class: "field-input" %>
+                        </div>
+
+                        <div class="camp-admin-notes">
+                          <%= camp_form.label :registration_link, "Registration link", class: "field-label" %>
+                          <%= camp_form.url_field :registration_link, class: "field-input", placeholder: "https://example.com/register" %>
+                        </div>
+
+                        <div class="camp-admin-notes">
+                          <%= camp_form.label :notes, "Notes", class: "field-label" %>
+                          <%= camp_form.text_area :notes, class: "field-input", rows: 3, placeholder: "Short note shown beside the flyer" %>
+                        </div>
+                      </div>
+                    </div>
+                  <% end %>
+                </template>
+              </section>
+            <% end %>
+            </div>
+          </div>
+        </div>
+      <% else %>
+        <div class="field-group">
+          <div class="event-status-note">
+            <strong>Camp details editor</strong>
+            <p>Set Event Type to Information and include “Camp” in the title, then save. The dashboard will open the editable state-by-state Camp details after the event is created.</p>
+          </div>
+        </div>
+      <% end %>
 
       <div class="field-group">
         <div class="event-status-note">
@@ -167,6 +347,38 @@
   .event-status-note { padding:1rem 1.25rem; background:#f0fdf4; border-radius:10px; border:1.5px solid #bbf7d0; }
   .event-status-note strong { display:block; font-size:.875rem; color:#166534; margin-bottom:.25rem; }
   .event-status-note p { font-size:.8rem; color:#15803d; font-style:italic; line-height:1.5; }
+  .camp-admin-heading { display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; padding:1.25rem; background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:12px; margin-bottom:1rem; }
+  .camp-admin-heading h2 { margin:0; font-size:1rem; color:#14532d; font-weight:800; }
+  .camp-admin-heading p { margin:.25rem 0 0; color:#15803d; font-size:.82rem; line-height:1.5; font-style:italic; }
+  .camp-admin-heading span { flex-shrink:0; display:inline-flex; align-items:center; border-radius:999px; background:#fff; border:1px solid #bbf7d0; color:#166534; padding:.35rem .7rem; font-size:.72rem; font-weight:800; }
+  .camp-admin-save-note { display:flex; align-items:center; gap:.5rem; flex-wrap:wrap; margin:0 0 1rem; padding:.85rem 1rem; border:1px solid #facc15; border-radius:10px; color:#854d0e; background:#fefce8; font-size:.82rem; }
+  .camp-admin-save-note strong { font-weight:900; }
+  .camp-admin-editor { border:1px solid #e5e7eb; border-radius:12px; background:#fff; overflow:hidden; }
+  .camp-admin-tabs { display:flex; gap:.45rem; padding:.75rem; overflow-x:auto; border-bottom:1px solid #e5e7eb; background:#f9fafb; }
+  .camp-admin-tab { flex:0 0 auto; border:1px solid #e5e7eb; border-radius:999px; padding:.55rem .8rem; color:#374151; background:#fff; font:inherit; font-size:.78rem; font-weight:800; cursor:pointer; }
+  .camp-admin-tab[aria-selected="true"] { color:#fff; background:#16a34a; border-color:#16a34a; box-shadow:0 8px 18px rgba(22,163,74,.18); }
+  .camp-admin-tab:focus-visible { outline:3px solid rgba(34,197,94,.22); outline-offset:2px; }
+  .camp-admin-panels { padding:1rem; }
+  .camp-admin-panel__head { display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; padding-bottom:1rem; border-bottom:1px solid #eef2f7; margin-bottom:1rem; }
+  .camp-admin-panel__head h3 { margin:0; font-size:1.1rem; color:#111827; font-weight:900; }
+  .camp-admin-panel__head p { margin:.25rem 0 0; color:#6b7280; font-size:.82rem; font-style:italic; }
+  .camp-admin-panel__actions { display:flex; align-items:center; justify-content:flex-end; gap:.65rem; flex-wrap:wrap; }
+  .camp-admin-manage { border:1px solid #e5e7eb; border-radius:9px; padding:.65rem .9rem; color:#374151; background:#fff; font-size:.8rem; font-weight:800; text-decoration:none; }
+  .camp-admin-manage:hover { background:#f9fafb; border-color:#bbf7d0; color:#15803d; }
+  .camp-admin-add { flex-shrink:0; border:0; border-radius:9px; padding:.7rem 1rem; color:#fff; background:#16a34a; font:inherit; font-size:.8rem; font-weight:900; cursor:pointer; box-shadow:0 8px 18px rgba(22,163,74,.18); }
+  .camp-admin-add:hover { background:#15803d; }
+  .camp-admin-locations { display:grid; gap:1rem; }
+  .camp-admin-location { border:1px solid #eef2f7; border-radius:10px; padding:1rem; background:#fbfdff; }
+  .camp-admin-location__head { display:flex; align-items:center; justify-content:space-between; gap:.75rem; margin-bottom:1rem; }
+  .camp-admin-location__head strong { color:#14532d; font-size:.85rem; text-transform:uppercase; letter-spacing:.06em; }
+  .camp-admin-location__head label { display:inline-flex; align-items:center; gap:.35rem; color:#b91c1c; font-size:.78rem; font-weight:700; cursor:pointer; }
+  .camp-admin-remove-new { border:0; background:transparent; color:#b91c1c; font:inherit; font-size:.78rem; font-weight:800; cursor:pointer; }
+  .camp-admin-fields { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+  @media(max-width:700px){ .camp-admin-fields { grid-template-columns:1fr; } }
+  .camp-admin-notes { grid-column:1 / -1; }
+  .camp-admin-empty-area { display:flex; align-items:center; gap:.5rem; flex-wrap:wrap; min-height:46px; border:1.5px dashed #d1d5db; border-radius:10px; padding:.75rem 1rem; color:#6b7280; background:#fff; font-size:.8rem; font-style:italic; }
+  .camp-admin-empty-area a { color:#15803d; font-weight:800; font-style:normal; text-decoration:none; }
+  .camp-admin-file { margin:.45rem 0 0; color:#15803d; font-size:.75rem; font-style:italic; overflow-wrap:anywhere; }
   .checkbox-row { display:flex; align-items:flex-start; gap:.875rem; padding:1rem 1.25rem; background:#f9fafb; border-radius:10px; border:1.5px solid #e5e7eb; transition:border-color .18s ease,background .18s ease; }
   .checkbox-row:hover { background:#fff; border-color:#bbf7d0; }
   .checkbox-input { width:1.1rem; height:1.1rem; margin-top:2px; accent-color:#16a34a; cursor:pointer; flex-shrink:0; }

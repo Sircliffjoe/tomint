@@ -48,11 +48,11 @@
           <% @upcoming_events.each_with_index do |event, index| %>
             <% accent = ["var(--tom-teal)", "var(--tom-orange)", "var(--tom-yellow)", "var(--tom-purple)"][index % 4] %>
             <article class="tom-resource-card" style="--accent:<%= accent %>;" data-reveal>
-              <small><%= event.start_time.strftime("%b %d, %Y") %> • Upcoming</small>
+              <small><%= event.date_label %> • Upcoming</small>
               <h3><%= link_to event.title, event_path(event) %></h3>
               <% event_summary = event.description.to_plain_text.squish.truncate(150) rescue strip_tags(event.description.to_s).squish.truncate(150) %>
               <p style="margin-top:.75rem;color:var(--tom-muted);line-height:1.55;font-size:.92rem;"><%= event_summary %></p>
-              <p style="margin-top:.8rem;color:var(--tom-muted);font-size:.9rem;"><%= event.location.presence || event.state&.name || "Location TBA" %></p>
+              <p style="margin-top:.8rem;color:var(--tom-muted);font-size:.9rem;"><%= event.location_label %></p>
               <%= link_to(event.information_only? ? "Learn More" : "View Details", event_path(event), class: "tom-btn tom-btn-primary", style: "margin-top:1rem;") %>
             </article>
           <% end %>

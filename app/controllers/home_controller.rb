@@ -1,7 +1,7 @@
 class HomeController < ApplicationController
   layout "public"
   def index
-    @upcoming_events = Event.where("start_time >= ?", Time.current).order(start_time: :asc).limit(3)
+    @upcoming_events = Event.where("start_time IS NULL OR start_time >= ?", Time.current).order(Arel.sql("start_time IS NULL, start_time ASC")).limit(3)
     @latest_posts = BlogPost.published.order(published_at: :desc).limit(3)
   end
 
@@ -14,9 +14,9 @@ class HomeController < ApplicationController
       pattern = "%#{ActiveRecord::Base.sanitize_sql_like(@query.downcase)}%"
 
       @upcoming_events = policy_scope(Event)
-        .where("start_time >= ?", Time.current)
+        .where("start_time IS NULL OR start_time >= ?", Time.current)
         .where("LOWER(title) LIKE :query OR LOWER(location) LIKE :query", query: pattern)
-        .order(start_time: :asc)
+        .order(Arel.sql("start_time IS NULL, start_time ASC"))
 
       @trainings = policy_scope(Training)
         .left_outer_joins(:training_sessions)

@@ -32,15 +32,15 @@
                 <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
                   <%= link_to event.title, admin_event_path(event), class: "hover:text-green-600 transition-colors" %>
                 </td>
-                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= event.start_time.strftime("%b %d, %Y %H:%M") %></td>
-                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= event.location %></td>
+                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= event.start_time&.strftime("%b %d, %Y %H:%M") || "Date TBA" %></td>
+                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= event.location_label %></td>
                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><%= event.state&.name || 'National' %></td>
                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                   <span class="inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">
                     <%= event.event_type&.humanize || 'Free' %>
                   </span>
                    <% if event.paid? %>
-                    <span class="ml-1 text-gray-900 font-semibold"><%= number_to_currency(event.price, unit: event.currency) %></span>
+                    <span class="ml-1 text-gray-900 font-semibold"><%= event.display_price %></span>
                    <% end %>
                 </td>
                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
