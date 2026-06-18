@@ -72,6 +72,7 @@ module Admin
           :id,
           :state_name,
           :area_id,
+          :area_row,
           :notes,
           :registration_link,
           :position,

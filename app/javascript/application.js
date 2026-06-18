@@ -222,8 +222,15 @@ function initPublicSite() {
     const placeholder = modal.querySelector("[data-camp-modal-placeholder]");
     const state = modal.querySelector("[data-camp-modal-state]");
     const areas = modal.querySelector("[data-camp-modal-areas]");
+    const switcher = modal.querySelector("[data-camp-modal-switcher]");
+    const previousButton = modal.querySelector("[data-camp-modal-prev]");
+    const nextButton = modal.querySelector("[data-camp-modal-next]");
+    const count = modal.querySelector("[data-camp-modal-count]");
     const notes = modal.querySelector("[data-camp-modal-notes]");
     const link = modal.querySelector("[data-camp-modal-link]");
+    let activeLocations = [];
+    let activeStateName = "State";
+    let activeLocationIndex = 0;
 
     function closeCampModal() {
       if (typeof modal.close === "function") {
@@ -235,7 +242,32 @@ function initPublicSite() {
       document.body.classList.remove("tom-modal-open");
     }
 
-    function activateLocation(location, stateName) {
+    function setActiveAreaButton(index) {
+      areas.querySelectorAll(".tom-camp-modal__area").forEach((areaButton, areaIndex) => {
+        areaButton.setAttribute("aria-pressed", areaIndex === index ? "true" : "false");
+      });
+    }
+
+    function updatePager() {
+      const hasMultipleLocations = activeLocations.length > 1;
+
+      if (switcher) switcher.hidden = activeLocations.length === 0;
+      if (previousButton) previousButton.hidden = !hasMultipleLocations;
+      if (nextButton) nextButton.hidden = !hasMultipleLocations;
+      if (count) {
+        count.textContent = hasMultipleLocations ? `${activeLocationIndex + 1} of ${activeLocations.length}` : "";
+        count.hidden = !hasMultipleLocations;
+      }
+    }
+
+    function activateLocation(index) {
+      const location = activeLocations[index];
+      if (!location) return;
+
+      activeLocationIndex = index;
+      setActiveAreaButton(index);
+      updatePager();
+
       notes.textContent = location.notes || "Camp details will be updated soon.";
 
       if (location.registrationLink) {
@@ -248,7 +280,7 @@ function initPublicSite() {
 
       if (location.flyerImage) {
         image.src = location.flyerImage;
-        image.alt = `${stateName} ${location.area || "camp"} flyer`;
+        image.alt = `${activeStateName} ${location.area || "camp"} flyer`;
         image.hidden = false;
         placeholder.hidden = true;
       } else {
@@ -260,13 +292,15 @@ function initPublicSite() {
     }
 
     function openCampModal(detail) {
-      const stateName = detail.state || "State";
-      const locations = Array.isArray(detail.locations) ? detail.locations : [];
+      activeStateName = detail.state || "State";
+      activeLocations = Array.isArray(detail.locations) ? detail.locations : [];
+      activeLocationIndex = 0;
 
-      state.textContent = `${stateName} Camp`;
+      state.textContent = `${activeStateName} Camp`;
       areas.innerHTML = "";
+      updatePager();
 
-      if (!locations.length) {
+      if (!activeLocations.length) {
         notes.textContent = "No Camp details have been published for this state yet.";
         link.removeAttribute("href");
         link.hidden = true;
@@ -285,22 +319,19 @@ function initPublicSite() {
         return;
       }
 
-      locations.forEach((location, index) => {
+      activeLocations.forEach((location, index) => {
         const button = document.createElement("button");
         button.type = "button";
         button.className = "tom-camp-modal__area";
         button.textContent = location.area || `Location ${index + 1}`;
         button.setAttribute("aria-pressed", index === 0 ? "true" : "false");
         button.addEventListener("click", () => {
-          areas.querySelectorAll(".tom-camp-modal__area").forEach((areaButton) => {
-            areaButton.setAttribute("aria-pressed", areaButton === button ? "true" : "false");
-          });
-          activateLocation(location, stateName);
+          activateLocation(index);
         });
         areas.appendChild(button);
       });
 
-      activateLocation(locations[0], stateName);
+      activateLocation(0);
 
       document.body.classList.add("tom-modal-open");
       if (typeof modal.showModal === "function") {
@@ -322,6 +353,20 @@ function initPublicSite() {
     });
 
     if (closeButton) closeButton.addEventListener("click", closeCampModal);
+    if (previousButton) {
+      previousButton.addEventListener("click", () => {
+        if (!activeLocations.length) return;
+        const previousIndex = (activeLocationIndex - 1 + activeLocations.length) % activeLocations.length;
+        activateLocation(previousIndex);
+      });
+    }
+    if (nextButton) {
+      nextButton.addEventListener("click", () => {
+        if (!activeLocations.length) return;
+        const nextIndex = (activeLocationIndex + 1) % activeLocations.length;
+        activateLocation(nextIndex);
+      });
+    }
 
     modal.addEventListener("click", (event) => {
       if (event.target === modal) closeCampModal();
@@ -356,7 +401,7 @@ function initPublicSite() {
         const template = editor.querySelector(`[data-camp-area-template="${stateKey}"]`);
         if (!list || !template) return;
 
-        const uniqueId = `${Date.now()}-${Math.floor(Math.random() * 100000)}`;
+        const uniqueId = `${Date.now()}${Math.floor(Math.random() * 100000)}`;
         const wrapper = document.createElement("div");
         wrapper.innerHTML = template.innerHTML.replace(/NEW_RECORD/g, uniqueId);
         list.append(...wrapper.childNodes);

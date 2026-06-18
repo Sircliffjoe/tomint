@@ -98,6 +98,39 @@ RSpec.describe "Events", type: :request do
       expect(response.body).to include("https://example.com/delta-camp")
     end
 
+    it "includes multiple camp areas for one state in the modal payload" do
+      state = State.create!(name: "Delta", code: "DEL", country: "Nigeria")
+      agbor = Area.create!(name: "Agbor Camp", state: state)
+      event = Event.create!(
+        title: "TOM Camp 2026",
+        event_type: :information
+      )
+      event.camp_details.create!(
+        state_name: "Delta",
+        notes: "Main camp details.",
+        registration_link: "https://example.com/main-camp",
+        position: 1
+      )
+      event.camp_details.create!(
+        state_name: "Delta",
+        area: agbor,
+        notes: "Agbor camp details.",
+        registration_link: "https://example.com/agbor-camp",
+        position: 2
+      )
+
+      get event_path(event)
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include("Main Camp")
+      expect(response.body).to include("Main camp details.")
+      expect(response.body).to include("https://example.com/main-camp")
+      expect(response.body).to include("Agbor Camp")
+      expect(response.body).to include("Agbor camp details.")
+      expect(response.body).to include("https://example.com/agbor-camp")
+      expect(response.body).to include("data-camp-modal-next")
+    end
+
     it "does not show state camp details for other information events" do
       event = Event.create!(
         title: "National Awareness Briefing",

@@ -173,19 +173,24 @@
                   </div>
                 </div>
 
-                <% details_for_state = camp_details_by_state[state_name].presence || [event.camp_details.build(state_name: state_name, position: state_index)] %>
+                <% existing_details_for_state = camp_details_by_state[state_name] || [] %>
+                <% main_camp_detail = existing_details_for_state.find { |detail| detail.area_id.blank? } || event.camp_details.build(state_name: state_name, position: state_index) %>
+                <% area_camp_details = existing_details_for_state.select { |detail| detail.area_id.present? } %>
+                <% details_for_state = [main_camp_detail, *area_camp_details] %>
 
                 <div class="camp-admin-locations" data-camp-area-list="<%= state_key %>">
                   <% details_for_state.each_with_index do |camp_detail, detail_index| %>
                     <%= form.fields_for :camp_details, camp_detail, child_index: (state_index * 100 + detail_index).to_s do |camp_form| %>
+                      <% main_camp_row = detail_index.zero? %>
                       <div class="camp-admin-location">
                         <%= camp_form.hidden_field :id if camp_form.object.persisted? %>
                         <%= camp_form.hidden_field :state_name %>
                         <%= camp_form.hidden_field :position %>
+                        <%= camp_form.hidden_field :area_row, value: "1" unless main_camp_row %>
 
                         <div class="camp-admin-location__head">
-                          <strong><%= detail_index.zero? ? "Main camp" : "Area/location #{detail_index + 1}" %></strong>
-                          <% if camp_form.object.persisted? && detail_index.positive? %>
+                          <strong><%= main_camp_row ? "Main camp" : "Area/location #{detail_index}" %></strong>
+                          <% if camp_form.object.persisted? && !main_camp_row %>
                             <label>
                               <%= camp_form.check_box :_destroy %>
                               Remove
@@ -196,9 +201,14 @@
                         <div class="camp-admin-fields">
                           <div>
                             <%= camp_form.label :area_id, "Area / Location", class: "field-label" %>
-                            <% if area_options.any? %>
+                            <% if main_camp_row %>
+                              <%= camp_form.hidden_field :area_id, value: "" %>
+                              <div class="camp-admin-empty-area">
+                                Main Camp / Statewide
+                              </div>
+                            <% elsif area_options.any? %>
                               <%= camp_form.collection_select :area_id, area_options, :id, :name,
-                                  { include_blank: "Main Camp / Statewide" },
+                                  { include_blank: "Choose Area" },
                                   { class: "field-input field-select" } %>
                             <% else %>
                               <%= camp_form.hidden_field :area_id %>
@@ -239,6 +249,7 @@
                     <div class="camp-admin-location">
                       <%= camp_form.hidden_field :state_name %>
                       <%= camp_form.hidden_field :position %>
+                      <%= camp_form.hidden_field :area_row, value: "1" %>
 
                       <div class="camp-admin-location__head">
                         <strong>New Area/location</strong>

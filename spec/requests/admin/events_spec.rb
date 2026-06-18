@@ -145,5 +145,46 @@ RSpec.describe "Admin events", type: :request do
       expect(response).to redirect_to(edit_admin_event_path(event))
       expect(event.camp_details.where(state_name: "Lagos").map(&:area_label)).to include("Ikorodu Area")
     end
+
+    it "saves main camp and area camp details for the same state" do
+      state = State.create!(name: "Delta", code: "DEL", country: "Nigeria")
+      agbor = Area.create!(name: "Agbor", state: state)
+      event = Event.create!(
+        title: "TOM Camp 2026",
+        event_type: :information
+      )
+
+      patch admin_event_path(event), params: {
+        event: {
+          title: event.title,
+          event_type: "information",
+          camp_details_attributes: {
+            "900" => {
+              state_name: "Delta",
+              position: 9,
+              area_id: "",
+              registration_link: "https://example.com/delta-main",
+              notes: "Main Delta camp."
+            },
+            "90001718756123456" => {
+              state_name: "Delta",
+              position: 9,
+              area_row: "1",
+              area_id: agbor.id,
+              registration_link: "https://example.com/delta-agbor",
+              notes: "Agbor Delta camp."
+            }
+          }
+        }
+      }
+
+      event.reload
+      delta_details = event.camp_details.where(state_name: "Delta")
+
+      expect(response).to redirect_to(edit_admin_event_path(event))
+      expect(delta_details.map(&:area_label)).to contain_exactly("Main Camp", "Agbor")
+      expect(delta_details.find { |detail| detail.area_id.blank? }.notes).to eq("Main Delta camp.")
+      expect(delta_details.find { |detail| detail.area == agbor }.registration_link).to eq("https://example.com/delta-agbor")
+    end
   end
 end
