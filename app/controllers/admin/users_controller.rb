@@ -74,11 +74,11 @@ module Admin
     end
 
     def user_params
-      params.require(:user).permit(:email, :first_name, :last_name, :phone, :role, :state_id, :directorate_id)
+      params.require(:user).permit(:email, :first_name, :last_name, :phone, :role, :state_id, :directorate_id, :avatar)
     end
 
     def user_params_no_password
-      params.require(:user).permit(:email, :first_name, :last_name, :phone, :role, :state_id, :directorate_id)
+      params.require(:user).permit(:email, :first_name, :last_name, :phone, :role, :state_id, :directorate_id, :avatar)
     end
 
     def authorize_admin!

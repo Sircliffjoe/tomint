@@ -33,7 +33,7 @@ class ProfilesController < ApplicationController
   end
 
   def changing_password?
-    params.dig(:user, :password).present? || params.dig(:user, :password_confirmation).present? || params.dig(:user, :current_password).present?
+    params.dig(:user, :password).present? || params.dig(:user, :password_confirmation).present?
   end
 
   def update_password

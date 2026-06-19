@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
   include Pundit::Authorization
+  rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
   def after_sign_in_path_for(resource)
     # Redirect to the smart dashboard controller
@@ -59,5 +60,10 @@ class ApplicationController < ActionController::Base
     return if controller_path == "dashboard" && action_name == "index"
 
     redirect_to edit_profile_path, alert: "Please change your temporary password before continuing."
+  end
+
+  def user_not_authorized
+    redirect_back fallback_location: dashboard_path_for_current_user,
+                  alert: "You are not allowed to perform that action."
   end
 end

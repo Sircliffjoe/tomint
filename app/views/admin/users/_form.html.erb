@@ -1,5 +1,5 @@
 <div class="form-card">
-  <%= form_with(model: [:admin, user], class: "directorate-form") do |form| %>
+  <%= form_with(model: [:admin, user], multipart: true, class: "directorate-form") do |form| %>
     <% if user.errors.any? %>
       <div class="error-banner">
         <div class="error-icon-wrap">
@@ -19,6 +19,22 @@
     <% end %>
 
     <div class="form-fields">
+      <div class="field-group">
+        <%= form.label :avatar, "Profile Image", class: "field-label" %>
+        <div class="field-hint">Upload a profile photo for this user. This works for every user role.</div>
+        <div class="avatar-upload-row">
+          <% if user.avatar.attached? %>
+            <%= image_tag user.avatar, class: "avatar-preview-image", data: { admin_avatar_preview: true } %>
+          <% else %>
+            <div class="avatar-preview-fallback" data-admin-avatar-fallback><%= user.initials.presence || "U" %></div>
+            <%= image_tag "", class: "avatar-preview-image hidden", data: { admin_avatar_preview: true } %>
+          <% end %>
+          <div class="avatar-upload-input">
+            <%= form.file_field :avatar, accept: "image/png,image/jpeg,image/webp,image/gif", class: "field-input", data: { admin_avatar_input: true } %>
+          </div>
+        </div>
+      </div>
+
       <div class="form-row">
         <div class="field-group">
           <%= form.label :first_name, class: "field-label" %>
@@ -104,6 +120,13 @@
   .field-input:hover { border-color:#16a34a; background:#fff; }
   .field-input:focus { background:#fff; border-color:#16a34a; box-shadow:0 0 0 4px rgba(34,197,94,.1); }
   .field-select { cursor:pointer; }
+  .avatar-upload-row { display:flex; align-items:center; gap:1rem; flex-wrap:wrap; }
+  .avatar-preview-image,
+  .avatar-preview-fallback { width:5rem; height:5rem; border-radius:999px; flex-shrink:0; }
+  .avatar-preview-image { object-fit:cover; border:3px solid #dcfce7; box-shadow:0 6px 16px rgba(22,163,74,.14); background:#f9fafb; }
+  .avatar-preview-fallback { display:flex; align-items:center; justify-content:center; background:#dcfce7; color:#166534; font-weight:800; font-size:1.4rem; border:3px solid #bbf7d0; box-shadow:0 6px 16px rgba(22,163,74,.14); }
+  .avatar-upload-input { flex:1; min-width:240px; }
+  .hidden { display:none !important; }
   .form-actions { display:flex; align-items:center; justify-content:flex-end; gap:.875rem; margin-top:2.5rem; padding-top:2rem; border-top:1px solid #f3f4f6; }
   .btn-cancel { display:inline-flex; align-items:center; gap:.4rem; padding:.65rem 1.375rem; font-size:.8375rem; font-weight:600; letter-spacing:.02em; color:#6b7280; background:transparent; border:1.5px solid #e5e7eb; border-radius:9px; text-decoration:none; cursor:pointer; transition:all .18s ease; font-family:inherit; }
   .btn-cancel:hover { color:#374151; background:#f9fafb; border-color:#d1d5db; }
@@ -148,5 +171,33 @@
       initUserForm();
     }
     document.addEventListener("turbo:load", initUserForm);
+  })();
+</script>
+
+<script>
+  (function() {
+    function initAdminAvatarPreview() {
+      const input = document.querySelector("[data-admin-avatar-input]");
+      const preview = document.querySelector("[data-admin-avatar-preview]");
+      const fallback = document.querySelector("[data-admin-avatar-fallback]");
+      if (!input || !preview || input.dataset.previewBound) return;
+      input.dataset.previewBound = "true";
+
+      input.addEventListener("change", function(event) {
+        const file = event.target.files && event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(loadEvent) {
+          preview.src = loadEvent.target.result;
+          preview.classList.remove("hidden");
+          if (fallback) fallback.classList.add("hidden");
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", initAdminAvatarPreview);
+    document.addEventListener("turbo:load", initAdminAvatarPreview);
   })();
 </script>

@@ -5,7 +5,7 @@
   </div>
 
   <div class="mt-6 border-t border-gray-100">
-    <%= form_with(model: @user, url: profile_path, method: :patch, local: true, class: "space-y-8 divide-y divide-gray-200") do |f| %>
+    <%= form_with(model: @user, url: profile_path, method: :patch, local: true, multipart: true, class: "space-y-8 divide-y divide-gray-200") do |f| %>
       <% if @user.errors.any? %>
         <div class="rounded-md bg-red-50 p-4 mb-6">
           <div class="flex">
@@ -41,15 +41,19 @@
             <label for="avatar" class="block text-sm font-medium text-gray-700">Profile picture</label>
             <div class="mt-2 flex items-center gap-x-3">
               <% if @user.avatar.attached? %>
-                <%= image_tag @user.avatar, class: "h-12 w-12 rounded-full object-cover" %>
+                <%= image_tag @user.avatar, class: "h-16 w-16 rounded-full object-cover ring-2 ring-white shadow", data: { avatar_preview: true } %>
               <% else %>
-                <div class="h-12 w-12 rounded-full bg-gray-100 flex items-center justify-center">
+                <div class="h-16 w-16 rounded-full bg-gray-100 flex items-center justify-center" data-avatar-fallback>
                   <svg class="h-7 w-7 text-gray-300" viewBox="0 0 24 24" fill="currentColor">
                     <path fill-rule="evenodd" d="M18.685 19.097A9.723 9.723 0 0021.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12c0 2.671 1.073 5.093 2.815 6.866a.75.75 0 001.196-.06l1.293-2.155a.75.75 0 011.23-.035 7.243 7.243 0 0010.517 0 .75.75 0 011.23.035l1.293 2.155a.75.75 0 001.196.06zM15.75 9a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" clip-rule="evenodd" />
                   </svg>
                 </div>
               <% end %>
-              <%= f.file_field :avatar, class: "block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100" %>
+              <%= image_tag "", class: "hidden h-16 w-16 rounded-full object-cover ring-2 ring-white shadow", data: { avatar_preview: true } unless @user.avatar.attached? %>
+              <div class="flex-1">
+                <%= f.file_field :avatar, accept: "image/png,image/jpeg,image/webp,image/gif", data: { avatar_input: true }, class: "block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100" %>
+                <p class="mt-2 text-xs text-gray-500">Choose an image to preview it before saving.</p>
+              </div>
             </div>
           </div>
 
@@ -106,3 +110,32 @@
     <% end %>
   </div>
 </div>
+
+<script>
+  (function() {
+    function initAvatarPreview() {
+      var input = document.querySelector("[data-avatar-input]");
+      var preview = document.querySelector("[data-avatar-preview]");
+      var fallback = document.querySelector("[data-avatar-fallback]");
+      if (!input || !preview) return;
+      if (input.dataset.previewBound) return;
+      input.dataset.previewBound = "true";
+
+      input.addEventListener("change", function(event) {
+        var file = event.target.files && event.target.files[0];
+        if (!file) return;
+
+        var reader = new FileReader();
+        reader.onload = function(loadEvent) {
+          preview.src = loadEvent.target.result;
+          preview.classList.remove("hidden");
+          if (fallback) fallback.classList.add("hidden");
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", initAvatarPreview);
+    document.addEventListener("turbo:load", initAvatarPreview);
+  })();
+</script>

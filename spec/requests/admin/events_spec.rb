@@ -76,6 +76,59 @@ RSpec.describe "Admin events", type: :request do
       expect(response.body).to include("trix-editor")
       expect(response.body).not_to include("event[camp_details_attributes][lagos-0-new]")
     end
+
+    it "redirects state coordinators away from national events they cannot edit" do
+      state = State.create!(name: "Delta", code: "DEL", country: "Nigeria")
+      coordinator = User.create!(
+        first_name: "State",
+        last_name: "Coordinator",
+        email: "event-state-coordinator@example.com",
+        password: "password",
+        role: :state_coordinator,
+        state: state
+      )
+      event = Event.create!(
+        title: "National Youth Conference 2027",
+        start_time: 1.week.from_now,
+        end_time: 1.week.from_now + 2.hours,
+        event_type: :information
+      )
+
+      sign_in coordinator
+      get edit_admin_event_path(event)
+
+      expect(response).to redirect_to(states_dashboard_path)
+      expect(flash[:alert]).to eq("You are not allowed to perform that action.")
+    end
+  end
+
+  describe "GET /admin/events" do
+    it "hides edit and delete actions for view-only national events" do
+      state = State.create!(name: "Delta", code: "DEL", country: "Nigeria")
+      coordinator = User.create!(
+        first_name: "State",
+        last_name: "Coordinator",
+        email: "event-index-coordinator@example.com",
+        password: "password",
+        role: :state_coordinator,
+        state: state
+      )
+      event = Event.create!(
+        title: "National Youth Conference 2027",
+        start_time: 1.week.from_now,
+        end_time: 1.week.from_now + 2.hours,
+        event_type: :information
+      )
+
+      sign_in coordinator
+      get admin_events_path
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include("National Youth Conference 2027")
+      expect(response.body).to include("View only")
+      expect(response.body).not_to include(edit_admin_event_path(event))
+      expect(response.body).not_to include(%(action="#{admin_event_path(event)}"))
+    end
   end
 
   describe "PATCH /admin/events/:id" do

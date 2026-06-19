@@ -5,8 +5,8 @@ class InternalMessagesController < ApplicationController
   before_action :set_recipients, only: %i[ new create ]
 
   def index
-    @inbox_messages = current_user.received_internal_messages.includes(:sender).recent
-    @sent_messages = current_user.sent_internal_messages.includes(:recipient).recent
+    @inbox_messages = current_user.received_internal_messages.includes(sender: { avatar_attachment: :blob }).recent
+    @sent_messages = current_user.sent_internal_messages.includes(recipient: { avatar_attachment: :blob }).recent
     @unread_count = current_user.received_internal_messages.unread.count
   end
 

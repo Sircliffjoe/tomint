@@ -55,6 +55,28 @@ RSpec.describe "Internal messages", type: :request do
     expect(message.reload).to be_read
   end
 
+  it "shows the sender avatar on received messages when present" do
+    sender.avatar.attach(
+      io: Rails.root.join("spec/fixtures/files/avatar.png").open,
+      filename: "avatar.png",
+      content_type: "image/png"
+    )
+    InternalMessage.create!(
+      sender: sender,
+      recipient: recipient,
+      subject: "Important Notice",
+      body: "Please review this update."
+    )
+
+    sign_in recipient
+    get internal_messages_path
+
+    expect(response).to have_http_status(:success)
+    expect(response.body).to include("Important Notice")
+    expect(response.body).to include("rails/active_storage")
+    expect(response.body).to include(sender.full_name)
+  end
+
   it "renders inside the authenticated dashboard layout" do
     state = State.create!(name: "Delta", code: "DEL", country: "Nigeria")
     state_user = User.create!(

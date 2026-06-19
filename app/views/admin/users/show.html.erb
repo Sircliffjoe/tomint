@@ -92,7 +92,11 @@
     <div class="show-sidebar">
       <div class="show-card">
         <div class="profile-card">
-          <div class="profile-avatar"><%= @user.initials %></div>
+          <% if @user.avatar.attached? %>
+            <%= image_tag @user.avatar, class: "profile-avatar profile-avatar--image" %>
+          <% else %>
+            <div class="profile-avatar"><%= @user.initials %></div>
+          <% end %>
           <h2 class="profile-name"><%= @user.full_name %></h2>
           <p class="profile-email"><%= @user.email %></p>
           <span class="badge badge--green"><%= @user.role.titleize %></span>
@@ -178,6 +182,7 @@
 .empty-state-link:hover{background:#f0fdf4}
 .profile-card{display:flex;flex-direction:column;align-items:center;text-align:center;padding:2rem 1.5rem}
 .profile-avatar{width:5rem;height:5rem;border-radius:50%;background:#dcfce7;color:#166534;font-weight:800;font-size:1.5rem;display:flex;align-items:center;justify-content:center;border:3px solid #bbf7d0;box-shadow:0 4px 12px rgba(22,163,74,.15);margin-bottom:1rem}
+.profile-avatar--image{object-fit:cover;background:#f9fafb}
 .profile-name{font-size:1.25rem;font-weight:800;color:#111827;margin:0 0 .25rem}
 .profile-email{font-size:.8125rem;color:#9ca3af;margin:0 0 1rem}
 .profile-divider{width:100%;border-top:1px solid #f3f4f6;margin:1rem 0}

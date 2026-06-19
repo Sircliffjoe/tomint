@@ -42,4 +42,30 @@ RSpec.describe "Profiles", type: :request do
     expect(user.password_changed_at).to be_present
     expect(user.valid_password?("new-secure-password")).to be(true)
   end
+
+  it "allows a user to upload and display an avatar without changing password" do
+    user = User.create!(
+      first_name: "Avatar",
+      last_name: "User",
+      email: "avatar-user@example.com",
+      password: "password"
+    )
+
+    sign_in user
+    patch profile_path, params: {
+      user: {
+        first_name: "Avatar",
+        last_name: "User",
+        current_password: "password",
+        avatar: fixture_file_upload("avatar.png", "image/png")
+      }
+    }
+
+    expect(response).to redirect_to(profile_path)
+    expect(user.reload.avatar).to be_attached
+
+    follow_redirect!
+    expect(response.body).to include("Profile picture")
+    expect(response.body).to include("rails/active_storage")
+  end
 end

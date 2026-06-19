@@ -7,7 +7,9 @@
       <p class="mt-2 text-sm text-gray-700">A list of all events.</p>
     </div>
     <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-      <%= link_to "New Event", new_admin_event_path, class: "block rounded-md bg-green-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600" %>
+      <% if policy(Event).new? %>
+        <%= link_to "New Event", new_admin_event_path, class: "block rounded-md bg-green-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600" %>
+      <% end %>
     </div>
   </div>
   <div class="mt-8 flow-root">
@@ -53,8 +55,15 @@
                   <% end %>
                 </td>
                 <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                  <%= link_to "Edit", edit_admin_event_path(event), class: "text-green-600 hover:text-green-900 mr-4" %>
-                  <%= button_to "Delete", admin_event_path(event), method: :delete, data: { turbo_confirm: "Are you sure you want to delete this event?" }, form: { class: "inline" }, class: "inline border-0 bg-transparent p-0 text-red-600 hover:text-red-900 cursor-pointer" %>
+                  <% if policy(event).edit? %>
+                    <%= link_to "Edit", edit_admin_event_path(event), class: "text-green-600 hover:text-green-900 mr-4" %>
+                  <% end %>
+                  <% if policy(event).destroy? %>
+                    <%= button_to "Delete", admin_event_path(event), method: :delete, data: { turbo_confirm: "Are you sure you want to delete this event?" }, form: { class: "inline" }, class: "inline border-0 bg-transparent p-0 text-red-600 hover:text-red-900 cursor-pointer" %>
+                  <% end %>
+                  <% unless policy(event).edit? || policy(event).destroy? %>
+                    <span class="text-xs font-semibold text-gray-400">View only</span>
+                  <% end %>
                 </td>
               </tr>
             <% end %>
