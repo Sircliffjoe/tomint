@@ -1,4 +1,6 @@
 class Event < ApplicationRecord
+  include Sluggable
+
   belongs_to :state, optional: true
   has_many :registrations, dependent: :destroy
   has_many :camp_details, -> { ordered }, dependent: :destroy
@@ -127,6 +129,7 @@ class Event < ApplicationRecord
       attributes["flyer"].blank? &&
       attributes["area_id"].blank? &&
       attributes["notes"].blank? &&
+      attributes["formatted_notes"].blank? &&
       attributes["registration_link"].blank?
   end
 end

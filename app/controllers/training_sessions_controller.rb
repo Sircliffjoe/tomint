@@ -3,7 +3,7 @@ class TrainingSessionsController < ApplicationController
   before_action :authenticate_user!
 
   def show
-    @training = Training.find(params[:training_id])
+    @training = Training.friendly_find(params[:training_id])
     @session = @training.training_sessions.find(params[:id])
   end
 end

@@ -1,4 +1,6 @@
 class BlogPost < ApplicationRecord
+  include Sluggable
+
   belongs_to :author, class_name: "User"
   has_rich_text :body
   has_one_attached :main_image

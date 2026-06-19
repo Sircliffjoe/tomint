@@ -7,7 +7,7 @@ class EventsController < ApplicationController
   end
 
   def show
-    @event = Event.find(params[:id])
+    @event = Event.friendly_find(params[:id])
     @registration = Registration.new
     if user_signed_in?
       @existing_registration = Registration.find_by(user: current_user, event: @event)

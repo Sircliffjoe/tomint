@@ -1,4 +1,5 @@
 require "uri"
+require "erb"
 
 class CampDetail < ApplicationRecord
   attr_accessor :area_row
@@ -6,6 +7,7 @@ class CampDetail < ApplicationRecord
   belongs_to :event
   belongs_to :area, optional: true
   has_one_attached :flyer
+  has_rich_text :formatted_notes
 
   validates :state_name, presence: true
   validates :area_id, presence: true, if: :area_row?
@@ -23,10 +25,27 @@ class CampDetail < ApplicationRecord
   end
 
   def custom_notes?
-    notes.present? && !notes.match?(/\ACamp details will be updated once the (state|FCT) flyer is ready\.\z/)
+    formatted_notes_content? || legacy_custom_notes?
+  end
+
+  def public_notes_html
+    return formatted_notes.to_s if formatted_notes_content?
+    return ERB::Util.html_escape(notes).to_s if legacy_custom_notes?
+
+    "Camp details will be updated soon."
   end
 
   def area_row?
     area_row.to_s == "1"
+  end
+
+  private
+
+  def formatted_notes_content?
+    formatted_notes&.body&.to_plain_text.to_s.strip.present?
+  end
+
+  def legacy_custom_notes?
+    notes.present? && !notes.match?(/\ACamp details will be updated once the (state|FCT) flyer is ready\.\z/)
   end
 end

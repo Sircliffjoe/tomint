@@ -23,7 +23,7 @@ module Admin
 
     def create
       @training = Training.new(training_params)
-      @training.state = current_user.state if current_user.state_admin? || current_user.state_secretary?
+      @training.state = current_user.state if current_user.state_coordinator? || current_user.state_secretary?
 
       authorize @training
 
@@ -52,7 +52,7 @@ module Admin
     private
 
     def set_training
-      @training = Training.find(params[:id])
+      @training = Training.friendly_find(params[:id])
     end
 
     def training_params
@@ -60,7 +60,7 @@ module Admin
     end
 
     def authorize_admin!
-      redirect_to root_path, alert: "Not authorized." unless current_user.super_admin? || current_user.state_admin? || current_user.state_secretary?
+      redirect_to root_path, alert: "Not authorized." unless current_user.super_admin? || current_user.state_coordinator? || current_user.state_secretary?
     end
   end
 end

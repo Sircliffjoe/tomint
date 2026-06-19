@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_18_133000) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_19_110000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -74,9 +74,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_18_133000) do
     t.bigint "author_id", null: false
     t.datetime "created_at", null: false
     t.datetime "published_at"
+    t.string "slug", null: false
     t.string "title"
     t.datetime "updated_at", null: false
     t.index ["author_id"], name: "index_blog_posts_on_author_id"
+    t.index ["slug"], name: "index_blog_posts_on_slug", unique: true
   end
 
   create_table "camp_details", force: :cascade do |t|
@@ -91,6 +93,21 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_18_133000) do
     t.index ["area_id"], name: "index_camp_details_on_area_id"
     t.index ["event_id", "state_name", "position"], name: "index_camp_details_on_event_state_position"
     t.index ["event_id"], name: "index_camp_details_on_event_id"
+  end
+
+  create_table "contact_messages", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "email", null: false
+    t.string "ip_address"
+    t.text "message", null: false
+    t.string "name", null: false
+    t.string "phone"
+    t.datetime "read_at"
+    t.string "subject", null: false
+    t.datetime "updated_at", null: false
+    t.text "user_agent"
+    t.index ["created_at"], name: "index_contact_messages_on_created_at"
+    t.index ["read_at"], name: "index_contact_messages_on_read_at"
   end
 
   create_table "directorates", force: :cascade do |t|
@@ -121,12 +138,28 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_18_133000) do
     t.string "location"
     t.decimal "price"
     t.boolean "registration_open"
+    t.string "slug", null: false
     t.boolean "spotlight"
     t.datetime "start_time"
     t.bigint "state_id"
     t.string "title"
     t.datetime "updated_at", null: false
+    t.index ["slug"], name: "index_events_on_slug", unique: true
     t.index ["state_id"], name: "index_events_on_state_id"
+  end
+
+  create_table "internal_messages", force: :cascade do |t|
+    t.text "body", null: false
+    t.datetime "created_at", null: false
+    t.datetime "read_at"
+    t.bigint "recipient_id", null: false
+    t.bigint "sender_id", null: false
+    t.string "subject", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_internal_messages_on_created_at"
+    t.index ["read_at"], name: "index_internal_messages_on_read_at"
+    t.index ["recipient_id"], name: "index_internal_messages_on_recipient_id"
+    t.index ["sender_id"], name: "index_internal_messages_on_sender_id"
   end
 
   create_table "pages", force: :cascade do |t|
@@ -341,9 +374,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_18_133000) do
     t.string "category"
     t.datetime "created_at", null: false
     t.text "description"
+    t.string "slug", null: false
     t.bigint "state_id"
     t.string "title"
     t.datetime "updated_at", null: false
+    t.index ["slug"], name: "index_trainings_on_slug", unique: true
     t.index ["state_id"], name: "index_trainings_on_state_id"
   end
 
@@ -354,6 +389,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_18_133000) do
     t.string "encrypted_password", default: "", null: false
     t.string "first_name"
     t.string "last_name"
+    t.boolean "must_change_password", default: false, null: false
+    t.datetime "password_changed_at"
     t.string "phone"
     t.datetime "remember_created_at"
     t.datetime "reset_password_sent_at"
@@ -382,6 +419,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_18_133000) do
   add_foreign_key "camp_details", "areas"
   add_foreign_key "camp_details", "events"
   add_foreign_key "events", "states"
+  add_foreign_key "internal_messages", "users", column: "recipient_id"
+  add_foreign_key "internal_messages", "users", column: "sender_id"
   add_foreign_key "registrations", "events"
   add_foreign_key "registrations", "users"
   add_foreign_key "report_categories", "directorates"

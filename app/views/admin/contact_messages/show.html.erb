@@ -1,0 +1,43 @@
+<% content_for :title, "Message from #{@contact_message.name}" %>
+
+<div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+  <div class="mb-6 flex items-center justify-between gap-4">
+    <div>
+      <%= link_to "Messages", admin_contact_messages_path, class: "text-sm font-semibold text-green-700 hover:text-green-900" %>
+      <h1 class="mt-2 text-2xl font-bold text-gray-900"><%= @contact_message.subject %></h1>
+      <p class="mt-1 text-sm text-gray-500">
+        Sent <%= @contact_message.created_at.strftime("%B %d, %Y at %I:%M %p") %>
+      </p>
+    </div>
+    <%= button_to "Delete", admin_contact_message_path(@contact_message), method: :delete, data: { turbo_confirm: "Delete this message?" }, class: "rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 border-0 cursor-pointer" %>
+  </div>
+
+  <div class="overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-gray-200">
+    <div class="border-b border-gray-100 px-6 py-5">
+      <h2 class="text-base font-semibold text-gray-900">Sender</h2>
+    </div>
+    <dl class="grid grid-cols-1 gap-px bg-gray-100 sm:grid-cols-2">
+      <div class="bg-white px-6 py-4">
+        <dt class="text-xs font-semibold uppercase tracking-wide text-gray-500">Name</dt>
+        <dd class="mt-1 text-sm text-gray-900"><%= @contact_message.name %></dd>
+      </div>
+      <div class="bg-white px-6 py-4">
+        <dt class="text-xs font-semibold uppercase tracking-wide text-gray-500">Email</dt>
+        <dd class="mt-1 text-sm text-gray-900"><%= mail_to @contact_message.email %></dd>
+      </div>
+      <div class="bg-white px-6 py-4">
+        <dt class="text-xs font-semibold uppercase tracking-wide text-gray-500">Phone</dt>
+        <dd class="mt-1 text-sm text-gray-900"><%= @contact_message.phone.presence || "Not provided" %></dd>
+      </div>
+      <div class="bg-white px-6 py-4">
+        <dt class="text-xs font-semibold uppercase tracking-wide text-gray-500">Source</dt>
+        <dd class="mt-1 text-sm text-gray-900"><%= @contact_message.ip_address.presence || "Unknown" %></dd>
+      </div>
+    </dl>
+
+    <div class="px-6 py-6">
+      <h2 class="text-base font-semibold text-gray-900">Message</h2>
+      <p class="mt-4 whitespace-pre-wrap text-sm leading-6 text-gray-700"><%= @contact_message.message %></p>
+    </div>
+  </div>
+</div>

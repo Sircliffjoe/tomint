@@ -8,11 +8,13 @@ class User < ApplicationRecord
 
   belongs_to :state, optional: true
   belongs_to :directorate, optional: true
+  has_many :sent_internal_messages, class_name: "InternalMessage", foreign_key: :sender_id, dependent: :destroy, inverse_of: :sender
+  has_many :received_internal_messages, class_name: "InternalMessage", foreign_key: :recipient_id, dependent: :destroy, inverse_of: :recipient
 
   enum :role, {
     super_admin: 0,
     directorate_director: 1,
-    state_admin: 2,
+    state_coordinator: 2,
     state_secretary: 3,
     public_user: 4
   }, default: :public_user
@@ -20,10 +22,14 @@ class User < ApplicationRecord
   ROLE_DISPLAY_NAMES = {
     "super_admin" => "Super Admin",
     "directorate_director" => "Director",
-    "state_admin" => "State Coordinator",
+    "state_coordinator" => "State Coordinator",
     "state_secretary" => "State Secretary",
     "public_user" => "User"
   }.freeze
+
+  def self.generate_temporary_password
+    "#{SecureRandom.alphanumeric(4)}-#{SecureRandom.alphanumeric(4)}-#{SecureRandom.alphanumeric(4)}"
+  end
 
   def display_role
     ROLE_DISPLAY_NAMES[role] || role.humanize
@@ -41,7 +47,12 @@ class User < ApplicationRecord
     "#{first_name&.first}#{last_name&.first}".upcase
   end
 
+  def mark_password_changed!
+    self.must_change_password = false
+    self.password_changed_at = Time.current
+  end
+
   validates :first_name, :last_name, presence: true
-  validates :state_id, presence: true, if: -> { state_admin? || state_secretary? }
+  validates :state_id, presence: true, if: -> { state_coordinator? || state_secretary? }
   validates :directorate_id, presence: true, if: :directorate_director?
 end

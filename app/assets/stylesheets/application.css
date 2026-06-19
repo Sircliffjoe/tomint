@@ -456,10 +456,18 @@ html {
   outline: 0;
 }
 
-.tom-camp-modal__body p {
+.tom-camp-modal__notes {
   margin: 0;
   color: #475569;
   line-height: 1.65;
+}
+
+.tom-camp-modal__notes > :first-child {
+  margin-top: 0;
+}
+
+.tom-camp-modal__notes > :last-child {
+  margin-bottom: 0;
 }
 
 .tom-camp-modal__link {

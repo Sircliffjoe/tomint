@@ -1,0 +1,21 @@
+<% content_for :title, @message.subject %>
+
+<div class="mx-auto max-w-4xl">
+  <div class="mb-6 flex items-center justify-between gap-4">
+    <div>
+      <%= link_to "Messages", internal_messages_path, class: "text-sm font-semibold text-green-700 hover:text-green-900" %>
+      <h1 class="mt-2 text-2xl font-bold text-gray-900"><%= @message.subject %></h1>
+      <p class="mt-1 text-sm text-gray-500">
+        <%= @message.sender == current_user ? "To #{@message.recipient.full_name}" : "From #{@message.sender.full_name}" %>
+        · <%= @message.created_at.strftime("%B %d, %Y at %I:%M %p") %>
+      </p>
+    </div>
+    <% if @message.recipient == current_user %>
+      <%= link_to "Reply", new_internal_message_path(internal_message: { recipient_id: @message.sender_id, subject: "Re: #{@message.subject}" }), class: "rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500" %>
+    <% end %>
+  </div>
+
+  <div class="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
+    <p class="whitespace-pre-wrap text-sm leading-6 text-gray-700"><%= @message.body %></p>
+  </div>
+</div>

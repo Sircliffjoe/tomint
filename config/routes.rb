@@ -18,13 +18,22 @@ Rails.application.routes.draw do
     resources :states do
       resources :areas
     end
-    resources :users
+    resources :users do
+      member do
+        patch :reset_password
+      end
+    end
     resources :events
     resources :trainings do
       resources :training_sessions
     end
     resources :blog_posts
     resources :donations
+    resources :contact_messages, path: "messages", only: [ :index, :show, :destroy ] do
+      member do
+        patch :mark_read
+      end
+    end
     resources :pages
     resources :announcements
   end
@@ -52,7 +61,8 @@ Rails.application.routes.draw do
 
   devise_for :users, controllers: {
     sessions: "users/sessions",
-    registrations: "users/registrations"
+    registrations: "users/registrations",
+    passwords: "users/passwords"
   }
 
   resources :reports do
@@ -60,6 +70,7 @@ Rails.application.routes.draw do
       patch :submit
     end
   end
+  resources :internal_messages, path: "messages", only: [ :index, :show, :new, :create ]
 
   resources :trainings, only: [ :index, :show ] do
     resources :training_registrations, only: [ :create ], path: "registrations"
@@ -87,6 +98,7 @@ Rails.application.routes.draw do
   get "about", to: "pages#about"
   get "programmes", to: "pages#programmes", as: :programmes
   get "contact", to: "pages#contact", as: :contact
+  post "contact", to: "contact_messages#create"
   get "privacy", to: "pages#show", defaults: { slug: "privacy" }, as: :privacy
   get "terms", to: "pages#show", defaults: { slug: "terms" }, as: :terms
 

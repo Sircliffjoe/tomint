@@ -1,0 +1,114 @@
+<% content_for :title, "Messages" %>
+
+<div class="space-y-6">
+  <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+    <div>
+      <p class="text-sm font-semibold uppercase tracking-wider text-green-700">Internal Comms</p>
+      <h1 class="mt-1 text-3xl font-bold tracking-tight text-gray-950">Messages</h1>
+      <p class="mt-2 text-sm text-gray-500">Send notes and updates to other authenticated platform users.</p>
+    </div>
+
+    <%= link_to new_internal_message_path, class: "inline-flex items-center justify-center rounded-lg bg-green-600 px-4 py-3 text-sm font-semibold text-white shadow-sm hover:bg-green-500" do %>
+      <svg class="mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+      </svg>
+      New Message
+    <% end %>
+  </div>
+
+  <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+    <div class="rounded-xl bg-white p-5 shadow-sm ring-1 ring-gray-200">
+      <p class="text-xs font-semibold uppercase tracking-wider text-gray-400">Inbox</p>
+      <p class="mt-3 text-3xl font-bold text-gray-950"><%= @inbox_messages.size %></p>
+      <p class="mt-1 text-sm text-gray-500">Received messages</p>
+    </div>
+    <div class="rounded-xl bg-white p-5 shadow-sm ring-1 ring-gray-200">
+      <p class="text-xs font-semibold uppercase tracking-wider text-gray-400">Unread</p>
+      <p class="mt-3 text-3xl font-bold text-green-700"><%= @unread_count %></p>
+      <p class="mt-1 text-sm text-gray-500"><%= pluralize(@unread_count, "message") %> awaiting review</p>
+    </div>
+    <div class="rounded-xl bg-white p-5 shadow-sm ring-1 ring-gray-200">
+      <p class="text-xs font-semibold uppercase tracking-wider text-gray-400">Sent</p>
+      <p class="mt-3 text-3xl font-bold text-gray-950"><%= @sent_messages.size %></p>
+      <p class="mt-1 text-sm text-gray-500">Messages you have sent</p>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1.4fr)_minmax(320px,0.8fr)]">
+    <section class="overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-gray-200">
+      <div class="flex items-center justify-between border-b border-gray-100 px-6 py-5">
+        <div>
+          <h2 class="text-lg font-semibold text-gray-950">Inbox</h2>
+          <p class="mt-1 text-sm text-gray-500"><%= pluralize(@unread_count, "unread message") %></p>
+        </div>
+        <% if @unread_count.positive? %>
+          <span class="rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">New</span>
+        <% end %>
+      </div>
+
+      <% if @inbox_messages.any? %>
+        <ul class="divide-y divide-gray-100">
+          <% @inbox_messages.each do |message| %>
+            <li>
+              <%= link_to internal_message_path(message), class: "block px-6 py-5 transition hover:bg-green-50/60" do %>
+                <div class="flex gap-4">
+                  <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-green-100 text-sm font-bold text-green-700">
+                    <%= message.sender.initials %>
+                  </div>
+                  <div class="min-w-0 flex-1">
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                      <p class="truncate text-base font-semibold text-gray-950"><%= message.subject %></p>
+                      <p class="shrink-0 text-xs font-medium text-gray-400"><%= time_ago_in_words(message.created_at) %> ago</p>
+                    </div>
+                    <p class="mt-1 text-sm font-medium text-gray-600">From <%= message.sender.full_name %></p>
+                    <p class="mt-2 line-clamp-2 text-sm leading-6 text-gray-500"><%= truncate(message.body.to_s.squish, length: 150) %></p>
+                  </div>
+                  <% unless message.read? %>
+                    <span class="mt-1 h-2.5 w-2.5 shrink-0 rounded-full bg-green-500"></span>
+                  <% end %>
+                </div>
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <div class="px-6 py-16 text-center">
+          <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 text-gray-400">
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 8.25v7.5A2.25 2.25 0 0118.75 18h-13.5A2.25 2.25 0 013 15.75v-7.5m18 0A2.25 2.25 0 0018.75 6h-13.5A2.25 2.25 0 003 8.25" />
+            </svg>
+          </div>
+          <h3 class="mt-4 text-sm font-semibold text-gray-950">No received messages yet</h3>
+          <p class="mt-1 text-sm text-gray-500">New internal messages will appear here.</p>
+        </div>
+      <% end %>
+    </section>
+
+    <section class="overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-gray-200">
+      <div class="border-b border-gray-100 px-6 py-5">
+        <h2 class="text-lg font-semibold text-gray-950">Sent</h2>
+        <p class="mt-1 text-sm text-gray-500">Recent messages you have sent.</p>
+      </div>
+
+      <% if @sent_messages.any? %>
+        <ul class="divide-y divide-gray-100">
+          <% @sent_messages.each do |message| %>
+            <li>
+              <%= link_to internal_message_path(message), class: "block px-6 py-4 transition hover:bg-gray-50" do %>
+                <p class="truncate text-sm font-semibold text-gray-950"><%= message.subject %></p>
+                <p class="mt-1 text-sm text-gray-500">To <%= message.recipient.full_name %></p>
+                <p class="mt-2 line-clamp-2 text-sm leading-6 text-gray-500"><%= truncate(message.body.to_s.squish, length: 110) %></p>
+                <p class="mt-3 text-xs font-medium text-gray-400"><%= message.created_at.strftime("%b %d, %Y %I:%M %p") %></p>
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <div class="px-6 py-12 text-center">
+          <h3 class="text-sm font-semibold text-gray-950">No sent messages yet</h3>
+          <p class="mt-1 text-sm text-gray-500">Use New Message to start a conversation.</p>
+        </div>
+      <% end %>
+    </section>
+  </div>
+</div>

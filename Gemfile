@@ -67,3 +67,4 @@ gem "pundit", "~> 2.5"
 gem "rqrcode"
 
 gem "rspec-rails", "~> 8.0", groups: [ :development, :test ]
+gem 'brevo'

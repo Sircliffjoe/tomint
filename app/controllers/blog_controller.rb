@@ -5,6 +5,6 @@ class BlogController < ApplicationController
   end
 
   def show
-    @post = BlogPost.published.find(params[:id])
+    @post = BlogPost.published.friendly_find(params[:id])
   end
 end

@@ -58,7 +58,7 @@ module Admin
     end
 
     def authorize_admin!
-      redirect_to root_path, alert: "Not authorized." unless current_user.super_admin? || current_user.state_admin? || current_user.state_secretary?
+      redirect_to root_path, alert: "Not authorized." unless current_user.super_admin? || current_user.state_coordinator? || current_user.state_secretary?
     end
   end
 end

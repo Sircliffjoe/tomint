@@ -1,46 +1,140 @@
 <% content_for :title, "My State - #{@state.name}" %>
 
 <div class="space-y-6">
-  <div class="flex items-center justify-between">
+  <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
     <div>
-      <h1 class="text-2xl font-bold text-gray-900">My State</h1>
-      <p class="text-sm text-gray-500"><%= @state.name %> (<%= @state.code %>)</p>
+      <p class="text-sm font-semibold uppercase tracking-wider text-green-700">State Chapter</p>
+      <h1 class="mt-1 text-3xl font-bold tracking-tight text-gray-950">My State - <%= @state.name %></h1>
+      <p class="mt-2 text-sm text-gray-500">
+        <%= @state.code %>
+        <% if @state.zone.present? %>
+          <span class="mx-2 text-gray-300">/</span><%= @state.zone.name %>
+        <% end %>
+      </p>
     </div>
-    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium <%= @state.active? ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' %>">
+
+    <span class="inline-flex w-fit items-center rounded-full px-4 py-2 text-sm font-semibold <%= @state.active? ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' %>">
       <%= @state.status.humanize %>
     </span>
   </div>
 
-  <div class="bg-white shadow overflow-hidden sm:rounded-lg">
-    <div class="px-4 py-5 sm:px-6">
-      <h3 class="text-lg leading-6 font-medium text-gray-900">State Details</h3>
-      <p class="mt-1 max-w-2xl text-sm text-gray-500">Overview of state information.</p>
+  <div class="grid grid-cols-1 gap-4 md:grid-cols-4">
+    <div class="rounded-xl bg-white p-5 shadow-sm ring-1 ring-gray-200">
+      <p class="text-xs font-semibold uppercase tracking-wider text-gray-400">Areas</p>
+      <p class="mt-3 text-3xl font-bold text-gray-950"><%= @state.areas.count %></p>
+      <p class="mt-1 text-sm text-gray-500">Operational locations</p>
     </div>
-    <div class="border-t border-gray-200 px-4 py-5 sm:p-0">
-      <dl class="sm:divide-y sm:divide-gray-200">
-        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-          <dt class="text-sm font-medium text-gray-500">State Name</dt>
-          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"><%= @state.name %></dd>
+    <div class="rounded-xl bg-white p-5 shadow-sm ring-1 ring-gray-200">
+      <p class="text-xs font-semibold uppercase tracking-wider text-gray-400">Members</p>
+      <p class="mt-3 text-3xl font-bold text-gray-950"><%= @state.users.count %></p>
+      <p class="mt-1 text-sm text-gray-500">Assigned users</p>
+    </div>
+    <div class="rounded-xl bg-white p-5 shadow-sm ring-1 ring-gray-200">
+      <p class="text-xs font-semibold uppercase tracking-wider text-gray-400">Reports</p>
+      <p class="mt-3 text-3xl font-bold text-gray-950"><%= @state.reports.count %></p>
+      <p class="mt-1 text-sm text-gray-500">State submissions</p>
+    </div>
+    <div class="rounded-xl bg-white p-5 shadow-sm ring-1 ring-gray-200">
+      <p class="text-xs font-semibold uppercase tracking-wider text-gray-400">Established</p>
+      <p class="mt-3 text-3xl font-bold text-gray-950"><%= @state.year_created.presence || "--" %></p>
+      <p class="mt-1 text-sm text-gray-500">Chapter year</p>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1.1fr)_minmax(360px,0.9fr)]">
+    <section class="overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-gray-200">
+      <div class="border-b border-gray-100 px-6 py-5">
+        <h2 class="text-lg font-semibold text-gray-950"><%= @state.name %> Map</h2>
+        <p class="mt-1 text-sm text-gray-500">Geographical reference for this state chapter.</p>
+      </div>
+
+      <div class="bg-slate-50 p-6">
+        <% if @state.map_image.attached? %>
+          <div class="flex min-h-[360px] items-center justify-center rounded-xl border border-gray-200 bg-white p-4">
+            <%= image_tag @state.map_image, class: "max-h-[520px] w-full object-contain", alt: "#{@state.name} State map" %>
+          </div>
+        <% else %>
+          <div class="flex min-h-[360px] flex-col items-center justify-center rounded-xl border border-dashed border-gray-300 bg-white px-6 text-center">
+            <div class="flex h-16 w-16 items-center justify-center rounded-full bg-green-100 text-green-700">
+              <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l5.447 2.724A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+              </svg>
+            </div>
+            <h3 class="mt-5 text-base font-semibold text-gray-950">No map image uploaded</h3>
+            <p class="mt-2 max-w-sm text-sm leading-6 text-gray-500">A Super Admin can upload this state's geographical map from the State edit page.</p>
+          </div>
+        <% end %>
+      </div>
+    </section>
+
+    <section class="rounded-xl bg-white shadow-sm ring-1 ring-gray-200">
+      <div class="border-b border-gray-100 px-6 py-5">
+        <h2 class="text-lg font-semibold text-gray-950">State Information</h2>
+        <p class="mt-1 text-sm text-gray-500">Core chapter details and contacts.</p>
+      </div>
+
+      <div class="divide-y divide-gray-100">
+        <div class="grid grid-cols-3 gap-4 px-6 py-4">
+          <dt class="text-sm font-medium text-gray-500">Name</dt>
+          <dd class="col-span-2 text-sm font-semibold text-gray-950"><%= @state.name %></dd>
         </div>
-        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-          <dt class="text-sm font-medium text-gray-500">State Code</dt>
-          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"><%= @state.code %></dd>
+        <div class="grid grid-cols-3 gap-4 px-6 py-4">
+          <dt class="text-sm font-medium text-gray-500">Code</dt>
+          <dd class="col-span-2 text-sm text-gray-950"><%= @state.code %></dd>
         </div>
-        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+        <div class="grid grid-cols-3 gap-4 px-6 py-4">
           <dt class="text-sm font-medium text-gray-500">Country</dt>
-          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"><%= @state.country %></dd>
+          <dd class="col-span-2 text-sm text-gray-950"><%= @state.country.presence || "Nigeria" %></dd>
         </div>
-       <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-          <dt class="text-sm font-medium text-gray-500">Contact Info</dt>
-          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"><%= @state.contact_info.presence || "Not provided" %></dd>
+        <div class="grid grid-cols-3 gap-4 px-6 py-4">
+          <dt class="text-sm font-medium text-gray-500">Zone</dt>
+          <dd class="col-span-2 text-sm text-gray-950"><%= @state.zone&.name || "Not assigned" %></dd>
         </div>
-        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-          <dt class="text-sm font-medium text-gray-500">Status</dt>
-          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-            <%= @state.status.humanize %>
-          </dd>
+        <div class="grid grid-cols-3 gap-4 px-6 py-4">
+          <dt class="text-sm font-medium text-gray-500">Contact</dt>
+          <dd class="col-span-2 whitespace-pre-wrap text-sm leading-6 text-gray-950"><%= @state.contact_info.presence || "Not provided" %></dd>
         </div>
-      </dl>
-    </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="grid grid-cols-1 gap-6 xl:grid-cols-2">
+    <section class="overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-gray-200">
+      <div class="flex items-center justify-between border-b border-gray-100 px-6 py-5">
+        <div>
+          <h2 class="text-lg font-semibold text-gray-950">Operational Areas</h2>
+          <p class="mt-1 text-sm text-gray-500">Locations currently attached to this state.</p>
+        </div>
+        <%= link_to "Manage Areas", states_state_areas_path, class: "rounded-lg bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500" %>
+      </div>
+
+      <% if @state.areas.any? %>
+        <ul class="divide-y divide-gray-100">
+          <% @state.areas.order(:name).each do |area| %>
+            <li class="px-6 py-4">
+              <%= link_to states_state_area_path(area), class: "group block" do %>
+                <p class="font-semibold text-gray-950 group-hover:text-green-700"><%= area.name %></p>
+                <p class="mt-1 line-clamp-2 text-sm leading-6 text-gray-500"><%= area.description.presence || "No description provided." %></p>
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <div class="px-6 py-12 text-center">
+          <h3 class="text-sm font-semibold text-gray-950">No areas yet</h3>
+          <p class="mt-1 text-sm text-gray-500">Add the first operational area for this state.</p>
+        </div>
+      <% end %>
+    </section>
+
+    <section class="rounded-xl bg-white shadow-sm ring-1 ring-gray-200">
+      <div class="border-b border-gray-100 px-6 py-5">
+        <h2 class="text-lg font-semibold text-gray-950">Overview</h2>
+        <p class="mt-1 text-sm text-gray-500">State chapter notes and background.</p>
+      </div>
+      <div class="px-6 py-5">
+        <p class="whitespace-pre-wrap text-sm leading-7 text-gray-700"><%= @state.description.presence || "No state overview has been added yet." %></p>
+      </div>
+    </section>
   </div>
 </div>

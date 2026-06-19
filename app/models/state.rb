@@ -1,4 +1,6 @@
 class State < ApplicationRecord
+  has_one_attached :map_image
+
   belongs_to :zone, optional: true
   has_many :users
   has_many :reports, dependent: :destroy

@@ -42,6 +42,30 @@ RSpec.describe "Events", type: :request do
       expect(response).to have_http_status(:success)
     end
 
+    it "uses a slug in generated event URLs" do
+      event = Event.create!(
+        title: "National Youth Conference 2027",
+        event_type: :information
+      )
+
+      expect(event_path(event)).to eq("/events/national-youth-conference-2027")
+
+      get event_path(event)
+
+      expect(response).to have_http_status(:success)
+    end
+
+    it "keeps old numeric event URLs working" do
+      event = Event.create!(
+        title: "Legacy Event URL",
+        event_type: :information
+      )
+
+      get "/events/#{event.id}"
+
+      expect(response).to have_http_status(:success)
+    end
+
     it "shows all state camp details for camp information events" do
       event = Event.create!(
         title: "TOM Camp 2026",
@@ -129,6 +153,26 @@ RSpec.describe "Events", type: :request do
       expect(response.body).to include("Agbor camp details.")
       expect(response.body).to include("https://example.com/agbor-camp")
       expect(response.body).to include("data-camp-modal-next")
+    end
+
+    it "includes rich text camp notes in the modal payload" do
+      event = Event.create!(
+        title: "TOM Camp 2026",
+        event_type: :information
+      )
+      camp_detail = event.camp_details.create!(
+        state_name: "Delta",
+        registration_link: "https://example.com/delta-camp",
+        position: 9
+      )
+      camp_detail.update!(formatted_notes: "<div><strong>Important:</strong> Come expectant.</div>")
+
+      get event_path(event)
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include("notesHtml")
+      expect(response.body).to include("Important:")
+      expect(response.body).to include("Come expectant.")
     end
 
     it "does not show state camp details for other information events" do

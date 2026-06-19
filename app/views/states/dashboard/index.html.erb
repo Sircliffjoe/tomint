@@ -6,7 +6,7 @@
       <h1 class="text-2xl font-bold text-gray-900">State Dashboard</h1>
       <p class="text-sm text-gray-500"><%= @state&.name %> (<%= @state&.code %>)</p>
     </div>
-    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium <%= current_user.state_admin? ? 'bg-leaf-100 text-leaf-800' : 'bg-gray-100 text-gray-800' %>">
+    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium <%= current_user.state_coordinator? ? 'bg-leaf-100 text-leaf-800' : 'bg-gray-100 text-gray-800' %>">
       <%= current_user.role.humanize %>
     </span>
   </div>

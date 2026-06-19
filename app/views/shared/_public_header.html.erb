@@ -36,7 +36,7 @@
           <%= link_to "Donate", new_donation_path, class: "tom-btn tom-btn-light" %>
 
           <div class="tom-account-dropdown" data-account-menu-panel hidden>
-            <%= link_to "Dashboard", dashboard_path, class: "tom-account-dropdown-link" %>
+            <%= link_to "Dashboard", dashboard_path_for_current_user, class: "tom-account-dropdown-link" %>
             <%= link_to "Profile", profile_path, class: "tom-account-dropdown-link" %>
             <%= button_to "Logout", destroy_user_session_path, method: :delete, form_class: "tom-account-dropdown-form", class: "tom-account-dropdown-link tom-account-dropdown-button" %>
           </div>
@@ -74,7 +74,7 @@
       </div>
       <div class="mt-8 pt-6 border-t border-white/20 space-y-3">
         <% if user_signed_in? %>
-          <%= link_to "Dashboard", dashboard_path, class: "block rounded-lg px-3 py-3 text-base font-semibold text-white hover:bg-white/10" %>
+          <%= link_to "Dashboard", dashboard_path_for_current_user, class: "block rounded-lg px-3 py-3 text-base font-semibold text-white hover:bg-white/10" %>
           <%= link_to "Profile", profile_path, class: "block rounded-lg px-3 py-3 text-base font-semibold text-white hover:bg-white/10" %>
           <%= button_to "Logout", destroy_user_session_path, method: :delete, class: "w-full text-left rounded-lg px-3 py-3 text-base font-semibold text-white hover:bg-white/10 bg-transparent border-0 cursor-pointer" %>
         <% else %>

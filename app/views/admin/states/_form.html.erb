@@ -53,6 +53,24 @@
         <%= form.text_area :description, rows: 5, placeholder: "Brief historical or operational overview...", class: "field-input field-textarea" %>
       </div>
 
+      <div class="field-group">
+        <%= form.label :contact_info, "Contact Information", class: "field-label" %>
+        <div class="field-hint">State office contact, phone numbers, or official communication details</div>
+        <%= form.text_area :contact_info, rows: 4, placeholder: "State contact details...", class: "field-input field-textarea" %>
+      </div>
+
+      <div class="field-group">
+        <%= form.label :map_image, "State Map Image", class: "field-label" %>
+        <div class="field-hint">Upload a geographical map image for this state's dashboard</div>
+        <% if state.map_image.attached? %>
+          <div class="map-preview">
+            <%= image_tag state.map_image, class: "map-preview-image" %>
+            <span class="map-preview-caption">Current map image</span>
+          </div>
+        <% end %>
+        <%= form.file_field :map_image, accept: "image/png,image/jpeg,image/webp,image/gif", class: "field-input" %>
+      </div>
+
       <% if state.persisted? %>
         <div class="info-banner">
           <svg class="info-banner-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -95,6 +113,9 @@
   .field-input:focus { background:#fff; border-color:#16a34a; box-shadow:0 0 0 4px rgba(34,197,94,.1); }
   .field-textarea { resize:vertical; min-height:120px; }
   .field-select { cursor:pointer; }
+  .map-preview { width:min(100%,420px); border:1px solid #e5e7eb; border-radius:12px; overflow:hidden; background:#f9fafb; margin-bottom:.875rem; }
+  .map-preview-image { display:block; width:100%; max-height:220px; object-fit:contain; background:#f8fafc; }
+  .map-preview-caption { display:block; padding:.625rem .875rem; color:#6b7280; font-size:.78rem; border-top:1px solid #e5e7eb; }
   .info-banner { display:flex; align-items:center; gap:.875rem; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; padding:.875rem 1.25rem; }
   .info-banner-icon { width:18px; height:18px; color:#16a34a; flex-shrink:0; }
   .info-banner-link { font-size:.8375rem; font-weight:700; color:#15803d; text-decoration:none; letter-spacing:.01em; }

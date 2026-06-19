@@ -63,7 +63,7 @@
             { class: "field-input field-select" } %>
       </div>
 
-      <div id="state-field" class="field-group <%= (user.state_admin? || user.state_secretary?) ? '' : 'hidden' %>">
+      <div id="state-field" class="field-group <%= (user.state_coordinator? || user.state_secretary?) ? '' : 'hidden' %>">
         <%= form.label :state_id, "Assign State", class: "field-label" %>
         <div class="field-hint">Select the state this user will administer or serve as secretary</div>
         <%= form.collection_select :state_id,
@@ -129,7 +129,7 @@
         if (role === "directorate_director") {
           directorateField.classList.remove("hidden");
           stateField.classList.add("hidden");
-        } else if (role === "state_admin" || role === "state_secretary") {
+        } else if (role === "state_coordinator" || role === "state_secretary") {
           stateField.classList.remove("hidden");
           directorateField.classList.add("hidden");
         } else {

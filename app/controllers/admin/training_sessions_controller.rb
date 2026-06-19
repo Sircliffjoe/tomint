@@ -41,7 +41,7 @@ module Admin
     private
 
     def set_training
-      @training = Training.find(params[:training_id])
+      @training = Training.friendly_find(params[:training_id])
     end
 
     def set_training_session

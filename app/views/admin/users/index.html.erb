@@ -26,7 +26,7 @@
           <div class="py-1" role="none">
             <%= link_to "All Users", admin_users_path, class: "text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100", role: "menuitem" %>
             <%= link_to "Directors", admin_users_path(role: 'directorate_director'), class: "text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100", role: "menuitem" %>
-            <%= link_to "State Coordinators", admin_users_path(role: 'state_admin'), class: "text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100", role: "menuitem" %>
+            <%= link_to "State Coordinators", admin_users_path(role: 'state_coordinator'), class: "text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100", role: "menuitem" %>
             <%= link_to "State Secretaries", admin_users_path(role: 'state_secretary'), class: "text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100", role: "menuitem" %>
           </div>
         </div>
@@ -79,7 +79,7 @@
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
               <% if user.directorate_director? %>
                 <%= user.directorate&.name || 'Unassigned' %>
-              <% elsif user.state_admin? || user.state_secretary? %>
+              <% elsif user.state_coordinator? || user.state_secretary? %>
                 <%= user.state&.name || 'Unassigned' %>
               <% else %>
                 -

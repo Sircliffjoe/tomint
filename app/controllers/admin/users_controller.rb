@@ -2,7 +2,7 @@ module Admin
   class UsersController < ApplicationController
     before_action :authenticate_user!
     before_action :authorize_admin!
-    before_action :set_user, only: %i[ show edit update destroy ]
+    before_action :set_user, only: %i[ show edit update destroy reset_password ]
 
     def index
       @role = params[:role]
@@ -27,12 +27,14 @@ module Admin
 
     def create
       @user = User.new(user_params)
-      # Set a default password if creating manually, user can reset later
-      @user.password = "password123"
-      @user.password_confirmation = "password123"
+      generated_password = User.generate_temporary_password
+      @user.password = generated_password
+      @user.password_confirmation = generated_password
+      @user.must_change_password = true
 
       if @user.save
-        redirect_to admin_users_path(role: @user.role), notice: "User was successfully created with default password 'password123'."
+        flash[:generated_password] = generated_password
+        redirect_to admin_user_path(@user), notice: "User was successfully created. Copy the temporary password below before leaving this page."
       else
         render :new, status: :unprocessable_entity
       end
@@ -49,6 +51,20 @@ module Admin
     def destroy
       @user.destroy
       redirect_to admin_users_path(role: params[:role]), notice: "User was successfully removed."
+    end
+
+    def reset_password
+      generated_password = User.generate_temporary_password
+      @user.password = generated_password
+      @user.password_confirmation = generated_password
+      @user.must_change_password = true
+
+      if @user.save
+        flash[:generated_password] = generated_password
+        redirect_to admin_user_path(@user), notice: "A new temporary password was generated. Copy it before leaving this page."
+      else
+        redirect_to admin_user_path(@user), alert: "Could not generate a new password."
+      end
     end
 
     private

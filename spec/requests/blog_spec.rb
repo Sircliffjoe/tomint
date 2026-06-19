@@ -22,6 +22,24 @@ RSpec.describe "Blogs", type: :request do
 
       expect(response).to have_http_status(:success)
     end
+
+    it "uses a slug in generated blog URLs" do
+      post = create_blog_post(title: "New Training Center Opening Soon")
+
+      expect(blog_path(post)).to eq("/blog/new-training-center-opening-soon")
+
+      get blog_path(post)
+
+      expect(response).to have_http_status(:success)
+    end
+
+    it "keeps old numeric blog URLs working" do
+      post = create_blog_post(title: "Legacy Blog URL")
+
+      get "/blog/#{post.id}"
+
+      expect(response).to have_http_status(:success)
+    end
   end
 
   def create_blog_post(title:)

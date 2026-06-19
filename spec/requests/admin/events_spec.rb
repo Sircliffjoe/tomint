@@ -72,6 +72,8 @@ RSpec.describe "Admin events", type: :request do
       expect(response.body).to include("Ikorodu Area")
       expect(response.body.scan('value="Update Event"').size).to eq(1)
       expect(response.body).to include("event[camp_details_attributes][2400][state_name]")
+      expect(response.body).to include("event[camp_details_attributes][2400][formatted_notes]")
+      expect(response.body).to include("trix-editor")
       expect(response.body).not_to include("event[camp_details_attributes][lagos-0-new]")
     end
   end
@@ -185,6 +187,35 @@ RSpec.describe "Admin events", type: :request do
       expect(delta_details.map(&:area_label)).to contain_exactly("Main Camp", "Agbor")
       expect(delta_details.find { |detail| detail.area_id.blank? }.notes).to eq("Main Delta camp.")
       expect(delta_details.find { |detail| detail.area == agbor }.registration_link).to eq("https://example.com/delta-agbor")
+    end
+
+    it "saves rich text camp notes" do
+      event = Event.create!(
+        title: "TOM Camp 2026",
+        event_type: :information
+      )
+
+      patch admin_event_path(event), params: {
+        event: {
+          title: event.title,
+          event_type: "information",
+          camp_details_attributes: {
+            "900" => {
+              state_name: "Delta",
+              position: 9,
+              area_id: "",
+              registration_link: "https://example.com/delta-main",
+              formatted_notes: "<div><strong>Bring your Bible</strong><br>Come expectant.</div>"
+            }
+          }
+        }
+      }
+
+      camp_detail = event.reload.camp_details.find_by!(state_name: "Delta")
+
+      expect(response).to redirect_to(edit_admin_event_path(event))
+      expect(camp_detail.formatted_notes.to_plain_text).to include("Bring your Bible")
+      expect(camp_detail.public_notes_html).to include("<strong>Bring your Bible</strong>")
     end
   end
 end

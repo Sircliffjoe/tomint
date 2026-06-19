@@ -40,5 +40,31 @@ RSpec.describe "Trainings", type: :request do
 
       expect(response).to have_http_status(:success)
     end
+
+    it "uses a slug in generated training URLs" do
+      training = Training.create!(
+        title: "Effective Evangelism",
+        category: "Evangelism",
+        description: "Outreach formation"
+      )
+
+      expect(training_path(training)).to eq("/trainings/effective-evangelism")
+
+      get training_path(training)
+
+      expect(response).to have_http_status(:success)
+    end
+
+    it "keeps old numeric training URLs working" do
+      training = Training.create!(
+        title: "Legacy Training URL",
+        category: "Leadership",
+        description: "Worker formation"
+      )
+
+      get "/trainings/#{training.id}"
+
+      expect(response).to have_http_status(:success)
+    end
   end
 end

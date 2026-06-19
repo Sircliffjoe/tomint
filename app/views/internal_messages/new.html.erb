@@ -1,0 +1,43 @@
+<% content_for :title, "New Message" %>
+
+<div class="mx-auto max-w-3xl">
+  <div class="mb-6">
+    <%= link_to "Messages", internal_messages_path, class: "text-sm font-semibold text-green-700 hover:text-green-900" %>
+    <h1 class="mt-2 text-2xl font-bold text-gray-900">New Message</h1>
+  </div>
+
+  <div class="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
+    <%= form_with(model: @message, url: internal_messages_path, class: "space-y-5") do |form| %>
+      <% if @message.errors.any? %>
+        <div class="rounded-lg bg-red-50 p-4 text-sm text-red-700">
+          <p class="font-semibold">Please fix the following:</p>
+          <ul class="mt-2 list-disc space-y-1 pl-5">
+            <% @message.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div>
+        <%= form.label :recipient_id, "Recipient", class: "block text-sm font-semibold text-gray-900" %>
+        <%= form.collection_select :recipient_id, @recipients, :id, :full_name, { prompt: "Choose a user" }, class: "mt-2 block w-full rounded-lg border-0 px-4 py-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-green-600" %>
+      </div>
+
+      <div>
+        <%= form.label :subject, class: "block text-sm font-semibold text-gray-900" %>
+        <%= form.text_field :subject, class: "mt-2 block w-full rounded-lg border-0 px-4 py-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-green-600" %>
+      </div>
+
+      <div>
+        <%= form.label :body, "Message", class: "block text-sm font-semibold text-gray-900" %>
+        <%= form.text_area :body, rows: 8, class: "mt-2 block w-full rounded-lg border-0 px-4 py-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-green-600" %>
+      </div>
+
+      <div class="flex justify-end gap-3">
+        <%= link_to "Cancel", internal_messages_path, class: "rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" %>
+        <%= form.submit "Send Message", class: "rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 border-0 cursor-pointer" %>
+      </div>
+    <% end %>
+  </div>
+</div>

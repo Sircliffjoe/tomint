@@ -37,6 +37,12 @@
           </div>
         <% end %>
 
+        <%= hidden_field_tag :form_started_at, @donation_form_started_at %>
+        <div style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden;" aria-hidden="true">
+          <%= label_tag :website, "Website" %>
+          <%= text_field_tag :website, nil, tabindex: -1, autocomplete: "off" %>
+        </div>
+
         <div>
           <%= f.label :amount, "Amount (NGN)", style: "display:block;font-weight:800;margin-bottom:.45rem;" %>
           <%= f.number_field :amount, step: "100", class: "tom-input", placeholder: "5000" %>
@@ -58,13 +64,16 @@
       <div style="margin-top:1.5rem;border-radius:8px;background:#f1faf5;padding:1rem;">
         <h3>Bank Details</h3>
         <p style="margin-top:.65rem;color:var(--tom-muted);line-height:1.65;">Account Name: Teenagers' Outreach Ministries<br>Bank: First Bank<br>Account Number: 2006864196</p>
+        <button type="button" class="tom-btn tom-btn-light" style="margin-top:.8rem;border:0;" data-copy-text="2006864196">Copy Account Number</button>
       </div>
       <div style="margin-top:1.5rem;border-radius:8px;background:#f1faf5;padding:1rem;">
         <p style="margin-top:.65rem;color:var(--tom-muted);line-height:1.65;">Account Name: Teenagers' Outreach Ministries<br>Bank: First Bank<br>Account Number: 2008599317</p>
+        <button type="button" class="tom-btn tom-btn-light" style="margin-top:.8rem;border:0;" data-copy-text="2008599317">Copy Account Number</button>
       </div>
       <div style="margin-top:1.5rem;border-radius:8px;background:#f1faf5;padding:1rem;">
         <p style="font-weight:800;">Building Project</p>
         <p style="margin-top:.65rem;color:var(--tom-muted);line-height:1.65;">Account Name: Teenagers' Outreach Ministries<br>Bank: Zenith Bank<br>Account Number: 1016869906</p>
+        <button type="button" class="tom-btn tom-btn-light" style="margin-top:.8rem;border:0;" data-copy-text="1016869906">Copy Account Number</button>
       </div>
     </div>
   </div>

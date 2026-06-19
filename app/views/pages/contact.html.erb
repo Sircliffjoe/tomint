@@ -26,24 +26,36 @@
 
     <div class="tom-feature-split" style="align-items:start;margin-top:3rem;">
       <div class="tom-card" style="padding:1.5rem;" data-reveal>
-        <h2>Send a Message</h2>
-        <form style="display:grid;gap:1rem;margin-top:1.3rem;">
-          <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;">
-            <input class="tom-input" type="text" placeholder="Name" aria-label="Name">
-            <input class="tom-input" type="email" placeholder="Email" aria-label="Email">
+        <h2 class="mb-3">Send a Message</h2>
+        <%= form_with(model: @contact_message, url: contact_path, style: "display:grid;gap:1rem;margin-top:1.3rem;") do |form| %>
+          <% if @contact_message.errors.any? %>
+            <div style="border-radius:8px;background:#fff1f1;padding:1rem;color:#b42318;">
+              <h3>There were errors with your message</h3>
+              <ul style="margin-top:.5rem;padding-left:1rem;">
+                <% @contact_message.errors.full_messages.each do |msg| %>
+                  <li><%= msg %></li>
+                <% end %>
+              </ul>
+            </div>
+          <% end %>
+
+          <%= hidden_field_tag :form_started_at, @contact_form_started_at %>
+          <div style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden;" aria-hidden="true">
+            <%= label_tag :website, "Website" %>
+            <%= text_field_tag :website, nil, tabindex: -1, autocomplete: "off" %>
           </div>
-          <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;">
-            <input class="tom-input" type="tel" placeholder="Phone" aria-label="Phone">
-            <select class="tom-input" aria-label="Subject">
-              <option>General enquiry</option>
-              <option>Events</option>
-              <option>Training</option>
-              <option>Donation</option>
-            </select>
+
+          <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem; margin-bottom:1rem; margin-top:2rem;">
+            <%= form.text_field :name, class: "tom-input", placeholder: "Name", aria: { label: "Name" } %>
+            <%= form.email_field :email, class: "tom-input", placeholder: "Email", aria: { label: "Email" } %>
           </div>
-          <textarea class="tom-input" style="min-height:150px;" placeholder="Message" aria-label="Message"></textarea>
-          <button type="submit" class="tom-btn tom-btn-primary" style="width:100%;border:0;">Send Message</button>
-        </form>
+          <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem; margin-bottom:1rem;">
+            <%= form.telephone_field :phone, class: "tom-input", placeholder: "Phone", aria: { label: "Phone" } %>
+            <%= form.select :subject, ContactMessage::SUBJECTS, {}, class: "tom-input", aria: { label: "Subject" } %>
+          </div>
+          <%= form.text_area :message, class: "tom-input", style: "min-height:150px; margin-bottom:1rem;", placeholder: "Message", aria: { label: "Message" } %>
+          <%= form.submit "Send Message", class: "tom-btn tom-btn-primary", style: "width:100%;border:0;cursor:pointer;" %>
+        <% end %>
       </div>
 
       <div style="display:grid;gap:1rem;">

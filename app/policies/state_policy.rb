@@ -3,7 +3,7 @@
 class StatePolicy < ApplicationPolicy
   def index?
     # Allow access if user has a state-level role or higher
-    user&.super_admin? || user&.directorate_director? || user&.state_admin? || user&.state_secretary?
+    user&.super_admin? || user&.directorate_director? || user&.state_coordinator? || user&.state_secretary?
   end
 
   def show?

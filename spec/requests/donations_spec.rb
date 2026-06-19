@@ -12,9 +12,14 @@ RSpec.describe "Donations", type: :request do
   end
 
   describe "POST /donations" do
+    before do
+      Rails.cache.clear
+    end
+
     it "creates a donation" do
       expect {
         post donations_path, params: {
+          form_started_at: 5.seconds.ago.to_i,
           donation: {
             amount: 5000,
             donor_email: "giver@example.com",
@@ -25,6 +30,22 @@ RSpec.describe "Donations", type: :request do
 
       expect(response).to redirect_to(thank_you_donations_path(id: Donation.last.id))
       expect(Donation.last.display_currency).to eq("NGN")
+    end
+
+    it "does not create a donation when the honeypot is filled" do
+      expect {
+        post donations_path, params: {
+          form_started_at: 5.seconds.ago.to_i,
+          website: "https://spam.example",
+          donation: {
+            amount: 5000,
+            donor_email: "bot@example.com",
+            purpose: "General Support"
+          }
+        }
+      }.not_to change(Donation, :count)
+
+      expect(response).to redirect_to(thank_you_donations_path)
     end
   end
 

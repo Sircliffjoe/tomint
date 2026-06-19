@@ -3,7 +3,7 @@ class EventPolicy < ApplicationPolicy
     def resolve
       if user&.super_admin? || user&.directorate_director?
         scope.all
-      elsif user&.state_admin? || user&.state_secretary?
+      elsif user&.state_coordinator? || user&.state_secretary?
         # Show global events (state_id: nil) OR events belonging to user's state
         scope.where(state: nil).or(scope.where(state: user.state))
       else
@@ -22,7 +22,7 @@ class EventPolicy < ApplicationPolicy
   end
 
   def create?
-    user.super_admin? || user.directorate_director? || user.state_admin?
+    user.super_admin? || user.directorate_director? || user.state_coordinator?
   end
 
   def new?
@@ -34,7 +34,7 @@ class EventPolicy < ApplicationPolicy
 
     if user.super_admin? || user.directorate_director?
       true
-    elsif user.state_admin?
+    elsif user.state_coordinator?
       # Can only update events belonging to their state
       record.state_id == user.state_id
     else

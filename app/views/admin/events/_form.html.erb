@@ -235,8 +235,10 @@
                           </div>
 
                           <div class="camp-admin-notes">
-                            <%= camp_form.label :notes, "Notes", class: "field-label" %>
-                            <%= camp_form.text_area :notes, class: "field-input", rows: 3, placeholder: "Short note shown beside the flyer" %>
+                            <%= camp_form.label :formatted_notes, "Notes", class: "field-label" %>
+                            <div class="rich-text-wrap">
+                              <%= camp_form.rich_text_area :formatted_notes, class: "field-richtext camp-admin-richtext" %>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -261,7 +263,7 @@
                           <%= camp_form.label :area_id, "Area / Location", class: "field-label" %>
                           <% if area_options.any? %>
                             <%= camp_form.collection_select :area_id, area_options, :id, :name,
-                                { include_blank: "Main Camp / Statewide" },
+                                { include_blank: "Choose Area" },
                                 { class: "field-input field-select" } %>
                           <% else %>
                             <%= camp_form.hidden_field :area_id %>
@@ -285,8 +287,10 @@
                         </div>
 
                         <div class="camp-admin-notes">
-                          <%= camp_form.label :notes, "Notes", class: "field-label" %>
-                          <%= camp_form.text_area :notes, class: "field-input", rows: 3, placeholder: "Short note shown beside the flyer" %>
+                          <%= camp_form.label :formatted_notes, "Notes", class: "field-label" %>
+                          <div class="rich-text-wrap">
+                            <%= camp_form.rich_text_area :formatted_notes, class: "field-richtext camp-admin-richtext" %>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -387,6 +391,7 @@
   .camp-admin-fields { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
   @media(max-width:700px){ .camp-admin-fields { grid-template-columns:1fr; } }
   .camp-admin-notes { grid-column:1 / -1; }
+  .camp-admin-richtext { min-height:150px; }
   .camp-admin-empty-area { display:flex; align-items:center; gap:.5rem; flex-wrap:wrap; min-height:46px; border:1.5px dashed #d1d5db; border-radius:10px; padding:.75rem 1rem; color:#6b7280; background:#fff; font-size:.8rem; font-style:italic; }
   .camp-admin-empty-area a { color:#15803d; font-weight:800; font-style:normal; text-decoration:none; }
   .camp-admin-file { margin:.45rem 0 0; color:#15803d; font-size:.75rem; font-style:italic; overflow-wrap:anywhere; }

@@ -14,7 +14,7 @@ class AnnouncementPolicy < ApplicationPolicy
   end
 
   def create?
-    user.super_admin? || user.directorate_director? || user.state_admin? || user.state_secretary?
+    user.super_admin? || user.directorate_director? || user.state_coordinator? || user.state_secretary?
   end
 
   def new?
@@ -22,7 +22,7 @@ class AnnouncementPolicy < ApplicationPolicy
   end
 
   def update?
-    user.super_admin? || user.directorate_director? || user.state_admin? || user.state_secretary?
+    user.super_admin? || user.directorate_director? || user.state_coordinator? || user.state_secretary?
   end
 
   def edit?

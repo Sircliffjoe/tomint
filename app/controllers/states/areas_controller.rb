@@ -1,7 +1,7 @@
 module States
   class AreasController < ApplicationController
     before_action :authenticate_user!
-    before_action :authorize_state_admin!
+    before_action :authorize_state_coordinator!
     before_action :set_state
     before_action :set_area, only: %i[ show edit update destroy ]
 
@@ -59,8 +59,8 @@ module States
       params.require(:area).permit(:name, :description, :area_leader_id)
     end
 
-    def authorize_state_admin!
-      redirect_to root_path, alert: "Not authorized." unless current_user.state_admin? || current_user.state_secretary?
+    def authorize_state_coordinator!
+      redirect_to root_path, alert: "Not authorized." unless current_user.state_coordinator? || current_user.state_secretary?
     end
   end
 end

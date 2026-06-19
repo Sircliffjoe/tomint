@@ -10,6 +10,8 @@ module Admin
       @total_states = State.count
       @total_directorates = Directorate.count
       @recent_reports = Report.order(created_at: :desc).limit(5)
+      @unread_contact_messages = ContactMessage.unread.count
+      @recent_contact_messages = ContactMessage.recent.limit(5)
     end
 
     private

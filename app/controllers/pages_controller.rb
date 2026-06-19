@@ -1,4 +1,6 @@
 class PagesController < ApplicationController
+  include SpamProtection
+
   layout "public"
   def about
   end
@@ -7,6 +9,8 @@ class PagesController < ApplicationController
   end
 
   def contact
+    @contact_message = ContactMessage.new
+    @contact_form_started_at = form_started_at
   end
 
   def show

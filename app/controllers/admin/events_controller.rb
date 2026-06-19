@@ -23,7 +23,7 @@ module Admin
 
     def create
       @event = Event.new(event_params)
-      @event.state = current_user.state if current_user.state_admin? || current_user.state_secretary?
+      @event.state = current_user.state if current_user.state_coordinator? || current_user.state_secretary?
 
       authorize @event
 
@@ -52,7 +52,7 @@ module Admin
     private
 
     def set_event
-      @event = Event.find(params[:id])
+      @event = Event.friendly_find(params[:id])
     end
 
     def event_params
@@ -74,6 +74,7 @@ module Admin
           :area_id,
           :area_row,
           :notes,
+          :formatted_notes,
           :registration_link,
           :position,
           :flyer,
@@ -97,7 +98,7 @@ module Admin
     end
 
     def authorize_admin!
-      redirect_to root_path, alert: "Not authorized." unless current_user.super_admin? || current_user.state_admin? || current_user.state_secretary?
+      redirect_to root_path, alert: "Not authorized." unless current_user.super_admin? || current_user.state_coordinator? || current_user.state_secretary?
     end
   end
 end

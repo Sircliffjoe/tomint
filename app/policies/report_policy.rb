@@ -11,7 +11,7 @@ class ReportPolicy < ApplicationPolicy
         scope.all
       elsif user.directorate_director?
         scope.where(directorate: user.directorate)
-      elsif user.state_admin? || user.state_secretary?
+      elsif user.state_coordinator? || user.state_secretary?
         scope.where(state: user.state)
       else
         scope.none
@@ -26,11 +26,11 @@ class ReportPolicy < ApplicationPolicy
   def show?
     user.super_admin? ||
     (user.directorate_director? && record.directorate == user.directorate) ||
-    ((user.state_admin? || user.state_secretary?) && record.state == user.state)
+    ((user.state_coordinator? || user.state_secretary?) && record.state == user.state)
   end
 
   def create?
-    user.state_admin? || user.state_secretary?
+    user.state_coordinator? || user.state_secretary?
   end
 
   def new?
@@ -40,7 +40,7 @@ class ReportPolicy < ApplicationPolicy
   def update?
     return false if record.approved?
     user.super_admin? ||
-    ((user.state_admin? || user.state_secretary?) && record.state == user.state)
+    ((user.state_coordinator? || user.state_secretary?) && record.state == user.state)
   end
 
   def edit?
@@ -50,10 +50,10 @@ class ReportPolicy < ApplicationPolicy
   def destroy?
     return false if record.approved?
     user.super_admin? ||
-    ((user.state_admin? || user.state_secretary?) && record.state == user.state)
+    ((user.state_coordinator? || user.state_secretary?) && record.state == user.state)
   end
 
   def submit?
-    (user.state_admin? || user.state_secretary?) && record.state == user.state && record.draft?
+    (user.state_coordinator? || user.state_secretary?) && record.state == user.state && record.draft?
   end
 end

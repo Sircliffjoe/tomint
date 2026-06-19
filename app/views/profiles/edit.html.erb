@@ -30,6 +30,12 @@
 
       <div class="pt-8">
         <div class="grid grid-cols-1 gap-y-6 sm:grid-cols-6 sm:gap-x-4">
+          <% if @user.must_change_password? %>
+            <div class="sm:col-span-6 rounded-md bg-yellow-50 p-4 text-sm text-yellow-800">
+              You are using a temporary password. Change it before continuing.
+            </div>
+          <% end %>
+
           <!-- Avatar Upload -->
           <div class="sm:col-span-6">
             <label for="avatar" class="block text-sm font-medium text-gray-700">Profile picture</label>
@@ -58,6 +64,34 @@
             <%= f.label :last_name, class: "block text-sm font-medium text-gray-700" %>
             <div class="mt-1">
               <%= f.text_field :last_name, class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-8">
+        <h3 class="text-base font-semibold leading-6 text-gray-900">Change Password</h3>
+        <p class="mt-1 text-sm text-gray-500">Enter your current password and choose a new password.</p>
+
+        <div class="mt-6 grid grid-cols-1 gap-y-6 sm:grid-cols-6 sm:gap-x-4">
+          <div class="sm:col-span-6">
+            <%= f.label :current_password, class: "block text-sm font-medium text-gray-700" %>
+            <div class="mt-1">
+              <%= f.password_field :current_password, autocomplete: "current-password", class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" %>
+            </div>
+          </div>
+
+          <div class="sm:col-span-3">
+            <%= f.label :password, "New password", class: "block text-sm font-medium text-gray-700" %>
+            <div class="mt-1">
+              <%= f.password_field :password, autocomplete: "new-password", class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" %>
+            </div>
+          </div>
+
+          <div class="sm:col-span-3">
+            <%= f.label :password_confirmation, "Confirm new password", class: "block text-sm font-medium text-gray-700" %>
+            <div class="mt-1">
+              <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" %>
             </div>
           </div>
         </div>

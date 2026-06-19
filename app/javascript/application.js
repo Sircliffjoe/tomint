@@ -268,7 +268,7 @@ function initPublicSite() {
       setActiveAreaButton(index);
       updatePager();
 
-      notes.textContent = location.notes || "Camp details will be updated soon.";
+      notes.innerHTML = location.notesHtml || location.notes || "Camp details will be updated soon.";
 
       if (location.registrationLink) {
         link.href = location.registrationLink;

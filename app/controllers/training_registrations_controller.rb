@@ -17,7 +17,7 @@ class TrainingRegistrationsController < ApplicationController
   private
 
   def set_training
-    @training = Training.find(params[:training_id])
+    @training = Training.friendly_find(params[:training_id])
   end
 
   def training_registration_params

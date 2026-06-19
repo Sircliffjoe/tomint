@@ -45,7 +45,7 @@ module Admin
     private
 
     def set_blog_post
-      @blog_post = BlogPost.find(params[:id])
+      @blog_post = BlogPost.friendly_find(params[:id])
     end
 
     def blog_post_params

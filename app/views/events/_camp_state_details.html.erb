@@ -10,10 +10,9 @@
     <% Event::CAMP_STATE_NAMES.each do |state_name| %>
       <% state_details = (details_by_state[state_name] || []).select(&:public_content?) %>
       <% locations = state_details.map do |detail|
-        notes = detail.custom_notes? ? detail.notes : "Camp details will be updated soon."
         {
           area: detail.area_label,
-          notes: notes,
+          notesHtml: detail.public_notes_html,
           registrationLink: detail.registration_link,
           flyerImage: detail.flyer.attached? ? url_for(detail.flyer) : nil
         }
@@ -52,7 +51,7 @@
       <span class="tom-eyebrow">Camp Information</span>
       <h3 id="camp-modal-title" data-camp-modal-state></h3>
 
-      <p data-camp-modal-notes></p>
+      <div class="tom-camp-modal__notes trix-content" data-camp-modal-notes></div>
 
       <a class="tom-camp-modal__link" data-camp-modal-link target="_blank" rel="noopener" hidden>
         Register

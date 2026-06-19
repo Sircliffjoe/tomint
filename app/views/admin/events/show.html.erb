@@ -124,7 +124,7 @@
                   </div>
                   <div>
                     <dt class="font-semibold text-gray-500">Notes</dt>
-                    <dd class="text-gray-900"><%= camp_detail.notes.presence || "No notes added" %></dd>
+                    <dd class="text-gray-900 trix-content"><%= camp_detail.public_notes_html.html_safe %></dd>
                   </div>
                 </dl>
               </div>

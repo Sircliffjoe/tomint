@@ -17,7 +17,7 @@ module States
     private
 
     def authorize_state_access!
-      unless current_user.state_admin? || current_user.state_secretary?
+      unless current_user.state_coordinator? || current_user.state_secretary?
         redirect_to root_path, alert: "You are not authorized to access this page."
       end
     end
