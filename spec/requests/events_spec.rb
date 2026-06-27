@@ -69,6 +69,7 @@ RSpec.describe "Events", type: :request do
     it "shows CMS state camp details for camp information events" do
       Country.find_or_create_by!(name: "Nigeria", code: "NG")
       State.create!(name: "Abia", code: "ABI", country: "Nigeria")
+      State.create!(name: "FCT", code: "FCT", country: "Nigeria")
       State.create!(name: "Zamfara", code: "ZAM", country: "Nigeria")
       event = Event.create!(
         title: "TOM Camp 2026",
@@ -84,8 +85,28 @@ RSpec.describe "Events", type: :request do
       expect(response.body).to include("Choose Your Location")
       expect(response.body).to include("Nigeria")
       expect(response.body).to include("Abia")
+      expect(response.body).to include("FCT")
       expect(response.body).to include("Zamfara")
-      expect(response.body.scan("data-camp-state").size).to eq(2)
+      expect(response.body).not_to include("Other Locations")
+      expect(response.body.scan("data-camp-state").size).to eq(3)
+    end
+
+    it "does not create an other locations tab for unmatched legacy camp details" do
+      Country.find_or_create_by!(name: "Nigeria", code: "NG")
+      State.create!(name: "FCT", code: "FCT", country: "Nigeria")
+      event = Event.create!(title: "TOM Camp 2026", event_type: :information)
+      event.camp_details.create!(
+        state_name: "Legacy Camp Name",
+        notes: "Legacy-only location.",
+        position: 1
+      )
+
+      get event_path(event)
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include("FCT")
+      expect(response.body).not_to include("Other Locations")
+      expect(response.body).not_to include("Legacy Camp Name")
     end
 
     it "shows international CMS locations for camp information events" do
@@ -175,6 +196,7 @@ RSpec.describe "Events", type: :request do
     end
 
     it "includes rich text camp notes in the modal payload" do
+      State.create!(name: "Delta", code: "DEL", country: "Nigeria")
       event = Event.create!(
         title: "TOM Camp 2026",
         event_type: :information

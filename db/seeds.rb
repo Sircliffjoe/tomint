@@ -46,7 +46,7 @@ states_data = {
     { name: "Imo", code: "IMO", year_created: 1999 }
   ],
   "North" => [
-    { name: "Abuja-FCT", code: "FCT", year_created: 1996 },
+    { name: "FCT", code: "FCT", year_created: 1996 },
     { name: "Adamawa", code: "ADA", year_created: 2010 },
     { name: "Bauchi", code: "BAU", year_created: 2020 },
     { name: "Benue", code: "BEN", year_created: 1994 },

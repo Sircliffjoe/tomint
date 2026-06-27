@@ -10,9 +10,8 @@
   </div>
 
   <% active_countries_with_states = active_countries.select { |country| country.states.active.exists? } %>
-  <% legacy_only_names = legacy_details_by_state.keys - active_countries.flat_map { |country| country.states.map(&:name) } %>
 
-  <% if active_countries_with_states.empty? && legacy_only_names.empty? %>
+  <% if active_countries_with_states.empty? %>
     <div class="tom-camp-empty">
       Camp location details will be updated soon.
     </div>
@@ -21,11 +20,6 @@
       <% active_countries_with_states.each_with_index do |country, index| %>
         <button type="button" class="tom-camp-location-tab <%= 'is-active' if index == 0 %>" role="tab" data-target="tom-camp-panel-<%= country.id %>">
           <%= country.name %>
-        </button>
-      <% end %>
-      <% if legacy_only_names.any? %>
-        <button type="button" class="tom-camp-location-tab <%= 'is-active' if active_countries_with_states.empty? %>" role="tab" data-target="tom-camp-panel-other">
-          Other Locations
         </button>
       <% end %>
     </div>
@@ -55,28 +49,6 @@
                 role="listitem"
                 data-camp-state="<%= json_escape(state_payload.to_json) %>">
                 <%= state_record.name %>
-              </button>
-            <% end %>
-          </div>
-        </div>
-      <% end %>
-
-      <% if legacy_only_names.any? %>
-        <div class="tom-camp-location-panel <%= 'is-active' if active_countries_with_states.empty? %>" id="tom-camp-panel-other" role="tabpanel">
-          <div class="tom-camp-grid" role="list" aria-label="Other TOM Camp locations">
-            <% legacy_only_names.sort.each do |state_name| %>
-              <% state_details = (legacy_details_by_state[state_name] || []).select(&:public_content?) %>
-              <% locations = state_details.map do |detail|
-                {
-                  area: detail.area_label,
-                  notesHtml: detail.public_notes_html,
-                  registrationLink: detail.registration_link,
-                  flyerImage: detail.flyer.attached? ? url_for(detail.flyer) : nil
-                }
-              end %>
-              <% state_payload = { state: state_name, locations: locations } %>
-              <button type="button" class="tom-camp-state" role="listitem" data-camp-state="<%= json_escape(state_payload.to_json) %>">
-                <%= state_name %>
               </button>
             <% end %>
           </div>
