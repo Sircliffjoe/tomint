@@ -1,16 +1,11 @@
 <div class="form-card">
-  <%= form_with(model: [:admin, zone], class: "directorate-form") do |form| %>
-    <% if zone.errors.any? %>
+  <%= form_with(model: [:admin, country], class: "directorate-form") do |form| %>
+    <% if country.errors.any? %>
       <div class="error-banner">
-        <div class="error-icon-wrap">
-          <svg class="error-icon" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-          </svg>
-        </div>
         <div class="error-body">
-          <h3 class="error-title"><%= pluralize(zone.errors.count, "error") %> detected</h3>
+          <h3 class="error-title"><%= pluralize(country.errors.count, "error") %> detected</h3>
           <ul class="error-list">
-            <% zone.errors.full_messages.each do |message| %>
+            <% country.errors.full_messages.each do |message| %>
               <li><%= message %></li>
             <% end %>
           </ul>
@@ -19,35 +14,65 @@
     <% end %>
 
     <div class="form-fields">
-      <div class="field-group">
-        <%= form.label :country_id, "Country", class: "field-label" %>
-        <div class="field-hint">The country this zone belongs to</div>
-        <%= form.collection_select :country_id, Country.ordered, :id, :name,
-            { include_blank: "— Select Country —" },
-            class: "field-input field-select" %>
+      <div class="form-row">
+        <div class="field-group">
+          <%= form.label :name, class: "field-label" %>
+          <div class="field-hint">Official country name.</div>
+          <%= form.text_field :name, placeholder: "e.g. Ghana", class: "field-input" %>
+        </div>
+        <div class="field-group">
+          <%= form.label :code, "Country Code", class: "field-label" %>
+          <div class="field-hint">Short unique code, usually ISO style.</div>
+          <%= form.text_field :code, placeholder: "e.g. GH", class: "field-input" %>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="field-group">
+          <%= form.label :status, class: "field-label" %>
+          <%= form.select :status, Country.statuses.keys.map { |status| [status.humanize, status] }, {}, class: "field-input field-select" %>
+        </div>
+        <div class="field-group">
+          <%= form.label :sort_order, class: "field-label" %>
+          <%= form.number_field :sort_order, class: "field-input", min: 0 %>
+        </div>
       </div>
 
       <div class="field-group">
-        <%= form.label :name, class: "field-label" %>
-        <div class="field-hint">The official name of this geopolitical or ministry zone</div>
-        <%= form.text_field :name, placeholder: "e.g. North West", class: "field-input" %>
+        <%= form.label :address, class: "field-label" %>
+        <%= form.text_area :address, rows: 3, class: "field-input field-textarea", placeholder: "National office address..." %>
+      </div>
+
+      <div class="form-row">
+        <div class="field-group">
+          <%= form.label :phone, class: "field-label" %>
+          <%= form.telephone_field :phone, class: "field-input", placeholder: "+233 ..." %>
+        </div>
+        <div class="field-group">
+          <%= form.label :email, class: "field-label" %>
+          <%= form.email_field :email, class: "field-input", placeholder: "country@example.org" %>
+        </div>
       </div>
 
       <div class="field-group">
         <%= form.label :description, class: "field-label" %>
-        <div class="field-hint">Regional coverage, states included, and operational details</div>
-        <%= form.text_area :description, rows: 5, placeholder: "Regional coverage and operational details...", class: "field-input field-textarea" %>
+        <%= form.text_area :description, rows: 4, class: "field-input field-textarea", placeholder: "Country chapter overview..." %>
+      </div>
+
+      <div class="field-group">
+        <%= form.label :contact_info, "Contact Information", class: "field-label" %>
+        <%= form.text_area :contact_info, rows: 4, class: "field-input field-textarea", placeholder: "Public contact details..." %>
       </div>
     </div>
 
     <div class="form-actions">
-      <%= link_to admin_zones_path, class: "btn-cancel" do %>
+      <%= link_to admin_countries_path, class: "btn-cancel" do %>
         <svg viewBox="0 0 20 20" fill="currentColor" class="btn-icon">
           <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
         </svg>
         Cancel
       <% end %>
-      <%= form.submit zone.new_record? ? "Create Zone" : "Update Zone", class: "btn-submit" %>
+      <%= form.submit country.new_record? ? "Create Country" : "Update Country", class: "btn-submit" %>
     </div>
   <% end %>
 </div>
@@ -55,11 +80,12 @@
 <style>
   .form-card { background:#fff; border-radius:16px; box-shadow:0 1px 3px rgba(0,0,0,.06),0 4px 24px rgba(0,0,0,.04); border:1px solid #f0f0f0; padding:2.5rem; font-family:'Georgia',serif; }
   .error-banner { display:flex; gap:.875rem; background:#fff5f5; border:1px solid #fecaca; border-left:4px solid #ef4444; border-radius:10px; padding:1rem 1.25rem; margin-bottom:2rem; }
-  .error-icon-wrap { flex-shrink:0; padding-top:1px; }
-  .error-icon { width:18px; height:18px; color:#ef4444; }
+  .error-body { flex:1; }
   .error-title { font-size:.8125rem; font-weight:700; color:#991b1b; margin:0 0 .375rem; letter-spacing:.01em; }
   .error-list { margin:0; padding-left:1.125rem; font-size:.8125rem; color:#b91c1c; line-height:1.6; }
   .form-fields { display:flex; flex-direction:column; gap:2rem; }
+  .form-row { display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; }
+  @media(max-width:540px){ .form-row { grid-template-columns:1fr; } }
   .field-group { display:flex; flex-direction:column; }
   .field-label { display:block; font-size:.6875rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#374151; margin-bottom:.375rem; }
   .field-hint { font-size:.8rem; color:#9ca3af; margin-bottom:.75rem; font-style:italic; font-family:'Georgia',serif; line-height:1.4; }
@@ -68,6 +94,7 @@
   .field-input:hover { border-color:#16a34a; background:#fff; }
   .field-input:focus { background:#fff; border-color:#16a34a; box-shadow:0 0 0 4px rgba(34,197,94,.1); }
   .field-textarea { resize:vertical; min-height:120px; }
+  .field-select { cursor:pointer; }
   .form-actions { display:flex; align-items:center; justify-content:flex-end; gap:.875rem; margin-top:2.5rem; padding-top:2rem; border-top:1px solid #f3f4f6; }
   .btn-cancel { display:inline-flex; align-items:center; gap:.4rem; padding:.65rem 1.375rem; font-size:.8375rem; font-weight:600; letter-spacing:.02em; color:#6b7280; background:transparent; border:1.5px solid #e5e7eb; border-radius:9px; text-decoration:none; cursor:pointer; transition:all .18s ease; font-family:inherit; }
   .btn-cancel:hover { color:#374151; background:#f9fafb; border-color:#d1d5db; }

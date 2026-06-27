@@ -24,6 +24,144 @@
       <% end %>
     </div>
 
+    <section class="tom-camp-details" data-camp-details data-location-title-suffix="" data-empty-location-message="Contact details will be updated soon.">
+      <div class="tom-camp-details__heading">
+        <span class="tom-eyebrow">TOM Locations</span>
+        <h2>Choose Your Location</h2>
+      </div>
+
+      <% if @countries.empty? %>
+        <div class="tom-camp-empty">Location contact details will be updated soon.</div>
+      <% else %>
+        <div class="tom-camp-location-tabs" role="tablist">
+          <% @countries.each_with_index do |country, index| %>
+            <button type="button" class="tom-camp-location-tab <%= 'is-active' if index == 0 %>" role="tab" data-target="tom-contact-panel-<%= country.id %>">
+              <%= country.name %>
+            </button>
+          <% end %>
+        </div>
+
+        <div class="tom-camp-location-panels">
+          <% @countries.each_with_index do |country, index| %>
+            <% country_states = country.states.active.ordered %>
+            <div class="tom-camp-location-panel <%= 'is-active' if index == 0 %>" id="tom-contact-panel-<%= country.id %>" role="tabpanel">
+              <div class="tom-camp-grid" role="list" aria-label="TOM contact locations in <%= country.name %>">
+                <% if country_states.any? %>
+                  <% country_states.each do |state| %>
+                    <% area_names = state.areas.order(:name).pluck(:name) %>
+                    <% notes_html = capture do %>
+                      <p><strong>Country:</strong> <%= country.name %></p>
+                      <p><strong>Location:</strong> <%= state.name %></p>
+                      <% if state.zone.present? %>
+                        <p><strong>Zone:</strong> <%= state.zone.name %></p>
+                      <% end %>
+                      <% if area_names.any? %>
+                        <p><strong>Areas:</strong> <%= area_names.to_sentence %></p>
+                      <% end %>
+                      <% if state.contact_info.present? %>
+                        <p><strong>Contact:</strong><br><%= simple_format(state.contact_info, {}, wrapper_tag: "span") %></p>
+                      <% elsif country.display_contact.present? %>
+                        <p><strong>Country Contact:</strong><br><%= simple_format(country.display_contact, {}, wrapper_tag: "span") %></p>
+                      <% else %>
+                        <p>Contact details will be updated soon.</p>
+                      <% end %>
+                      <% if state.description.present? %>
+                        <p><%= state.description %></p>
+                      <% end %>
+                    <% end %>
+                    <% location_payload = {
+                      state: state.name,
+                      country: country.name,
+                      locations: [
+                        {
+                          area: state.zone&.name || "Contact",
+                          notesHtml: notes_html,
+                          flyerImage: state.map_image.attached? ? url_for(state.map_image) : nil
+                        }
+                      ]
+                    } %>
+                    <button type="button" class="tom-camp-state" role="listitem" data-camp-state="<%= json_escape(location_payload.to_json) %>">
+                      <%= state.name %>
+                    </button>
+                  <% end %>
+                <% else %>
+                  <% notes_html = capture do %>
+                    <p><strong>Country:</strong> <%= country.name %></p>
+                    <% if country.address.present? %>
+                      <p><strong>Address:</strong><br><%= simple_format(country.address, {}, wrapper_tag: "span") %></p>
+                    <% end %>
+                    <% if country.phone.present? %>
+                      <p><strong>Phone:</strong> <%= country.phone %></p>
+                    <% end %>
+                    <% if country.email.present? %>
+                      <p><strong>Email:</strong> <%= country.email %></p>
+                    <% end %>
+                    <% if country.contact_info.present? %>
+                      <p><strong>Contact:</strong><br><%= simple_format(country.contact_info, {}, wrapper_tag: "span") %></p>
+                    <% elsif country.description.present? %>
+                      <p><%= country.description %></p>
+                    <% else %>
+                      <p>Contact details will be updated soon.</p>
+                    <% end %>
+                  <% end %>
+                  <% country_payload = {
+                    state: country.name,
+                    locations: [
+                      {
+                        area: "National Contact",
+                        notesHtml: notes_html
+                      }
+                    ]
+                  } %>
+                  <button type="button" class="tom-camp-state" role="listitem" data-camp-state="<%= json_escape(country_payload.to_json) %>">
+                    <%= country.name %>
+                  </button>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+
+      <dialog class="tom-camp-modal" data-camp-modal aria-labelledby="contact-location-modal-title">
+        <button type="button" class="tom-camp-modal__close" data-camp-modal-close aria-label="Close contact details">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.4 5 5 6.4 10.6 12 5 17.6 6.4 19 12 13.4 17.6 19 19 17.6 13.4 12 19 6.4 17.6 5 12 10.6 6.4 5z"/></svg>
+        </button>
+
+        <div class="tom-camp-modal__media">
+          <img data-camp-modal-image alt="" hidden>
+          <div class="tom-camp-modal__placeholder" data-camp-modal-placeholder>
+            <span>TOM Contact</span>
+          </div>
+        </div>
+
+        <div class="tom-camp-modal__body">
+          <span class="tom-eyebrow">Contact Information</span>
+          <h3 id="contact-location-modal-title" data-camp-modal-state></h3>
+
+          <div class="tom-camp-modal__notes trix-content" data-camp-modal-notes></div>
+
+          <a class="tom-camp-modal__link" data-camp-modal-link target="_blank" rel="noopener" hidden>
+            Open Link
+          </a>
+
+          <div class="tom-camp-modal__switcher" data-camp-modal-switcher hidden>
+            <div class="tom-camp-modal__pager">
+              <button type="button" data-camp-modal-prev aria-label="Previous contact location">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.7 5.3 14.3 4 6.3 12l8 8 1.4-1.3L9 12z"/></svg>
+              </button>
+              <span data-camp-modal-count></span>
+              <button type="button" data-camp-modal-next aria-label="Next contact location">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8.3 18.7 1.4 1.3 8-8-8-8-1.4 1.3L15 12z"/></svg>
+              </button>
+            </div>
+
+            <div class="tom-camp-modal__areas" data-camp-modal-areas></div>
+          </div>
+        </div>
+      </dialog>
+    </section>
+
     <div class="tom-feature-split" style="align-items:start;margin-top:3rem;">
       <div class="tom-card" style="padding:1.5rem;" data-reveal>
         <h2 class="mb-3">Send a Message</h2>
@@ -79,3 +217,87 @@
     </div>
   </div>
 </section>
+
+<style>
+  .tom-camp-location-tabs {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    border-bottom: 2px solid rgba(20, 83, 45, 0.1);
+    padding-bottom: 1rem;
+  }
+  .tom-camp-location-tab {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(20, 83, 45, 0.12);
+    border-radius: 8px;
+    padding: 0.65rem 1.2rem;
+    color: var(--tom-green-950, #052e16);
+    background: #fff;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 180ms ease;
+  }
+  .tom-camp-location-tab:hover {
+    border-color: rgba(22, 163, 74, 0.45);
+    color: var(--tom-green-700, #15803d);
+    transform: translateY(-1px);
+  }
+  .tom-camp-location-tab.is-active {
+    color: #fff;
+    background: var(--tom-green-700, #15803d);
+    border-color: var(--tom-green-700, #15803d);
+    box-shadow: 0 10px 24px rgba(22, 163, 74, 0.2);
+  }
+  .tom-camp-location-panel {
+    display: none;
+    animation: fadeIn 300ms ease-in-out;
+  }
+  .tom-camp-location-panel.is-active {
+    display: block;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+
+<script>
+  (function() {
+    function initCampTabs() {
+      const container = document.querySelector('.tom-camp-details');
+      if (!container || container.dataset.publicTabsInitialized) return;
+      container.dataset.publicTabsInitialized = "true";
+
+      const tabs = container.querySelectorAll('.tom-camp-location-tab');
+      const panels = container.querySelectorAll('.tom-camp-location-panel');
+
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          tabs.forEach(t => t.classList.remove('is-active'));
+          panels.forEach(p => p.classList.remove('is-active'));
+
+          tab.classList.add('is-active');
+
+          const targetId = tab.getAttribute('data-target');
+          const targetPanel = document.getElementById(targetId);
+          if (targetPanel) {
+            targetPanel.classList.add('is-active');
+          }
+        });
+      });
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initCampTabs);
+    } else {
+      initCampTabs();
+    }
+    document.addEventListener("turbo:load", initCampTabs);
+    document.addEventListener("turbo:render", initCampTabs);
+  })();
+</script>

@@ -10,32 +10,25 @@
   </div>
 </section>
 
-<section class="tom-section bg-white" data-filter-group data-default-filter="all">
+<section class="tom-section bg-white">
   <div class="tom-container">
-    <div class="tom-filter-row" role="tablist" aria-label="Event filters" data-reveal>
-      <% [["all", "All"], ["upcoming", "Upcoming"], ["camp", "Camps"], ["training", "Training"], ["past", "Past"]].each do |key, label| %>
-        <button type="button" class="tom-btn" data-filter-button="<%= key %>" role="tab"><%= label %></button>
-      <% end %>
-    </div>
-
-    <% spotlight = @events.find(&:spotlight?) || @events.first %>
-    <% if spotlight %>
-      <% spotlight_summary = spotlight.description.to_plain_text.squish.truncate(220) rescue strip_tags(spotlight.description.to_s).squish.truncate(220) %>
-      <%= link_to event_path(spotlight), class: "tom-card", style: "display:block;overflow:hidden;margin-top:2rem;text-decoration:none;", data: { reveal: true, filter_item: "all upcoming spotlight" } do %>
+    <% if @spotlight_event %>
+      <% spotlight_summary = @spotlight_event.description.to_plain_text.squish.truncate(220) rescue strip_tags(@spotlight_event.description.to_s).squish.truncate(220) %>
+      <%= link_to event_path(@spotlight_event), class: "tom-card", style: "display:block;overflow:hidden;margin-bottom:2rem;text-decoration:none;", data: { reveal: true } do %>
         <div class="tom-feature-split" style="gap:0;align-items:stretch;">
           <div class="tom-media" style="border-radius:0;box-shadow:none;min-height:280px;">
-            <% if spotlight.image.attached? %>
-              <%= image_tag spotlight.image, alt: spotlight.title, loading: "lazy" %>
+            <% if @spotlight_event.image.attached? %>
+              <%= image_tag @spotlight_event.image, alt: @spotlight_event.title, loading: "lazy" %>
             <% else %>
-              <%= image_tag "/outreach.png", alt: spotlight.title, loading: "lazy" %>
+              <%= image_tag "/outreach.png", alt: @spotlight_event.title, loading: "lazy" %>
             <% end %>
           </div>
           <div style="padding:2rem;display:flex;flex-direction:column;justify-content:center;">
             <span class="tom-eyebrow">Spotlight Event</span>
-            <h2 style="margin-top:.7rem;color:var(--tom-ink);"><%= spotlight.title %></h2>
-            <p style="margin-top:1rem;color:var(--tom-muted);"><%= spotlight.date_label %> <%= spotlight.location.present? ? "• #{spotlight.location}" : "" %></p>
+            <h2 style="margin-top:.7rem;color:var(--tom-ink);"><%= @spotlight_event.title %></h2>
+            <p style="margin-top:1rem;color:var(--tom-muted);"><%= @spotlight_event.date_label %> <%= @spotlight_event.location.present? ? "• #{@spotlight_event.location}" : "" %></p>
             <p style="margin-top:1rem;color:var(--tom-muted);line-height:1.65;"><%= spotlight_summary %></p>
-            <span class="tom-btn tom-btn-primary" style="margin-top:1.25rem;"><%= spotlight.information_only? ? "Learn More" : "View Details" %></span>
+            <span class="tom-btn tom-btn-primary" style="margin-top:1.25rem;"><%= @spotlight_event.information_only? ? "Learn More" : "View Details" %></span>
           </div>
         </div>
       <% end %>
@@ -44,31 +37,34 @@
     <div class="tom-section-title" style="margin-top:3rem;" data-reveal>
       <div>
         <span class="tom-eyebrow">Events Grid</span>
-        <h2>Ministry gatherings</h2>
+        <h2>Explore TOM Events</h2>
       </div>
     </div>
 
     <div class="tom-three-grid">
-      <% [ [@events, "upcoming"], [@past_events, "past"] ].each do |collection, status| %>
-        <% collection.each_with_index do |event, index| %>
-          <% next if spotlight && event == spotlight %>
-          <% plain_description = event.description.to_plain_text rescue "" %>
-          <% corpus = "#{event.title} #{plain_description}".downcase %>
-          <% tags = [status] %>
-          <% tags << "camp" if corpus.include?("camp") %>
-          <% tags << "training" if corpus.include?("training") || corpus.include?("course") || corpus.include?("workshop") %>
-          <% accent = ["var(--tom-teal)", "var(--tom-orange)", "var(--tom-yellow)", "var(--tom-purple)"][index % 4] %>
-          <article class="tom-resource-card" style="--accent:<%= accent %>;" data-reveal data-filter-item="<%= tags.join(' ') %>">
-            <small><%= event.date_label %> • <%= status.titleize %></small>
+      <% @events.each_with_index do |event, index| %>
+        <% plain_description = event.description.to_plain_text rescue "" %>
+        <% accent = ["var(--tom-teal)", "var(--tom-orange)", "var(--tom-yellow)", "var(--tom-purple)"][index % 4] %>
+        <% status = event.start_time.blank? || event.start_time >= Time.current ? "Upcoming" : "Past" %>
+      
+        
+        <article class="tom-resource-card tom-event-card" style="--accent:<%= accent %>;" data-reveal>
+          <div class="tom-event-card__body">
+            <% if event.image.attached? %>
+              <%= image_tag event.image, alt: event.title, loading: "lazy", style: "width: 100%; aspect-ratio: 1 / 1; object-fit: cover;" %>
+            <% end %>
+            <small><%= event.date_label %> • <%= status %></small>
             <h3><%= link_to event.title, event_path(event) %></h3>
             <p style="margin-top:.75rem;color:var(--tom-muted);line-height:1.55;font-size:.92rem;"><%= plain_description.squish.truncate(150) %></p>
             <p style="margin-top:.8rem;color:var(--tom-muted);font-size:.9rem;"><%= event.location_label %></p>
             <%= link_to(event.information_only? ? "Learn More" : "View Details", event_path(event), class: "tom-btn tom-btn-primary", style: "margin-top:1rem;") %>
-          </article>
-        <% end %>
+          </div>
+        </article>
       <% end %>
     </div>
 
-    <div class="tom-filter-empty" data-filter-empty hidden>No events found for this filter yet.</div>
+    <div style="margin-top: 3rem; display: flex; justify-content: center;">
+      <%== @pagy.series_nav %>
+    </div>
   </div>
 </section>

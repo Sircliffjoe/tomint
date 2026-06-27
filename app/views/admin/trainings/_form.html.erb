@@ -34,11 +34,12 @@
 
         <% if current_user.super_admin? %>
           <div class="field-group">
-            <%= form.label :state_id, "State (Optional)", class: "field-label" %>
-            <div class="field-hint">Scope to a state, or leave blank for national</div>
-            <%= form.collection_select :state_id, State.order(:name), :id, :name,
+            <%= form.label :state_id, "State / Region (Optional)", class: "field-label" %>
+            <div class="field-hint">Scope to a state or region, or leave blank for national/global</div>
+            <%= form.select :state_id,
+                State.includes(:country).order("countries.sort_order ASC", "countries.name ASC", "states.name ASC").references(:country).map { |state| [state.location_label, state.id] },
                 { include_blank: "National Training" },
-                { class: "field-input field-select" } %>
+                class: "field-input field-select" %>
           </div>
         <% end %>
       </div>

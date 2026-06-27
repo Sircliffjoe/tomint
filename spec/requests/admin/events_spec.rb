@@ -66,15 +66,40 @@ RSpec.describe "Admin events", type: :request do
 
       expect(response).to have_http_status(:success)
       expect(response.body).to include('data-camp-admin-editor')
-      expect(response.body).to include('data-camp-admin-tab="lagos"')
-      expect(response.body).to include('data-camp-add-area="lagos"')
+      expect(response.body).to include("data-camp-admin-tab=\"state-#{state.id}\"")
+      expect(response.body).to include("data-camp-add-area=\"state-#{state.id}\"")
       expect(response.body).to include("Manage Areas")
       expect(response.body).to include("Ikorodu Area")
       expect(response.body.scan('value="Update Event"').size).to eq(1)
-      expect(response.body).to include("event[camp_details_attributes][2400][state_name]")
-      expect(response.body).to include("event[camp_details_attributes][2400][formatted_notes]")
+      expect(response.body).to include("event[camp_details_attributes][0][state_id]")
+      expect(response.body).to include("event[camp_details_attributes][0][state_name]")
+      expect(response.body).to include("event[camp_details_attributes][0][formatted_notes]")
       expect(response.body).to include("trix-editor")
       expect(response.body).not_to include("event[camp_details_attributes][lagos-0-new]")
+    end
+
+    it "groups camp editor locations by country" do
+      nigeria = Country.find_or_create_by!(name: "Nigeria", code: "NG")
+      ghana = Country.create!(name: "Ghana", code: "GH")
+      lagos = State.create!(name: "Lagos", code: "LAG", country: nigeria)
+      greater_accra = State.create!(name: "Greater Accra", code: "GAR", country: ghana)
+      event = Event.create!(
+        title: "TOM Camp 2026",
+        start_time: 1.week.from_now,
+        end_time: 1.week.from_now + 2.hours,
+        event_type: :information
+      )
+
+      get edit_admin_event_path(event)
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include("data-camp-country-tab=\"country-#{nigeria.id}\"")
+      expect(response.body).to include("data-camp-country-tab=\"country-#{ghana.id}\"")
+      expect(response.body).to include("href=\"#camp-country-panel-country-#{ghana.id}\"")
+      expect(response.body).to include("data-camp-country-panel=\"country-#{ghana.id}\"")
+      expect(response.body).to include("data-camp-admin-tab=\"state-#{lagos.id}\"")
+      expect(response.body).to include("data-camp-admin-tab=\"state-#{greater_accra.id}\"")
+      expect(response.body).to include("Greater Accra")
     end
 
     it "redirects state coordinators away from national events they cannot edit" do
@@ -167,6 +192,37 @@ RSpec.describe "Admin events", type: :request do
       expect(lagos.area_label).to eq("Mainland Area")
       expect(lagos.registration_link).to eq("https://example.com/lagos-camp")
       expect(lagos.notes).to eq("Come prepared.")
+    end
+
+    it "stores the selected state reference for camp details" do
+      ghana = Country.create!(name: "Ghana", code: "GH")
+      greater_accra = State.create!(name: "Greater Accra", code: "GA", country: ghana)
+      event = Event.create!(
+        title: "TOM Camp 2026",
+        event_type: :information
+      )
+
+      patch admin_event_path(event), params: {
+        event: {
+          title: event.title,
+          event_type: "information",
+          camp_details_attributes: {
+            "0" => {
+              state_id: greater_accra.id,
+              state_name: "Greater Accra",
+              position: 0,
+              area_id: "",
+              notes: "Ghana camp details."
+            }
+          }
+        }
+      }
+
+      detail = event.reload.camp_details.find_by!(state: greater_accra)
+
+      expect(response).to redirect_to(edit_admin_event_path(event))
+      expect(detail.state_name).to eq("Greater Accra")
+      expect(detail.notes).to eq("Ghana camp details.")
     end
 
     it "adds another area for a state" do
@@ -269,6 +325,68 @@ RSpec.describe "Admin events", type: :request do
       expect(response).to redirect_to(edit_admin_event_path(event))
       expect(camp_detail.formatted_notes.to_plain_text).to include("Bring your Bible")
       expect(camp_detail.public_notes_html).to include("<strong>Bring your Bible</strong>")
+    end
+
+    it "does not create duplicate main camp details for a state" do
+      state = State.create!(name: "Edo", code: "EDO", country: "Nigeria")
+      event = Event.create!(title: "TOM Camp 2026", event_type: :information)
+      event.camp_details.create!(state: state, state_name: "Edo", notes: "Existing Edo camp.")
+
+      patch admin_event_path(event), params: {
+        event: {
+          title: event.title,
+          event_type: "information",
+          camp_details_attributes: {
+            "0" => {
+              state_id: state.id,
+              state_name: "Edo",
+              position: 1,
+              area_id: "",
+              notes: "Duplicate Edo camp."
+            }
+          }
+        }
+      }
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(event.reload.camp_details.where(state_name: "Edo", area_id: nil).count).to eq(1)
+    end
+  end
+
+  describe "PATCH /admin/events/:id/deduplicate_camp_details" do
+    it "clears duplicate main camp entries while keeping the most complete entry" do
+      state = State.create!(name: "Edo", code: "EDO", country: "Nigeria")
+      event = Event.create!(title: "TOM Camp 2026", event_type: :information)
+      CampDetail.insert_all!([
+        {
+          event_id: event.id,
+          state_id: nil,
+          state_name: "Edo",
+          registration_link: nil,
+          notes: "Old legacy row.",
+          position: 1,
+          created_at: 2.days.ago,
+          updated_at: 2.days.ago
+        },
+        {
+          event_id: event.id,
+          state_id: state.id,
+          state_name: "Edo",
+          registration_link: "https://example.com/edo",
+          notes: "Complete row.",
+          position: 1,
+          created_at: 1.day.ago,
+          updated_at: 1.day.ago
+        }
+      ])
+
+      patch deduplicate_camp_details_admin_event_path(event)
+
+      edo_details = event.reload.camp_details.where(state_name: "Edo")
+
+      expect(response).to redirect_to(edit_admin_event_path(event))
+      expect(edo_details.count).to eq(1)
+      expect(edo_details.first.registration_link).to eq("https://example.com/edo")
     end
   end
 end

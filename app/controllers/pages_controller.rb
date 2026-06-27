@@ -11,6 +11,7 @@ class PagesController < ApplicationController
   def contact
     @contact_message = ContactMessage.new
     @contact_form_started_at = form_started_at
+    @countries = Country.active.includes(states: [ :country, :zone, :areas, map_image_attachment: :blob ]).ordered
   end
 
   def show

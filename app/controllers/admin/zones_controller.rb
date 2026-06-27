@@ -5,7 +5,7 @@ module Admin
     before_action :set_zone, only: %i[ show edit update destroy ]
 
     def index
-      @zones = Zone.all.order(:name).includes(:states)
+      @zones = Zone.includes(:country, :states).order("countries.sort_order ASC", "countries.name ASC", "zones.name ASC").references(:country)
     end
 
     def show
@@ -48,7 +48,7 @@ module Admin
     end
 
     def zone_params
-      params.require(:zone).permit(:name, :description)
+      params.require(:zone).permit(:name, :country_id, :description)
     end
 
     def authorize_admin!

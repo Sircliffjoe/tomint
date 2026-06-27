@@ -1,39 +1,88 @@
-<% details_by_state = camp_details.group_by(&:state_name) %>
+<% active_countries = Country.active.includes(states: [ :country, :areas ]).ordered %>
+<% details_by_state_id = camp_details.select(&:state_id).group_by(&:state_id) %>
+<% legacy_details_by_state = camp_details.reject(&:state_id).group_by(&:state_name) %>
 
 <section class="tom-camp-details" data-camp-details>
   <div class="tom-camp-details__heading">
-    <span class="tom-eyebrow">State Camp Details</span>
-    <h2>Choose Your State</h2>
+    <span class="tom-eyebrow">Camp Details</span>
+    <h2>Choose Your Location</h2>
   </div>
 
-  <div class="tom-camp-grid" role="list" aria-label="TOM Camp states and FCT">
-    <% Event::CAMP_STATE_NAMES.each do |state_name| %>
-      <% state_details = (details_by_state[state_name] || []).select(&:public_content?) %>
-      <% locations = state_details.map do |detail|
-        {
-          area: detail.area_label,
-          notesHtml: detail.public_notes_html,
-          registrationLink: detail.registration_link,
-          flyerImage: detail.flyer.attached? ? url_for(detail.flyer) : nil
-        }
-      end %>
-      <% state_payload = {
-        state: state_name,
-        locations: locations
-      } %>
-      <button
-        type="button"
-        class="tom-camp-state"
-        role="listitem"
-        data-camp-state="<%= json_escape(state_payload.to_json) %>">
-        <%= state_name %>
-      </button>
-    <% end %>
+  <% active_countries_with_states = active_countries.select { |country| country.states.active.exists? } %>
+  <% legacy_only_names = legacy_details_by_state.keys - active_countries.flat_map { |country| country.states.map(&:name) } %>
 
-    <% (42 - Event::CAMP_STATE_NAMES.size).times do %>
-      <span class="tom-camp-state tom-camp-state--empty" aria-hidden="true"></span>
-    <% end %>
-  </div>
+  <% if active_countries_with_states.empty? && legacy_only_names.empty? %>
+    <div class="tom-camp-empty">
+      Camp location details will be updated soon.
+    </div>
+  <% else %>
+    <div class="tom-camp-location-tabs" role="tablist">
+      <% active_countries_with_states.each_with_index do |country, index| %>
+        <button type="button" class="tom-camp-location-tab <%= 'is-active' if index == 0 %>" role="tab" data-target="tom-camp-panel-<%= country.id %>">
+          <%= country.name %>
+        </button>
+      <% end %>
+      <% if legacy_only_names.any? %>
+        <button type="button" class="tom-camp-location-tab <%= 'is-active' if active_countries_with_states.empty? %>" role="tab" data-target="tom-camp-panel-other">
+          Other Locations
+        </button>
+      <% end %>
+    </div>
+
+    <div class="tom-camp-location-panels">
+      <% active_countries_with_states.each_with_index do |country, index| %>
+        <div class="tom-camp-location-panel <%= 'is-active' if index == 0 %>" id="tom-camp-panel-<%= country.id %>" role="tabpanel">
+          <div class="tom-camp-grid" role="list" aria-label="TOM Camp locations in <%= country.name %>">
+            <% country.states.active.ordered.each do |state_record| %>
+              <% state_details = ((details_by_state_id[state_record.id] || []) + (legacy_details_by_state[state_record.name] || [])).select(&:public_content?) %>
+              <% locations = state_details.map do |detail|
+                {
+                  area: detail.area_label,
+                  notesHtml: detail.public_notes_html,
+                  registrationLink: detail.registration_link,
+                  flyerImage: detail.flyer.attached? ? url_for(detail.flyer) : nil
+                }
+              end %>
+              <% state_payload = {
+                state: state_record.name,
+                country: country.name,
+                locations: locations
+              } %>
+              <button
+                type="button"
+                class="tom-camp-state"
+                role="listitem"
+                data-camp-state="<%= json_escape(state_payload.to_json) %>">
+                <%= state_record.name %>
+              </button>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+
+      <% if legacy_only_names.any? %>
+        <div class="tom-camp-location-panel <%= 'is-active' if active_countries_with_states.empty? %>" id="tom-camp-panel-other" role="tabpanel">
+          <div class="tom-camp-grid" role="list" aria-label="Other TOM Camp locations">
+            <% legacy_only_names.sort.each do |state_name| %>
+              <% state_details = (legacy_details_by_state[state_name] || []).select(&:public_content?) %>
+              <% locations = state_details.map do |detail|
+                {
+                  area: detail.area_label,
+                  notesHtml: detail.public_notes_html,
+                  registrationLink: detail.registration_link,
+                  flyerImage: detail.flyer.attached? ? url_for(detail.flyer) : nil
+                }
+              end %>
+              <% state_payload = { state: state_name, locations: locations } %>
+              <button type="button" class="tom-camp-state" role="listitem" data-camp-state="<%= json_escape(state_payload.to_json) %>">
+                <%= state_name %>
+              </button>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
 
   <dialog class="tom-camp-modal" data-camp-modal aria-labelledby="camp-modal-title">
     <button type="button" class="tom-camp-modal__close" data-camp-modal-close aria-label="Close camp details">
@@ -73,3 +122,87 @@
     </div>
   </dialog>
 </section>
+
+<style>
+  .tom-camp-location-tabs {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    border-bottom: 2px solid rgba(20, 83, 45, 0.1);
+    padding-bottom: 1rem;
+  }
+  .tom-camp-location-tab {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(20, 83, 45, 0.12);
+    border-radius: 8px;
+    padding: 0.65rem 1.2rem;
+    color: var(--tom-green-950, #052e16);
+    background: #fff;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 180ms ease;
+  }
+  .tom-camp-location-tab:hover {
+    border-color: rgba(22, 163, 74, 0.45);
+    color: var(--tom-green-700, #15803d);
+    transform: translateY(-1px);
+  }
+  .tom-camp-location-tab.is-active {
+    color: #fff;
+    background: var(--tom-green-700, #15803d);
+    border-color: var(--tom-green-700, #15803d);
+    box-shadow: 0 10px 24px rgba(22, 163, 74, 0.2);
+  }
+  .tom-camp-location-panel {
+    display: none;
+    animation: fadeIn 300ms ease-in-out;
+  }
+  .tom-camp-location-panel.is-active {
+    display: block;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+
+<script>
+  (function() {
+    function initCampTabs() {
+      const container = document.querySelector('.tom-camp-details');
+      if (!container || container.dataset.publicTabsInitialized) return;
+      container.dataset.publicTabsInitialized = "true";
+
+      const tabs = container.querySelectorAll('.tom-camp-location-tab');
+      const panels = container.querySelectorAll('.tom-camp-location-panel');
+
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          tabs.forEach(t => t.classList.remove('is-active'));
+          panels.forEach(p => p.classList.remove('is-active'));
+
+          tab.classList.add('is-active');
+
+          const targetId = tab.getAttribute('data-target');
+          const targetPanel = document.getElementById(targetId);
+          if (targetPanel) {
+            targetPanel.classList.add('is-active');
+          }
+        });
+      });
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initCampTabs);
+    } else {
+      initCampTabs();
+    }
+    document.addEventListener("turbo:load", initCampTabs);
+    document.addEventListener("turbo:render", initCampTabs);
+  })();
+</script>

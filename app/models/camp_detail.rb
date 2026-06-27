@@ -5,12 +5,17 @@ class CampDetail < ApplicationRecord
   attr_accessor :area_row
 
   belongs_to :event
+  belongs_to :state, optional: true
   belongs_to :area, optional: true
   has_one_attached :flyer
   has_rich_text :formatted_notes
 
+  before_validation :sync_state_name
+
   validates :state_name, presence: true
   validates :area_id, presence: true, if: :area_row?
+  validate :area_belongs_to_selected_state
+  validate :unique_event_location
   validates :registration_link,
             format: { with: URI::DEFAULT_PARSER.make_regexp(%w[http https]), allow_blank: true }
 
@@ -18,6 +23,14 @@ class CampDetail < ApplicationRecord
 
   def area_label
     area&.name || "Main Camp"
+  end
+
+  def state_label
+    state&.name || state_name
+  end
+
+  def country_label
+    state&.country&.name
   end
 
   def public_content?
@@ -39,7 +52,44 @@ class CampDetail < ApplicationRecord
     area_row.to_s == "1"
   end
 
+  def location_key
+    [ state_name.to_s.strip.downcase, area_id.presence || "main" ]
+  end
+
+  def completeness_score
+    [
+      flyer.attached?,
+      registration_link.present?,
+      formatted_notes_content?,
+      legacy_custom_notes?,
+      area_id.present?
+    ].count(true)
+  end
+
   private
+
+  def sync_state_name
+    self.state_name = state.name if state.present?
+  end
+
+  def area_belongs_to_selected_state
+    return if area.blank? || state.blank? || area.state_id == state_id
+
+    errors.add(:area, "must belong to the selected state or region")
+  end
+
+  def unique_event_location
+    return if event.blank?
+
+    duplicate = event.camp_details
+      .reject { |detail| detail.equal?(self) || detail.marked_for_destruction? }
+      .any? do |detail|
+        same_state = detail.state_name.to_s.strip.casecmp?(state_name.to_s.strip)
+        same_state && detail.area_id.to_i == area_id.to_i
+      end
+
+    errors.add(:base, "already has camp details for this location") if duplicate
+  end
 
   def formatted_notes_content?
     formatted_notes&.body&.to_plain_text.to_s.strip.present?

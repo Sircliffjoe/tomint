@@ -80,12 +80,12 @@
       </div>
 
       <div id="state-field" class="field-group <%= (user.state_coordinator? || user.state_secretary?) ? '' : 'hidden' %>">
-        <%= form.label :state_id, "Assign State", class: "field-label" %>
-        <div class="field-hint">Select the state this user will administer or serve as secretary</div>
-        <%= form.collection_select :state_id,
-            State.all.order(:name), :id, :name,
+        <%= form.label :state_id, "Assign State / Region", class: "field-label" %>
+        <div class="field-hint">Select the state or region this user will administer or serve as secretary</div>
+        <%= form.select :state_id,
+            State.includes(:country).order("countries.sort_order ASC", "countries.name ASC", "states.name ASC").references(:country).map { |state| [state.location_label, state.id] },
             { include_blank: "— Select State —" },
-            { class: "field-input field-select" } %>
+            class: "field-input field-select" %>
       </div>
     </div>
 

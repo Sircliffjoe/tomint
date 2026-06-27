@@ -68,3 +68,5 @@ gem "rqrcode"
 
 gem "rspec-rails", "~> 8.0", groups: [ :development, :test ]
 gem 'brevo'
+
+gem "pagy", "~> 43.5"

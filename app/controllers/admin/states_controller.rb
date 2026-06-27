@@ -2,10 +2,12 @@ module Admin
   class StatesController < ApplicationController
     before_action :authenticate_user!
     before_action :authorize_admin!
+    before_action :refresh_state_columns, only: %i[ new create edit update ]
     before_action :set_state, only: %i[ show edit update destroy ]
 
     def index
-      @states = State.all.order(:name)
+      @states = State.includes(:country, :zone).order("countries.sort_order ASC", "countries.name ASC", "states.name ASC").references(:country)
+      @states_by_country = @states.group_by(&:country)
     end
 
     def show
@@ -48,7 +50,11 @@ module Admin
     end
 
     def state_params
-      params.require(:state).permit(:name, :code, :zone_id, :year_created, :description, :contact_info, :status, :map_image)
+      params.require(:state).permit(:name, :code, :country_id, :zone_id, :year_created, :description, :contact_info, :status, :map_image)
+    end
+
+    def refresh_state_columns
+      State.reset_column_information
     end
 
     def authorize_admin!

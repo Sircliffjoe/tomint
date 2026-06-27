@@ -228,6 +228,8 @@ function initPublicSite() {
     const count = modal.querySelector("[data-camp-modal-count]");
     const notes = modal.querySelector("[data-camp-modal-notes]");
     const link = modal.querySelector("[data-camp-modal-link]");
+    const titleSuffix = campDetails.dataset.locationTitleSuffix ?? "Camp";
+    const emptyMessage = campDetails.dataset.emptyLocationMessage || "No Camp details have been published for this state yet.";
     let activeLocations = [];
     let activeStateName = "State";
     let activeLocationIndex = 0;
@@ -280,7 +282,7 @@ function initPublicSite() {
 
       if (location.flyerImage) {
         image.src = location.flyerImage;
-        image.alt = `${activeStateName} ${location.area || "camp"} flyer`;
+        image.alt = `${activeStateName} ${location.area || titleSuffix || "location"} image`;
         image.hidden = false;
         placeholder.hidden = true;
       } else {
@@ -296,12 +298,12 @@ function initPublicSite() {
       activeLocations = Array.isArray(detail.locations) ? detail.locations : [];
       activeLocationIndex = 0;
 
-      state.textContent = `${activeStateName} Camp`;
+      state.textContent = titleSuffix ? `${activeStateName} ${titleSuffix}` : activeStateName;
       areas.innerHTML = "";
       updatePager();
 
       if (!activeLocations.length) {
-        notes.textContent = "No Camp details have been published for this state yet.";
+        notes.textContent = emptyMessage;
         link.removeAttribute("href");
         link.hidden = true;
         image.removeAttribute("src");
@@ -379,19 +381,33 @@ function initPublicSite() {
 
     const tabs = editor.querySelectorAll("[data-camp-admin-tab]");
     const panels = editor.querySelectorAll("[data-camp-admin-panel]");
+    const countryTabs = editor.querySelectorAll("[data-camp-country-tab]");
+    const countryPanels = editor.querySelectorAll("[data-camp-country-panel]");
 
-    function activate(stateKey) {
-      tabs.forEach((tab) => {
+    function activate(stateKey, scope = editor) {
+      scope.querySelectorAll("[data-camp-admin-tab]").forEach((tab) => {
         tab.setAttribute("aria-selected", tab.dataset.campAdminTab === stateKey ? "true" : "false");
       });
 
-      panels.forEach((panel) => {
+      scope.querySelectorAll("[data-camp-admin-panel]").forEach((panel) => {
         panel.hidden = panel.dataset.campAdminPanel !== stateKey;
       });
     }
 
+    function activateCountry(countryKey) {
+      countryTabs.forEach((tab) => {
+        tab.setAttribute("aria-selected", tab.dataset.campCountryTab === countryKey ? "true" : "false");
+      });
+
+      editor.querySelector(`[data-camp-country-panel="${countryKey}"]`)?.scrollIntoView({ block: "start", behavior: "smooth" });
+    }
+
     tabs.forEach((tab) => {
-      tab.addEventListener("click", () => activate(tab.dataset.campAdminTab));
+      tab.addEventListener("click", () => activate(tab.dataset.campAdminTab, tab.closest("[data-camp-country-panel]") || editor));
+    });
+
+    countryTabs.forEach((tab) => {
+      tab.addEventListener("click", () => activateCountry(tab.dataset.campCountryTab));
     });
 
     editor.querySelectorAll("[data-camp-add-area]").forEach((button) => {
@@ -415,7 +431,24 @@ function initPublicSite() {
       removeButton.closest(".camp-admin-location")?.remove();
     });
 
-    activate(tabs[0]?.dataset.campAdminTab || "");
+    if (countryTabs.length) {
+      countryTabs.forEach((tab, index) => {
+        tab.setAttribute("aria-selected", index === 0 ? "true" : "false");
+      });
+      countryPanels.forEach((panel) => {
+        const firstStateTab = panel.querySelector("[data-camp-admin-tab]");
+        if (!firstStateTab) return;
+
+        panel.querySelectorAll("[data-camp-admin-tab]").forEach((tab, index) => {
+          tab.setAttribute("aria-selected", index === 0 ? "true" : "false");
+        });
+        panel.querySelectorAll("[data-camp-admin-panel]").forEach((statePanel, index) => {
+          statePanel.hidden = index !== 0;
+        });
+      });
+    } else {
+      activate(tabs[0]?.dataset.campAdminTab || "");
+    }
   });
 
   const globalModal = document.querySelector("[data-global-modal]");

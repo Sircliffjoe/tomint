@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_20_150442) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_27_133000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -88,11 +88,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_20_150442) do
     t.text "notes"
     t.integer "position", default: 0, null: false
     t.string "registration_link"
+    t.bigint "state_id"
     t.string "state_name", null: false
     t.datetime "updated_at", null: false
     t.index ["area_id"], name: "index_camp_details_on_area_id"
+    t.index ["event_id", "state_id", "position"], name: "index_camp_details_on_event_id_and_state_id_and_position"
     t.index ["event_id", "state_name", "position"], name: "index_camp_details_on_event_state_position"
     t.index ["event_id"], name: "index_camp_details_on_event_id"
+    t.index ["state_id"], name: "index_camp_details_on_state_id"
   end
 
   create_table "contact_messages", force: :cascade do |t|
@@ -108,6 +111,24 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_20_150442) do
     t.text "user_agent"
     t.index ["created_at"], name: "index_contact_messages_on_created_at"
     t.index ["read_at"], name: "index_contact_messages_on_read_at"
+  end
+
+  create_table "countries", force: :cascade do |t|
+    t.text "address"
+    t.string "code", null: false
+    t.text "contact_info"
+    t.datetime "created_at", null: false
+    t.text "description"
+    t.string "email"
+    t.string "name", null: false
+    t.string "phone"
+    t.string "slug", null: false
+    t.integer "sort_order", default: 0, null: false
+    t.integer "status", default: 0, null: false
+    t.datetime "updated_at", null: false
+    t.index ["code"], name: "index_countries_on_code", unique: true
+    t.index ["slug"], name: "index_countries_on_slug", unique: true
+    t.index ["status", "sort_order", "name"], name: "index_countries_on_status_and_sort_order_and_name"
   end
 
   create_table "directorates", force: :cascade do |t|
@@ -339,6 +360,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_20_150442) do
     t.string "code"
     t.text "contact_info"
     t.string "country"
+    t.bigint "country_id", null: false
     t.datetime "created_at", null: false
     t.text "description"
     t.string "name"
@@ -346,6 +368,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_20_150442) do
     t.datetime "updated_at", null: false
     t.integer "year_created"
     t.bigint "zone_id"
+    t.index ["country_id", "code"], name: "index_states_on_country_id_and_code", unique: true
+    t.index ["country_id", "name"], name: "index_states_on_country_id_and_name", unique: true
+    t.index ["country_id"], name: "index_states_on_country_id"
   end
 
   create_table "training_registrations", force: :cascade do |t|
@@ -406,10 +431,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_20_150442) do
   end
 
   create_table "zones", force: :cascade do |t|
+    t.bigint "country_id", null: false
     t.datetime "created_at", null: false
     t.text "description"
     t.string "name"
     t.datetime "updated_at", null: false
+    t.index ["country_id", "name"], name: "index_zones_on_country_id_and_name", unique: true
+    t.index ["country_id"], name: "index_zones_on_country_id"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
@@ -418,6 +446,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_20_150442) do
   add_foreign_key "blog_posts", "users", column: "author_id"
   add_foreign_key "camp_details", "areas"
   add_foreign_key "camp_details", "events"
+  add_foreign_key "camp_details", "states"
   add_foreign_key "events", "states"
   add_foreign_key "internal_messages", "users", column: "recipient_id"
   add_foreign_key "internal_messages", "users", column: "sender_id"
@@ -434,8 +463,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_20_150442) do
   add_foreign_key "solid_queue_ready_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_recurring_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_scheduled_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
+  add_foreign_key "states", "countries"
   add_foreign_key "training_registrations", "trainings"
   add_foreign_key "training_registrations", "users"
   add_foreign_key "training_sessions", "trainings"
   add_foreign_key "trainings", "states"
+  add_foreign_key "zones", "countries"
 end

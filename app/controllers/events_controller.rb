@@ -2,8 +2,13 @@ class EventsController < ApplicationController
   layout "public"
 
   def index
-    @events = policy_scope(Event).where("start_time IS NULL OR start_time >= ?", Time.current).order(Arel.sql("start_time IS NULL, start_time ASC"))
-    @past_events = policy_scope(Event).where("start_time < ?", Time.current).order(start_time: :desc).limit(5)
+    all_events = policy_scope(Event).order(created_at: :desc)
+    @spotlight_event = all_events.find(&:spotlight?) || all_events.first
+    
+    events_query = all_events
+    events_query = events_query.where.not(id: @spotlight_event.id) if @spotlight_event
+    
+    @pagy, @events = pagy(:offset, events_query, limit: 9)
   end
 
   def show

@@ -66,7 +66,10 @@ RSpec.describe "Events", type: :request do
       expect(response).to have_http_status(:success)
     end
 
-    it "shows all state camp details for camp information events" do
+    it "shows CMS state camp details for camp information events" do
+      Country.find_or_create_by!(name: "Nigeria", code: "NG")
+      State.create!(name: "Abia", code: "ABI", country: "Nigeria")
+      State.create!(name: "Zamfara", code: "ZAM", country: "Nigeria")
       event = Event.create!(
         title: "TOM Camp 2026",
         start_time: 1.week.from_now,
@@ -77,11 +80,27 @@ RSpec.describe "Events", type: :request do
       get event_path(event)
 
       expect(response).to have_http_status(:success)
-      expect(response.body).to include("State Camp Details")
-      expect(response.body).to include("Choose Your State")
+      expect(response.body).to include("Camp Details")
+      expect(response.body).to include("Choose Your Location")
+      expect(response.body).to include("Nigeria")
       expect(response.body).to include("Abia")
       expect(response.body).to include("Zamfara")
-      expect(response.body.scan("data-camp-state").size).to eq(37)
+      expect(response.body.scan("data-camp-state").size).to eq(2)
+    end
+
+    it "shows international CMS locations for camp information events" do
+      ghana = Country.create!(name: "Ghana", code: "GH")
+      State.create!(name: "Greater Accra", code: "GA", country: ghana)
+      event = Event.create!(
+        title: "TOM Camp 2026",
+        event_type: :information
+      )
+
+      get event_path(event)
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include("Ghana")
+      expect(response.body).to include("Greater Accra")
     end
 
     it "renders an event without schedule or location details" do

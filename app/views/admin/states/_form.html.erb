@@ -21,47 +21,56 @@
     <div class="form-fields">
       <div class="field-group">
         <%= form.label :name, class: "field-label" %>
-        <div class="field-hint">The full official name of this state</div>
-        <%= form.text_field :name, placeholder: "e.g. Lagos", class: "field-input" %>
+        <div class="field-hint">The full official name of this state, region, county, or chapter territory</div>
+        <%= form.text_field :name, placeholder: "e.g. Lagos, Greater Accra, Texas", class: "field-input" %>
       </div>
 
       <div class="form-row">
         <div class="field-group">
-          <%= form.label :code, "State Code", class: "field-label" %>
-          <div class="field-hint">Short identifier code for this state</div>
-          <%= form.text_field :code, placeholder: "e.g. LAG", class: "field-input" %>
+          <%= form.label :country_id, "Country", class: "field-label" %>
+          <div class="field-hint">The country this location belongs to</div>
+          <%= form.collection_select :country_id, Country.ordered, :id, :name,
+              { include_blank: "— Select Country —" },
+              class: "field-input field-select" %>
         </div>
         <div class="field-group">
-          <%= form.label :zone_id, "Region / Zone", class: "field-label" %>
-          <div class="field-hint">The geopolitical zone this state belongs to</div>
-          <%= form.select :zone_id,
-              Zone.order(:name).map { |z| [z.name, z.id] },
-              { include_blank: "— Select Zone —" },
-              class: "field-input field-select" %>
+          <%= form.label :code, "Location Code", class: "field-label" %>
+          <div class="field-hint">Short identifier code for this state or region</div>
+          <%= form.text_field :code, placeholder: "e.g. LAG", class: "field-input" %>
         </div>
       </div>
 
-      <div class="field-group">
-        <%= form.label :year_created, "Year Established", class: "field-label" %>
-        <div class="field-hint">The year this state chapter was formally established</div>
-        <%= form.number_field :year_created, min: 1980, max: Date.current.year, placeholder: "YYYY", class: "field-input" %>
+      <div class="form-row">
+        <div class="field-group">
+          <%= form.label :zone_id, "Region / Zone", class: "field-label" %>
+          <div class="field-hint">Choose a zone from the same country</div>
+          <%= form.select :zone_id,
+              Zone.includes(:country).ordered.map { |z| ["#{z.country.name} — #{z.name}", z.id] },
+              { include_blank: "— Select Zone —" },
+              class: "field-input field-select" %>
+        </div>
+        <div class="field-group">
+          <%= form.label :year_created, "Year Established", class: "field-label" %>
+          <div class="field-hint">The year this chapter was formally established</div>
+          <%= form.number_field :year_created, min: 1980, max: Date.current.year, placeholder: "YYYY", class: "field-input" %>
+        </div>
       </div>
 
       <div class="field-group">
         <%= form.label :description, class: "field-label" %>
-        <div class="field-hint">A brief historical or operational overview of this state</div>
+        <div class="field-hint">A brief historical or operational overview of this location</div>
         <%= form.text_area :description, rows: 5, placeholder: "Brief historical or operational overview...", class: "field-input field-textarea" %>
       </div>
 
       <div class="field-group">
         <%= form.label :contact_info, "Contact Information", class: "field-label" %>
-        <div class="field-hint">State office contact, phone numbers, or official communication details</div>
-        <%= form.text_area :contact_info, rows: 4, placeholder: "State contact details...", class: "field-input field-textarea" %>
+        <div class="field-hint">Office contact, phone numbers, or official communication details</div>
+        <%= form.text_area :contact_info, rows: 4, placeholder: "Location contact details...", class: "field-input field-textarea" %>
       </div>
 
       <div class="field-group">
-        <%= form.label :map_image, "State Map Image", class: "field-label" %>
-        <div class="field-hint">Upload a geographical map image for this state's dashboard</div>
+        <%= form.label :map_image, "Map Image", class: "field-label" %>
+        <div class="field-hint">Upload a geographical map image for this location's dashboard</div>
         <% if state.map_image.attached? %>
           <div class="map-preview">
             <%= image_tag state.map_image, class: "map-preview-image" %>

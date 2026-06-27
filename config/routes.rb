@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   # Admin namespace
   namespace :admin do
     get "dashboard", to: "dashboard#index"
+    resources :countries
     resources :directorates
     resources :zones
     resources :states do
@@ -23,7 +24,11 @@ Rails.application.routes.draw do
         patch :reset_password
       end
     end
-    resources :events
+    resources :events do
+      member do
+        patch :deduplicate_camp_details
+      end
+    end
     resources :trainings do
       resources :training_sessions
     end

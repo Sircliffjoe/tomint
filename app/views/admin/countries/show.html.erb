@@ -1,0 +1,47 @@
+<div class="space-y-6">
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-900"><%= @country.name %></h1>
+      <p class="text-sm text-gray-500"><%= @country.code %> · <%= @country.status.humanize %></p>
+    </div>
+    <%= link_to "Edit Country", edit_admin_country_path(@country), class: "rounded-md bg-green-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500" %>
+  </div>
+
+  <div class="grid gap-6 lg:grid-cols-3">
+    <div class="rounded-lg bg-white p-6 shadow lg:col-span-2">
+      <h2 class="text-lg font-semibold text-gray-900">Contact Details</h2>
+      <dl class="mt-4 grid gap-4 text-sm">
+        <div>
+          <dt class="font-medium text-gray-500">Address</dt>
+          <dd class="mt-1 whitespace-pre-line text-gray-900"><%= @country.address.presence || "—" %></dd>
+        </div>
+        <div>
+          <dt class="font-medium text-gray-500">Phone</dt>
+          <dd class="mt-1 text-gray-900"><%= @country.phone.presence || "—" %></dd>
+        </div>
+        <div>
+          <dt class="font-medium text-gray-500">Email</dt>
+          <dd class="mt-1 text-gray-900"><%= @country.email.presence || "—" %></dd>
+        </div>
+        <div>
+          <dt class="font-medium text-gray-500">Notes</dt>
+          <dd class="mt-1 whitespace-pre-line text-gray-900"><%= @country.contact_info.presence || @country.description.presence || "—" %></dd>
+        </div>
+      </dl>
+    </div>
+
+    <div class="rounded-lg bg-white p-6 shadow">
+      <h2 class="text-lg font-semibold text-gray-900">Structure</h2>
+      <dl class="mt-4 grid gap-4 text-sm">
+        <div>
+          <dt class="font-medium text-gray-500">States / Regions</dt>
+          <dd class="mt-1 text-2xl font-bold text-gray-900"><%= @country.states.count %></dd>
+        </div>
+        <div>
+          <dt class="font-medium text-gray-500">Zones</dt>
+          <dd class="mt-1 text-2xl font-bold text-gray-900"><%= @country.zones.count %></dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+</div>

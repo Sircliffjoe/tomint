@@ -2,7 +2,7 @@ module Admin
   class EventsController < ApplicationController
     before_action :authenticate_user!
     before_action :authorize_admin!
-    before_action :set_event, only: %i[ show edit update destroy ]
+    before_action :set_event, only: %i[ show edit update destroy deduplicate_camp_details ]
 
     def index
       @events = policy_scope(Event).order(start_time: :desc)
@@ -49,6 +49,14 @@ module Admin
       redirect_to admin_events_path, notice: "Event was successfully destroyed."
     end
 
+    def deduplicate_camp_details
+      authorize @event, :update?
+
+      removed_count = remove_duplicate_camp_details(@event)
+
+      redirect_to edit_admin_event_path(@event), notice: "#{removed_count} duplicate camp #{'entry'.pluralize(removed_count)} removed."
+    end
+
     private
 
     def set_event
@@ -70,6 +78,7 @@ module Admin
         :spotlight,
         camp_details_attributes: [
           :id,
+          :state_id,
           :state_name,
           :area_id,
           :area_row,
@@ -82,19 +91,27 @@ module Admin
         ]
       )
 
-      unless camp_params?(permitted)
-        permitted.delete(:camp_details_attributes)
-      end
-
       permitted
-    end
-
-    def camp_params?(permitted)
-      permitted[:event_type] == "information" && permitted[:title].to_s.match?(/\bcamp\b/i)
     end
 
     def after_save_path(event)
       event.camp_information_event? ? edit_admin_event_path(event) : admin_events_path
+    end
+
+    def remove_duplicate_camp_details(event)
+      removed_count = 0
+
+      event.camp_details.includes(:rich_text_formatted_notes, flyer_attachment: :blob).group_by(&:location_key).each_value do |details|
+        next if details.size < 2
+
+        keeper = details.max_by { |detail| [ detail.completeness_score, detail.updated_at || detail.created_at, detail.id ] }
+        (details - [ keeper ]).each do |duplicate|
+          duplicate.destroy
+          removed_count += 1
+        end
+      end
+
+      removed_count
     end
 
     def authorize_admin!

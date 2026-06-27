@@ -1,49 +1,62 @@
 <div class="space-y-6">
   <div class="flex items-center justify-between">
     <div>
-      <h1 class="text-2xl font-bold text-gray-900">States</h1>
-      <p class="text-sm text-gray-500">Manage all states in the system.</p>
+      <h1 class="text-2xl font-bold text-gray-900">States / Regions</h1>
+      <p class="text-sm text-gray-500">Manage state and regional chapters across all countries.</p>
     </div>
     <%= link_to new_admin_state_path, class: "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" do %>
       <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
         <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
       </svg>
-      New State
+      New State / Region
     <% end %>
   </div>
 
-  <div class="bg-white shadow overflow-hidden sm:rounded-lg">
-    <table class="min-w-full divide-y divide-gray-200">
-      <thead class="bg-gray-50">
-        <tr>
-          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Code</th>
-          <th scope="col" class="relative px-6 py-3">
-            <span class="sr-only">Actions</span>
-          </th>
-        </tr>
-      </thead>
-      <tbody class="bg-white divide-y divide-gray-200">
-        <% @states.each do |state| %>
-          <tr>
-            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-              <%= link_to state.name, admin_state_path(state), class: "hover:text-green-600 transition-colors" %>
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-              <%= state.code %>
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-              <%= link_to "Edit", edit_admin_state_path(state), class: "text-green-600 hover:text-green-900 mr-4" %>
-              <%= link_to "Delete", admin_state_path(state), data: { turbo_method: :delete, turbo_confirm: "Are you sure? This action cannot be undone." }, class: "text-red-600 hover:text-red-900" %>
-            </td>
-          </tr>
+  <% if @states.any? %>
+    <div class="space-y-6">
+      <% @states_by_country.each do |country, states| %>
+        <section class="overflow-hidden rounded-lg bg-white shadow">
+          <div class="flex items-center justify-between border-b border-gray-200 bg-green-50 px-6 py-4">
+            <div>
+              <h2 class="text-lg font-bold text-green-950"><%= country.name %></h2>
+              <p class="mt-1 text-sm text-green-700"><%= pluralize(states.size, "state / region") %></p>
+            </div>
+            <span class="rounded-full bg-white px-3 py-1 text-xs font-bold uppercase tracking-wider text-green-700 ring-1 ring-green-200"><%= country.code %></span>
+          </div>
+
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Name</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Code</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Zone</th>
+                <th scope="col" class="relative px-6 py-3">
+                  <span class="sr-only">Actions</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200 bg-white">
+              <% states.each do |state| %>
+                <tr>
+                  <td class="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">
+                    <%= link_to state.name, admin_state_path(state), class: "hover:text-green-600 transition-colors" %>
+                  </td>
+                  <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-500"><%= state.code %></td>
+                  <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-500"><%= state.zone&.name || "—" %></td>
+                  <td class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
+                    <%= link_to "Edit", edit_admin_state_path(state), class: "mr-4 text-green-600 hover:text-green-900" %>
+                    <%= link_to "Delete", admin_state_path(state), data: { turbo_method: :delete, turbo_confirm: "Are you sure? This action cannot be undone." }, class: "text-red-600 hover:text-red-900" %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </section>
         <% end %>
-      </tbody>
-    </table>
-    <% if @states.empty? %>
-      <div class="text-center py-10">
-        <p class="text-gray-500">No states found.</p>
-      </div>
-    <% end %>
-  </div>
+    </div>
+  <% else %>
+    <div class="rounded-lg bg-white py-10 text-center shadow">
+      <p class="text-gray-500">No states or regions found.</p>
+    </div>
+  <% end %>
 </div>
