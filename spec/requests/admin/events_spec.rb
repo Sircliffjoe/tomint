@@ -75,6 +75,8 @@ RSpec.describe "Admin events", type: :request do
       expect(response.body).to include("event[camp_details_attributes][0][state_name]")
       expect(response.body).to include("event[camp_details_attributes][0][formatted_notes]")
       expect(response.body).to include("trix-editor")
+      expect(response.body).to include("novalidate=\"novalidate\"")
+      expect(response.body).not_to include("type=\"url\"")
       expect(response.body).not_to include("event[camp_details_attributes][lagos-0-new]")
     end
 
@@ -116,6 +118,38 @@ RSpec.describe "Admin events", type: :request do
       expect(response.body).to include("Edo")
       expect(response.body).to include("event[camp_details_attributes][0][state_name]")
       expect(response.body).not_to include("event[camp_details_attributes][0][state_id]")
+    end
+
+    it "links duplicate cleanup to the dedicated dedupe route" do
+      state = State.create!(name: "Edo", code: "EDO", country: "Nigeria")
+      event = Event.create!(title: "TOM Camp 2026", event_type: :information)
+      CampDetail.insert_all!([
+        {
+          event_id: event.id,
+          state_id: nil,
+          state_name: "Edo",
+          notes: nil,
+          position: 1,
+          created_at: 2.days.ago,
+          updated_at: 2.days.ago
+        },
+        {
+          event_id: event.id,
+          state_id: state.id,
+          state_name: "Edo",
+          notes: "Complete row.",
+          position: 1,
+          created_at: 1.day.ago,
+          updated_at: 1.day.ago
+        }
+      ])
+
+      get edit_admin_event_path(event)
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include("Clear Duplicates")
+      expect(response.body).to include("href=\"#{deduplicate_camp_details_admin_event_path(event)}\"")
+      expect(response.body).to include('data-turbo-method="patch"')
     end
 
     it "redirects state coordinators away from national events they cannot edit" do

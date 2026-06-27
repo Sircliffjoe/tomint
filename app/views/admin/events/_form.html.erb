@@ -1,5 +1,5 @@
 <div class="form-card">
-  <%= form_with(model: [:admin, event], class: "directorate-form", html: { multipart: true }, data: { controller: "event-type" }) do |form| %>
+  <%= form_with(model: [:admin, event], class: "directorate-form", html: { multipart: true, novalidate: true }, data: { controller: "event-type" }) do |form| %>
     <% if event.errors.any? %>
       <div class="error-banner">
         <div class="error-icon-wrap">
@@ -145,7 +145,13 @@
                   <strong><%= pluralize(duplicate_count, "duplicate camp entry") %> detected</strong>
                   <span>Duplicate entries can make one state or region appear multiple times on the public page.</span>
                 </div>
-                <%= button_to "Clear Duplicates", deduplicate_camp_details_admin_event_path(event), method: :patch, class: "camp-admin-dedupe", data: { turbo_confirm: "Clear duplicate camp entries and keep the most complete entry for each location?" } %>
+                <%= link_to "Clear Duplicates",
+                            deduplicate_camp_details_admin_event_path(event),
+                            class: "camp-admin-dedupe",
+                            data: {
+                              turbo_method: :patch,
+                              turbo_confirm: "Clear duplicate camp entries and keep the most complete entry for each location?"
+                            } %>
               </div>
             <% end %>
             <div class="camp-admin-editor" data-camp-admin-editor>
@@ -273,7 +279,7 @@
 
                               <div class="camp-admin-notes">
                                 <%= camp_form.label :registration_link, "Registration link", class: "field-label" %>
-                                <%= camp_form.url_field :registration_link, class: "field-input", placeholder: "https://example.com/register" %>
+                                <%= camp_form.text_field :registration_link, class: "field-input", placeholder: "https://example.com/register" %>
                               </div>
 
                               <div class="camp-admin-notes">
@@ -326,7 +332,7 @@
 
                             <div class="camp-admin-notes">
                               <%= camp_form.label :registration_link, "Registration link", class: "field-label" %>
-                              <%= camp_form.url_field :registration_link, class: "field-input", placeholder: "https://example.com/register" %>
+                              <%= camp_form.text_field :registration_link, class: "field-input", placeholder: "https://example.com/register" %>
                             </div>
 
                             <div class="camp-admin-notes">
