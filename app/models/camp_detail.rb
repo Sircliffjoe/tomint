@@ -21,15 +21,26 @@ class CampDetail < ApplicationRecord
 
   scope :ordered, -> { order(:position, :state_name) }
 
+  def self.state_reference_available?
+    return true if column_names.include?("state_id")
+
+    reset_column_information
+    column_names.include?("state_id")
+  end
+
   def area_label
     area&.name || "Main Camp"
   end
 
   def state_label
+    return state_name unless self.class.state_reference_available?
+
     state&.name || state_name
   end
 
   def country_label
+    return nil unless self.class.state_reference_available?
+
     state&.country&.name
   end
 
@@ -69,10 +80,13 @@ class CampDetail < ApplicationRecord
   private
 
   def sync_state_name
+    return unless self.class.state_reference_available?
+
     self.state_name = state.name if state.present?
   end
 
   def area_belongs_to_selected_state
+    return unless self.class.state_reference_available?
     return if area.blank? || state.blank? || area.state_id == state_id
 
     errors.add(:area, "must belong to the selected state or region")

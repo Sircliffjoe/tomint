@@ -2,6 +2,7 @@ module Admin
   class EventsController < ApplicationController
     before_action :authenticate_user!
     before_action :authorize_admin!
+    before_action :refresh_camp_detail_columns, only: %i[ new edit create update deduplicate_camp_details ]
     before_action :set_event, only: %i[ show edit update destroy deduplicate_camp_details ]
 
     def index
@@ -59,11 +60,29 @@ module Admin
 
     private
 
+    def refresh_camp_detail_columns
+      CampDetail.reset_column_information
+    end
+
     def set_event
       @event = Event.friendly_find(params[:id])
     end
 
     def event_params
+      camp_detail_attributes = [
+        :id,
+        :state_name,
+        :area_id,
+        :area_row,
+        :notes,
+        :formatted_notes,
+        :registration_link,
+        :position,
+        :flyer,
+        :_destroy
+      ]
+      camp_detail_attributes.insert(1, :state_id) if CampDetail.state_reference_available?
+
       permitted = params.require(:event).permit(
         :title,
         :description,
@@ -76,19 +95,7 @@ module Admin
         :event_type,
         :image,
         :spotlight,
-        camp_details_attributes: [
-          :id,
-          :state_id,
-          :state_name,
-          :area_id,
-          :area_row,
-          :notes,
-          :formatted_notes,
-          :registration_link,
-          :position,
-          :flyer,
-          :_destroy
-        ]
+        camp_details_attributes: camp_detail_attributes
       )
 
       permitted

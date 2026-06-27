@@ -135,8 +135,9 @@
           </div>
 
           <% if camp_states.any? %>
-            <% camp_details_by_state_id = event.camp_details.select(&:state_id).group_by(&:state_id) %>
-            <% legacy_camp_details_by_state = event.camp_details.reject(&:state_id).group_by(&:state_name) %>
+            <% camp_detail_state_refs = CampDetail.state_reference_available? %>
+            <% camp_details_by_state_id = camp_detail_state_refs ? event.camp_details.select(&:state_id).group_by(&:state_id) : {} %>
+            <% legacy_camp_details_by_state = camp_detail_state_refs ? event.camp_details.reject(&:state_id).group_by(&:state_name) : event.camp_details.group_by(&:state_name) %>
             <% duplicate_count = event.camp_details.group_by(&:location_key).sum { |_key, details| [details.size - 1, 0].max } %>
             <% if duplicate_count.positive? %>
               <div class="camp-admin-duplicate-note">
@@ -213,8 +214,10 @@
                       </div>
                     </div>
 
-                    <% existing_details_for_state = (camp_details_by_state_id[state_record.id] || []) + (legacy_camp_details_by_state[state_record.name] || []) %>
-                    <% main_camp_detail = existing_details_for_state.find { |detail| detail.area_id.blank? } || event.camp_details.build(state: state_record, state_name: state_record.name, position: state_index) %>
+                    <% existing_details_for_state = ((camp_detail_state_refs ? camp_details_by_state_id[state_record.id] : []) || []) + (legacy_camp_details_by_state[state_record.name] || []) %>
+                    <% new_main_camp_attributes = { state_name: state_record.name, position: state_index } %>
+                    <% new_main_camp_attributes[:state] = state_record if camp_detail_state_refs %>
+                    <% main_camp_detail = existing_details_for_state.find { |detail| detail.area_id.blank? } || event.camp_details.build(new_main_camp_attributes) %>
                     <% area_camp_details = existing_details_for_state.select { |detail| detail.area_id.present? } %>
                     <% details_for_state = [main_camp_detail, *area_camp_details] %>
 
@@ -224,7 +227,7 @@
                           <% main_camp_row = detail_index.zero? %>
                           <div class="camp-admin-location">
                             <%= camp_form.hidden_field :id if camp_form.object.persisted? %>
-                            <%= camp_form.hidden_field :state_id, value: state_record.id %>
+                            <%= camp_form.hidden_field :state_id, value: state_record.id if camp_detail_state_refs %>
                             <%= camp_form.hidden_field :state_name %>
                             <%= camp_form.hidden_field :position %>
                             <%= camp_form.hidden_field :area_row, value: "1" unless main_camp_row %>
@@ -286,9 +289,11 @@
                     </div>
 
                     <template data-camp-area-template="<%= state_key %>">
-                      <%= form.fields_for :camp_details, CampDetail.new(state: state_record, state_name: state_record.name, position: state_index), child_index: "#{state_index}000NEW_RECORD" do |camp_form| %>
+                      <% new_area_camp_attributes = { state_name: state_record.name, position: state_index } %>
+                      <% new_area_camp_attributes[:state] = state_record if camp_detail_state_refs %>
+                      <%= form.fields_for :camp_details, CampDetail.new(new_area_camp_attributes), child_index: "#{state_index}000NEW_RECORD" do |camp_form| %>
                         <div class="camp-admin-location">
-                          <%= camp_form.hidden_field :state_id, value: state_record.id %>
+                          <%= camp_form.hidden_field :state_id, value: state_record.id if camp_detail_state_refs %>
                           <%= camp_form.hidden_field :state_name %>
                           <%= camp_form.hidden_field :position %>
                           <%= camp_form.hidden_field :area_row, value: "1" %>

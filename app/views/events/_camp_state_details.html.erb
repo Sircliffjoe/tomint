@@ -1,6 +1,7 @@
 <% active_countries = Country.active.includes(states: [ :country, :areas ]).ordered %>
-<% details_by_state_id = camp_details.select(&:state_id).group_by(&:state_id) %>
-<% legacy_details_by_state = camp_details.reject(&:state_id).group_by(&:state_name) %>
+<% camp_detail_state_refs = CampDetail.state_reference_available? %>
+<% details_by_state_id = camp_detail_state_refs ? camp_details.select(&:state_id).group_by(&:state_id) : {} %>
+<% legacy_details_by_state = camp_detail_state_refs ? camp_details.reject(&:state_id).group_by(&:state_name) : camp_details.group_by(&:state_name) %>
 
 <section class="tom-camp-details" data-camp-details>
   <div class="tom-camp-details__heading">
@@ -34,7 +35,7 @@
         <div class="tom-camp-location-panel <%= 'is-active' if index == 0 %>" id="tom-camp-panel-<%= country.id %>" role="tabpanel">
           <div class="tom-camp-grid" role="list" aria-label="TOM Camp locations in <%= country.name %>">
             <% country.states.active.ordered.each do |state_record| %>
-              <% state_details = ((details_by_state_id[state_record.id] || []) + (legacy_details_by_state[state_record.name] || [])).select(&:public_content?) %>
+              <% state_details = (((camp_detail_state_refs ? details_by_state_id[state_record.id] : []) || []) + (legacy_details_by_state[state_record.name] || [])).select(&:public_content?) %>
               <% locations = state_details.map do |detail|
                 {
                   area: detail.area_label,

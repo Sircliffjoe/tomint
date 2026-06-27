@@ -102,6 +102,22 @@ RSpec.describe "Admin events", type: :request do
       expect(response.body).to include("Greater Accra")
     end
 
+    it "renders the camp editor before the camp detail state reference migration is present" do
+      allow(CampDetail).to receive(:state_reference_available?).and_return(false)
+      state = State.create!(name: "Edo", code: "EDO", country: "Nigeria")
+      event = Event.create!(
+        title: "TOM Camp 2026",
+        event_type: :information
+      )
+
+      get edit_admin_event_path(event)
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include("Edo")
+      expect(response.body).to include("event[camp_details_attributes][0][state_name]")
+      expect(response.body).not_to include("event[camp_details_attributes][0][state_id]")
+    end
+
     it "redirects state coordinators away from national events they cannot edit" do
       state = State.create!(name: "Delta", code: "DEL", country: "Nigeria")
       coordinator = User.create!(
