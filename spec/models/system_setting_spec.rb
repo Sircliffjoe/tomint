@@ -42,5 +42,11 @@ RSpec.describe SystemSetting, type: :model do
       SystemSetting.set('custom_key', 'custom_value')
       expect(SystemSetting.get('custom_key')).to eq('custom_value')
     end
+
+    it 'works when solid_cache_store is active' do
+      allow(Rails).to receive(:cache).and_return(ActiveSupport::Cache.lookup_store(:solid_cache_store))
+      expect { SystemSetting.set('cache_test_key', 'cache_test_val') }.not_to raise_error
+      expect(SystemSetting.get('cache_test_key')).to eq('cache_test_val')
+    end
   end
 end

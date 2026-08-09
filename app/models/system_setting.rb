@@ -20,7 +20,11 @@ class SystemSetting < ApplicationRecord
     setting.value = value.to_s
     setting.description = description if description.present?
     setting.save!
-    Rails.cache.write("system_setting/#{key}", setting.value)
+    begin
+      Rails.cache.write("system_setting/#{key}", setting.value)
+    rescue StandardError => e
+      Rails.logger.error("SystemSetting cache write failed for #{key}: #{e.message}")
+    end
     setting.value
   end
 
