@@ -12,6 +12,7 @@ class ApplicationController < ActionController::Base
   stale_when_importmap_changes
   helper_method :admin_area?, :dashboard_path_for_current_user
 
+  before_action :check_maintenance_mode
   before_action :load_global_modal_content
   before_action :enforce_password_change
 
@@ -66,5 +67,34 @@ class ApplicationController < ActionController::Base
   def user_not_authorized
     redirect_back fallback_location: dashboard_path_for_current_user,
                   alert: "You are not allowed to perform that action."
+  end
+
+  def check_maintenance_mode
+    return if maintenance_exempt?
+
+    respond_to do |format|
+      format.html do
+        render "errors/maintenance", status: :service_unavailable, layout: "maintenance"
+      end
+      format.json do
+        render json: {
+          error: "Site is currently undergoing scheduled maintenance.",
+          maintenance: true,
+          message: SystemSetting.maintenance_message
+        }, status: :service_unavailable
+      end
+      format.any do
+        render "errors/maintenance", status: :service_unavailable, layout: "maintenance"
+      end
+    end
+  end
+
+  def maintenance_exempt?
+    return true unless SystemSetting.maintenance_mode?
+    return true if current_user&.super_admin?
+    return true if controller_name == "health" && action_name == "show"
+    return true if devise_controller?
+
+    false
   end
 end

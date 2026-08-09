@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+  <head>
+    <title>System Maintenance - Tomint</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="#14532d">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="h-full bg-slate-950 text-slate-100 flex flex-col justify-between antialiased selection:bg-emerald-500 selection:text-white font-sans relative overflow-x-hidden">
+    <!-- Background Decorator -->
+    <div class="fixed inset-0 z-0 opacity-20 pointer-events-none">
+      <div class="absolute -top-40 -left-40 w-96 h-96 bg-emerald-500 rounded-full filter blur-[128px]"></div>
+      <div class="absolute -bottom-40 -right-40 w-96 h-96 bg-amber-500 rounded-full filter blur-[128px]"></div>
+    </div>
+
+    <!-- Content -->
+    <div class="relative z-10 flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8">
+      <%= yield %>
+    </div>
+
+    <!-- Footer -->
+    <footer class="relative z-10 text-center py-6 text-xs text-slate-500 border-t border-slate-900/80 bg-slate-950/60 backdrop-blur-sm">
+      <p>&copy; <%= Time.current.year %> TOM International. All rights reserved.</p>
+    </footer>
+  </body>
+</html>

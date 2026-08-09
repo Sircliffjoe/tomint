@@ -1,0 +1,15 @@
+<% if user_signed_in? && current_user.super_admin? && SystemSetting.maintenance_mode? %>
+  <div class="bg-amber-500 text-white px-4 py-2 text-xs font-semibold flex items-center justify-between shadow-md z-50 relative border-b border-amber-600">
+    <div class="flex items-center space-x-2">
+      <span class="flex h-2 w-2 relative">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+      </span>
+      <span><strong>MAINTENANCE MODE IS ACTIVE:</strong> The platform is currently locked for regular users and guests.</span>
+    </div>
+    <div class="flex items-center space-x-3">
+      <%= link_to "Manage Maintenance", admin_maintenance_path, class: "underline hover:text-amber-100 font-bold" %>
+      <%= button_to "Turn Off", toggle_admin_maintenance_path, method: :post, class: "bg-white text-amber-600 hover:bg-amber-50 px-2.5 py-0.5 rounded font-bold text-[11px] transition-colors cursor-pointer shadow-sm" %>
+    </div>
+  </div>
+<% end %>

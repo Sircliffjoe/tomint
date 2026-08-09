@@ -1,0 +1,117 @@
+<% content_for :title, "Platform Maintenance Mode" %>
+
+<div class="max-w-5xl mx-auto space-y-6">
+  <!-- Page Title & Header -->
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-200 pb-5">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-900 flex items-center gap-2">
+        <svg class="w-7 h-7 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+        </svg>
+        Platform Maintenance Mode
+      </h1>
+      <p class="text-sm text-gray-500 mt-1">Control system accessibility for all public users and guests across the platform.</p>
+    </div>
+
+    <!-- Toggle Action Header Button -->
+    <div>
+      <% if @maintenance_active %>
+        <%= button_to toggle_admin_maintenance_path, method: :post, class: "px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold text-sm shadow flex items-center gap-2 transition-all cursor-pointer" do %>
+          <span class="w-3 h-3 rounded-full bg-white animate-pulse"></span>
+          <span>Disable Maintenance Mode</span>
+        <% end %>
+      <% else %>
+        <%= button_to toggle_admin_maintenance_path, method: :post, class: "px-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-lg font-semibold text-sm shadow flex items-center gap-2 transition-all cursor-pointer" do %>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+          <span>Enable Maintenance Mode</span>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Status Card -->
+  <div class="rounded-xl border p-6 shadow-sm transition-all <%= @maintenance_active ? 'bg-amber-50/80 border-amber-200' : 'bg-green-50/80 border-green-200' %>">
+    <div class="flex items-start justify-between">
+      <div class="space-y-2">
+        <div class="flex items-center space-x-3">
+          <span class="px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-full <%= @maintenance_active ? 'bg-amber-500 text-white animate-pulse' : 'bg-emerald-600 text-white' %>">
+            <%= @maintenance_active ? 'Maintenance Mode ACTIVE' : 'System Operational' %>
+          </span>
+          <span class="text-xs text-gray-500">Live Status</span>
+        </div>
+        <h2 class="text-lg font-bold text-gray-900">
+          <%= @maintenance_active ? 'Platform is currently locked for regular users and guests.' : 'Platform is fully accessible to all visitors and registered users.' %>
+        </h2>
+        <p class="text-sm text-gray-600 max-w-2xl">
+          <%= @maintenance_active ? 'Only Super Admin users can log in and browse the site. All other requests will be served the maintenance screen.' : 'Enabling maintenance mode will immediately lock out non-admin users and display the custom maintenance banner.' %>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Form & Live Preview Grid -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Configuration Form -->
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-5">
+      <h3 class="text-lg font-bold text-gray-800 border-b border-gray-100 pb-3">Maintenance Settings</h3>
+
+      <%= form_with url: admin_maintenance_path, method: :patch, class: "space-y-5" do |f| %>
+        <div>
+          <%= f.label :maintenance_message, "Custom Maintenance Message", class: "block text-sm font-semibold text-gray-700 mb-1" %>
+          <%= f.text_area :maintenance_message, value: @maintenance_message, rows: 4, class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 text-sm", placeholder: "Explain why the site is down and when service will resume..." %>
+          <p class="text-xs text-gray-500 mt-1">This message will be shown on the maintenance page to guests and users.</p>
+        </div>
+
+        <div>
+          <%= f.label :maintenance_end_time, "Estimated Completion Time (Optional)", class: "block text-sm font-semibold text-gray-700 mb-1" %>
+          <%= f.datetime_field :maintenance_end_time, value: (@maintenance_end_time&.strftime("%Y-%m-%dT%H:%M")), class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 text-sm" %>
+          <p class="text-xs text-gray-500 mt-1">If set, a countdown timer will appear for visitors.</p>
+        </div>
+
+        <div class="pt-3 border-t border-gray-100 flex items-center gap-3">
+          <%= f.button "Save Settings", name: "toggle", value: "save", class: "px-5 py-2 bg-gray-900 hover:bg-gray-800 text-white rounded-lg text-sm font-semibold shadow transition-all cursor-pointer" %>
+
+          <% if @maintenance_active %>
+            <%= f.button "Disable Maintenance", name: "toggle", value: "disable", class: "px-5 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-semibold shadow transition-all cursor-pointer" %>
+          <% else %>
+            <%= f.button "Enable Maintenance", name: "toggle", value: "enable", class: "px-5 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg text-sm font-semibold shadow transition-all cursor-pointer" %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Live User View Preview -->
+    <div class="bg-slate-900 text-slate-100 rounded-xl border border-slate-800 p-6 shadow-sm flex flex-col justify-between space-y-4">
+      <div>
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
+          <h3 class="text-sm font-bold uppercase tracking-wider text-slate-400">User Experience Preview</h3>
+          <span class="text-xs px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-mono">503 Service Unavailable</span>
+        </div>
+
+        <div class="space-y-4 text-center py-6 px-4 bg-slate-950/60 rounded-xl border border-slate-800">
+          <div class="inline-flex items-center space-x-2 px-2.5 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-[10px] font-semibold uppercase tracking-wider">
+            <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+            <span>Maintenance Mode Active</span>
+          </div>
+
+          <h4 class="text-xl font-bold text-white">System Under Maintenance</h4>
+          <p class="text-xs text-slate-300 max-w-md mx-auto leading-relaxed">
+            <%= @maintenance_message %>
+          </p>
+
+          <% if @maintenance_end_time.present? %>
+            <div class="bg-slate-900 border border-slate-800 rounded-lg p-3 max-w-xs mx-auto text-center">
+              <p class="text-[10px] text-slate-400 uppercase tracking-wider">Estimated End Time</p>
+              <p class="text-sm font-mono font-bold text-emerald-400"><%= @maintenance_end_time.strftime("%b %d, %Y at %I:%M %p") %></p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="text-[11px] text-slate-400 text-center border-t border-slate-800/80 pt-3">
+        Non-admin users and guests attempting to access any route will see this screen.
+      </div>
+    </div>
+  </div>
+</div>

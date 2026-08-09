@@ -44,6 +44,7 @@
   </head>
 
   <body class="bg-gray-50 font-sans text-gray-900 antialiased">
+    <%= render "shared/maintenance_banner" %>
     <% if user_signed_in? && admin_area? %>
       <%= render "shared/sidebar" %>
       <%= render "shared/header" %>

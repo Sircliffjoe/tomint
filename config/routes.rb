@@ -41,6 +41,9 @@ Rails.application.routes.draw do
     end
     resources :pages
     resources :announcements
+    resource :maintenance, only: [ :show, :update ] do
+      post :toggle, on: :member
+    end
   end
 
 

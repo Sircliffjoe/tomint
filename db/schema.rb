@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_27_170000) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_08_000000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -371,6 +371,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_27_170000) do
     t.index ["country_id", "code"], name: "index_states_on_country_id_and_code", unique: true
     t.index ["country_id", "name"], name: "index_states_on_country_id_and_name", unique: true
     t.index ["country_id"], name: "index_states_on_country_id"
+  end
+
+  create_table "system_settings", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "description"
+    t.string "key", null: false
+    t.datetime "updated_at", null: false
+    t.text "value"
+    t.index ["key"], name: "index_system_settings_on_key", unique: true
   end
 
   create_table "training_registrations", force: :cascade do |t|
