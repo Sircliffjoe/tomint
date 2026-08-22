@@ -216,92 +216,8 @@ User.find_or_create_by!(email: admin_email) do |user|
 end
 
 puts "Created super admin user: #{admin_email}"
-
-# Report Categories
-# Clear existing reports and non-core categories as requested
-Report.delete_all
-# Sync core categories with directorates
-mappings = {
-  "Annual Report" => "Administration",
-  "Camp Report" => "Outreaches",
-  "Training Report" => "Training",
-  "Financial Report" => "Finance"
-}
-
-mappings.each do |cat_name, dir_name|
-  dir = Directorate.find_by(name: dir_name)
-  cat = ReportCategory.find_or_create_by!(name: cat_name)
-  cat.update!(directorate: dir) if dir
-end
-
-puts "Synced #{ReportCategory.count} report categories with directorates."
-
-# Events
-Event.find_or_create_by!(title: "National Youth Conference 2026") do |event|
-  event.start_time = DateTime.new(2026, 8, 15, 9, 0, 0)
-  event.end_time = DateTime.new(2026, 8, 17, 17, 0, 0)
-  event.location = "Camp Ground, Lagos-Ibadan Expressway"
-  event.state = nil # National
-  event.description = "<div><strong>Theme: The Rising Generation</strong><br>Join thousands of teenagers from across the nation for 3 days of intense worship, word, and workshops.</div>"
-end
-
-Event.find_or_create_by!(title: "Lagos State Workers Retreat") do |event|
-  event.start_time = DateTime.new(2026, 3, 10, 8, 0, 0)
-  event.end_time = DateTime.new(2026, 3, 10, 16, 0, 0)
-  event.location = "Lagos State Secretariat"
-  event.state = State.find_by(name: "Lagos")
-  event.description = "<div>Annual retreat for all TOM workers in Lagos State. A time of refreshing and strategic planning.</div>"
-end
-
-puts "Created #{Event.count} events."
-
-# Trainings
-training = Training.find_or_create_by!(title: "Foundations of Leadership") do |t|
-  t.category = "Leadership"
-  t.description = "<div>A comprehensive course for new leaders in the ministry. Covers the basics of servant leadership, integrity, and vision.</div>"
-end
-
-TrainingSession.find_or_create_by!(title: "The Heart of a Servant", training: training) do |s|
-  s.media_url = "https://www.youtube.com/embed/dQw4w9WgXcQ" # Placeholder
-  s.duration = 45
-end
-
-TrainingSession.find_or_create_by!(title: "Vision and Strategy", training: training) do |s|
-  s.media_url = "https://www.youtube.com/embed/dQw4w9WgXcQ" # Placeholder
-  s.duration = 60
-end
-
-training2 = Training.find_or_create_by!(title: "Effective Evangelism") do |t|
-  t.category = "Outreach"
-  t.description = "<div>Learn how to share the gospel effectively with teenagers in today's culture.</div>"
-end
-
-TrainingSession.find_or_create_by!(title: "Understanding Gen Z", training: training2) do |s|
-  s.media_url = "https://www.youtube.com/embed/dQw4w9WgXcQ" # Placeholder
-  s.duration = 50
-end
-
-puts "Created #{Training.count} trainings and sessions."
-
-# Blog Posts
-admin = User.find_by(email: "admin@tomint.org")
-
-BlogPost.find_or_create_by!(title: "Successfully Completed the National Youth Camp") do |post|
-  post.body = "<div>We thank God for a successful camp meeting. Over 500 teenagers were in attendance, and many gave their lives to Christ. The atmosphere was charged with prayer and the word. We look forward to next year's edition with great anticipation.</div>"
-  post.published_at = 1.week.ago
-  post.author = admin
-end
-
-BlogPost.find_or_create_by!(title: "New Training Center Opening Soon") do |post|
-  post.body = "<div>We are excited to announce that our new training facility in Abuja will be opening next month. This center will serve as a hub for leadership development and discipleship training. Stay tuned for more details on the dedication ceremony.</div>"
-  post.published_at = 2.days.ago
-  post.author = admin
-end
-
-puts "Created #{BlogPost.count} blog posts."
-
 # ==========================================
-# TOM ASK SEED DATA (Categories & Settings)
+# TOM ASK SEED DATA (Categories)
 # ==========================================
 puts "Seeding TOM ASK categories..."
 
@@ -331,3 +247,42 @@ end
 
 puts "Created #{AskCategory.count} TOM ASK categories."
 
+dokku run tomint bin/rails runner "                                                                                                                     
+    ask_categories = [                                                                                                                                      
+      { name: 'Faith & God', slug: 'faith-god', color: 'emerald', position: 1, description: 'Questions about God, the Bible, faith, prayer, and spiritual   
+  doubts.' },                                                                                                                                               
+      { name: 'Family', slug: 'family', color: 'blue', position: 2, description: 'Navigating family relationships, parents, siblings, and home life.' },    
+      { name: 'Friendship', slug: 'friendship', color: 'purple', position: 3, description: 'Making true friends, handling betrayal, loneliness, and social  
+  dynamics.' },                                                                                                                                             
+      { name: 'School & Academics', slug: 'school-academics', color: 'amber', position: 4, description: 'Exam stress, career choices, teachers, and school  
+  pressure.' },                                                                                                                                             
+      { name: 'Relationships & Dating', slug: 'relationships-dating', color: 'rose', position: 5, description: 'Feelings, crushes, boundaries, purity, and  
+  relationship questions.' },                                                                                                                               
+      { name: 'Body & Growing Up', slug: 'body-growing-up', color: 'orange', position: 6, description: 'Changes during puberty, physical appearance, and    
+  self-image.' },                                                                                                                                           
+      { name: 'Emotions & Mental Well-being', slug: 'emotions', color: 'blue', position: 7, description: 'Dealing with anxiety, sadness, anger, fear, and   
+  emotional struggles.' },                                                                                                                                  
+      { name: 'Peer Pressure', slug: 'peer-pressure', color: 'purple', position: 8, description: 'Standing strong against negative habits, trends, and      
+  pressure to fit in.' },                                                                                                                                   
+      { name: 'Identity & Purpose', slug: 'identity-purpose', color: 'emerald', position: 9, description: 'Discovering who you are, God\'s calling, talents,
+  and future.' },                                                                                                                                           
+      { name: 'Something Happened', slug: 'something-happened', color: 'rose', position: 10, description: 'Personal incidents, sensitive concerns, or       
+  sharing what happened to you.' },                                                                                                                         
+      { name: 'Something Else', slug: 'something-else', color: 'gray', position: 11, description: 'Any other question or concern not covered in the above   
+  topics.' }                                                                                                                                                
+    ]                                                                                                                                                       
+                                                                                                                                                            
+    ask_categories.each do |cat_data|                                                                                                                       
+      cat = AskCategory.find_or_initialize_by(slug: cat_data[:slug])                                                                                        
+      cat.assign_attributes(                                                                                                                                
+        name: cat_data[:name],                                                                                                                              
+        color: cat_data[:color],                                                                                                                            
+        position: cat_data[:position],                                                                                                                      
+        description: cat_data[:description],                                                                                                                
+        active: true                                                                                                                                        
+      )                                                                                                                                                     
+      cat.save!                                                                                                                                             
+    end 
+  
+    puts \"Successfully seeded #{AskCategory.count} TOM ASK categories.\"                                                                                   
+    "
