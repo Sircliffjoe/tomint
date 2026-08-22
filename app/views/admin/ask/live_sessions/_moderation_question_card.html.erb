@@ -1,0 +1,25 @@
+<div id="mod-pending-<%= question.id %>" class="p-4 rounded-2xl bg-stone-50 border border-stone-200 hover:border-emerald-300 transition-all space-y-3">
+  <div class="flex items-center justify-between text-[11px] text-stone-400">
+    <span class="font-mono font-bold text-stone-600">#<%= question.id %> &bull; <%= time_ago_in_words(question.created_at) %> ago</span>
+    <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800">Pending</span>
+  </div>
+
+  <p class="text-sm font-semibold text-stone-900 leading-snug">
+    <%= question.body %>
+  </p>
+
+  <div class="flex items-center justify-end gap-2 pt-2 border-t border-stone-200/60">
+    <%= button_to approve_question_admin_ask_live_session_path(live_session, question_id: question.id),
+      method: :post,
+      class: "px-3.5 py-1.5 rounded-xl bg-emerald-700 text-white text-xs font-bold hover:bg-emerald-800 shadow cursor-pointer" do %>
+      &check; Approve
+    <% end %>
+
+    <%= button_to reject_question_admin_ask_live_session_path(live_session, question_id: question.id),
+      method: :post,
+      data: { turbo_confirm: "Reject this question?" },
+      class: "px-3 py-1.5 rounded-xl bg-red-100 text-red-700 text-xs font-bold hover:bg-red-200 cursor-pointer" do %>
+      &times; Reject
+    <% end %>
+  </div>
+</div>

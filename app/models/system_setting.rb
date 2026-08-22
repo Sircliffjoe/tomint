@@ -63,6 +63,22 @@ class SystemSetting < ApplicationRecord
     "We are currently performing scheduled maintenance to improve our platform services. Please check back shortly."
   end
 
+  def self.ask_headline
+    get("ask_headline", "You can ask. We will listen.")
+  end
+
+  def self.ask_intro_text
+    get("ask_intro_text", "You don't need to have the right words. Ask us about something you're struggling with, something you don't understand, or something that's bothering you. You can remain completely anonymous.")
+  end
+
+  def self.ask_privacy_notice
+    get("ask_privacy_notice", "Your privacy matters to us. You don't have to provide your name or contact information to ask a question. However, if you tell us that you or someone else may be in serious danger, TOM may need to take appropriate steps to help protect you or someone else.")
+  end
+
+  def self.ask_urgent_help_text
+    get("ask_urgent_help_text", "If you are in immediate danger or distress, our trained safeguarding team is here for you. We treat every urgent concern with highest priority and confidentiality.")
+  end
+
   def self.table_exists_safe?
     connection.table_exists?("system_settings")
   rescue StandardError

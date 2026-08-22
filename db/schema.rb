@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_08_100000) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_20_140000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -68,6 +68,173 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_08_100000) do
     t.bigint "state_id", null: false
     t.datetime "updated_at", null: false
     t.index ["state_id"], name: "index_areas_on_state_id"
+  end
+
+  create_table "ask_assignments", force: :cascade do |t|
+    t.boolean "active", default: true, null: false
+    t.bigint "ask_question_id", null: false
+    t.datetime "assigned_at", null: false
+    t.bigint "assigned_by_id", null: false
+    t.bigint "assignee_id", null: false
+    t.datetime "completed_at"
+    t.datetime "created_at", null: false
+    t.text "notes"
+    t.datetime "updated_at", null: false
+    t.index ["ask_question_id", "active"], name: "index_ask_assignments_on_ask_question_id_and_active"
+    t.index ["ask_question_id"], name: "index_ask_assignments_on_ask_question_id"
+    t.index ["assigned_by_id"], name: "index_ask_assignments_on_assigned_by_id"
+    t.index ["assignee_id"], name: "index_ask_assignments_on_assignee_id"
+  end
+
+  create_table "ask_categories", force: :cascade do |t|
+    t.boolean "active", default: true, null: false
+    t.string "color", default: "emerald"
+    t.datetime "created_at", null: false
+    t.text "description"
+    t.string "icon"
+    t.string "name", null: false
+    t.integer "position", default: 0, null: false
+    t.integer "questions_count", default: 0, null: false
+    t.string "slug", null: false
+    t.datetime "updated_at", null: false
+    t.index ["active", "position"], name: "index_ask_categories_on_active_and_position"
+    t.index ["slug"], name: "index_ask_categories_on_slug", unique: true
+  end
+
+  create_table "ask_escalations", force: :cascade do |t|
+    t.text "action_taken_notes"
+    t.bigint "ask_question_id", null: false
+    t.bigint "assigned_safeguarding_lead_id"
+    t.datetime "created_at", null: false
+    t.bigint "created_by_id", null: false
+    t.integer "escalation_type", default: 0, null: false
+    t.text "reason", null: false
+    t.datetime "resolved_at"
+    t.integer "severity", default: 2, null: false
+    t.integer "status", default: 0, null: false
+    t.datetime "updated_at", null: false
+    t.index ["ask_question_id"], name: "index_ask_escalations_on_ask_question_id"
+    t.index ["assigned_safeguarding_lead_id"], name: "index_ask_escalations_on_assigned_safeguarding_lead_id"
+    t.index ["created_by_id"], name: "index_ask_escalations_on_created_by_id"
+    t.index ["escalation_type"], name: "index_ask_escalations_on_escalation_type"
+    t.index ["status"], name: "index_ask_escalations_on_status"
+  end
+
+  create_table "ask_internal_notes", force: :cascade do |t|
+    t.bigint "ask_question_id", null: false
+    t.text "body", null: false
+    t.datetime "created_at", null: false
+    t.boolean "safeguarding_only", default: false, null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["ask_question_id"], name: "index_ask_internal_notes_on_ask_question_id"
+    t.index ["user_id"], name: "index_ask_internal_notes_on_user_id"
+  end
+
+  create_table "ask_live_sessions", force: :cascade do |t|
+    t.string "access_code", null: false
+    t.boolean "anonymous_mode", default: true, null: false
+    t.datetime "created_at", null: false
+    t.bigint "created_by_id", null: false
+    t.bigint "current_question_id"
+    t.text "description"
+    t.integer "display_mode", default: 0, null: false
+    t.datetime "end_at"
+    t.bigint "event_id"
+    t.boolean "moderation_required", default: true, null: false
+    t.integer "participants_count", default: 0, null: false
+    t.integer "questions_count", default: 0, null: false
+    t.string "slug", null: false
+    t.datetime "start_at"
+    t.integer "status", default: 0, null: false
+    t.string "title", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "voting_enabled", default: true, null: false
+    t.index ["access_code"], name: "index_ask_live_sessions_on_access_code", unique: true
+    t.index ["created_by_id"], name: "index_ask_live_sessions_on_created_by_id"
+    t.index ["event_id"], name: "index_ask_live_sessions_on_event_id"
+    t.index ["slug"], name: "index_ask_live_sessions_on_slug", unique: true
+    t.index ["status"], name: "index_ask_live_sessions_on_status"
+  end
+
+  create_table "ask_moderation_actions", force: :cascade do |t|
+    t.string "action", null: false
+    t.bigint "ask_question_id", null: false
+    t.datetime "created_at", null: false
+    t.text "details"
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["ask_question_id"], name: "index_ask_moderation_actions_on_ask_question_id"
+    t.index ["user_id"], name: "index_ask_moderation_actions_on_user_id"
+  end
+
+  create_table "ask_questions", force: :cascade do |t|
+    t.text "anonymized_body"
+    t.string "anonymous_identifier"
+    t.datetime "answered_at"
+    t.bigint "ask_category_id"
+    t.bigint "ask_live_session_id"
+    t.text "body", null: false
+    t.datetime "closed_at"
+    t.string "contact_details"
+    t.integer "contact_method", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.boolean "featured", default: false, null: false
+    t.string "ip_hash"
+    t.text "moderation_reason"
+    t.boolean "pinned", default: false, null: false
+    t.integer "priority", default: 1, null: false
+    t.string "public_reference", null: false
+    t.integer "response_preference", default: 0, null: false
+    t.datetime "reviewed_at"
+    t.boolean "safeguarding_flag", default: false, null: false
+    t.integer "status", default: 0, null: false
+    t.integer "submission_type", default: 0, null: false
+    t.datetime "submitted_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "upvotes_count", default: 0, null: false
+    t.boolean "urgent_flag", default: false, null: false
+    t.string "user_agent_hash"
+    t.integer "views_count", default: 0, null: false
+    t.integer "visibility", default: 0, null: false
+    t.index ["ask_category_id"], name: "index_ask_questions_on_ask_category_id"
+    t.index ["ask_live_session_id", "status", "upvotes_count"], name: "idx_ask_questions_on_session_status_upvotes"
+    t.index ["ask_live_session_id"], name: "index_ask_questions_on_ask_live_session_id"
+    t.index ["featured"], name: "index_ask_questions_on_featured"
+    t.index ["pinned"], name: "index_ask_questions_on_pinned"
+    t.index ["public_reference"], name: "index_ask_questions_on_public_reference", unique: true
+    t.index ["safeguarding_flag"], name: "index_ask_questions_on_safeguarding_flag"
+    t.index ["status"], name: "index_ask_questions_on_status"
+    t.index ["submission_type"], name: "index_ask_questions_on_submission_type"
+    t.index ["submitted_at"], name: "index_ask_questions_on_submitted_at"
+    t.index ["urgent_flag"], name: "index_ask_questions_on_urgent_flag"
+    t.index ["visibility"], name: "index_ask_questions_on_visibility"
+  end
+
+  create_table "ask_responses", force: :cascade do |t|
+    t.bigint "ask_question_id", null: false
+    t.text "body", null: false
+    t.datetime "created_at", null: false
+    t.datetime "published_at"
+    t.integer "response_type", default: 0, null: false
+    t.datetime "sent_at"
+    t.integer "status", default: 0, null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.integer "visibility", default: 0, null: false
+    t.index ["ask_question_id"], name: "index_ask_responses_on_ask_question_id"
+    t.index ["status"], name: "index_ask_responses_on_status"
+    t.index ["user_id"], name: "index_ask_responses_on_user_id"
+  end
+
+  create_table "ask_votes", force: :cascade do |t|
+    t.bigint "ask_question_id", null: false
+    t.datetime "created_at", null: false
+    t.string "ip_hash"
+    t.datetime "updated_at", null: false
+    t.string "voter_token", null: false
+    t.index ["ask_question_id", "voter_token"], name: "index_ask_votes_on_ask_question_id_and_voter_token", unique: true
+    t.index ["ask_question_id"], name: "index_ask_votes_on_ask_question_id"
   end
 
   create_table "blog_posts", force: :cascade do |t|
@@ -463,6 +630,23 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_08_100000) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "areas", "states"
+  add_foreign_key "ask_assignments", "ask_questions"
+  add_foreign_key "ask_assignments", "users", column: "assigned_by_id"
+  add_foreign_key "ask_assignments", "users", column: "assignee_id"
+  add_foreign_key "ask_escalations", "ask_questions"
+  add_foreign_key "ask_escalations", "users", column: "assigned_safeguarding_lead_id"
+  add_foreign_key "ask_escalations", "users", column: "created_by_id"
+  add_foreign_key "ask_internal_notes", "ask_questions"
+  add_foreign_key "ask_internal_notes", "users"
+  add_foreign_key "ask_live_sessions", "events"
+  add_foreign_key "ask_live_sessions", "users", column: "created_by_id"
+  add_foreign_key "ask_moderation_actions", "ask_questions"
+  add_foreign_key "ask_moderation_actions", "users"
+  add_foreign_key "ask_questions", "ask_categories"
+  add_foreign_key "ask_questions", "ask_live_sessions"
+  add_foreign_key "ask_responses", "ask_questions"
+  add_foreign_key "ask_responses", "users"
+  add_foreign_key "ask_votes", "ask_questions"
   add_foreign_key "blog_posts", "users", column: "author_id"
   add_foreign_key "camp_details", "areas"
   add_foreign_key "camp_details", "events"

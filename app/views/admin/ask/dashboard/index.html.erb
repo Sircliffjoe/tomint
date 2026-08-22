@@ -1,0 +1,202 @@
+<% content_for :title, "TOM ASK Administration Dashboard" %>
+
+<div class="space-y-8">
+  <!-- Header -->
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div>
+      <div class="flex items-center gap-2">
+        <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">
+          TOM International
+        </span>
+        <span class="text-xs text-stone-400">&bull; Anonymous Teen Engagement &amp; Q&amp;A</span>
+      </div>
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-stone-900 mt-1">TOM ASK Dashboard</h1>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <%= link_to admin_ask_questions_path, class: "px-4 py-2 rounded-xl bg-emerald-700 text-white font-bold text-xs sm:text-sm hover:bg-emerald-800 transition-all shadow" do %>
+        Review Queue
+      <% end %>
+      <%= link_to new_admin_ask_live_session_path, class: "px-4 py-2 rounded-xl bg-lime-500 text-emerald-950 font-bold text-xs sm:text-sm hover:bg-lime-400 transition-all shadow" do %>
+        + New Live Session
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Stat Counters Grid -->
+  <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+    <!-- New Intake -->
+    <%= link_to admin_ask_questions_path(status: "new_intake"), class: "p-5 rounded-2xl bg-white border border-stone-200/90 shadow-sm hover:border-blue-300 hover:shadow-md transition-all block group" do %>
+      <span class="text-xs font-bold text-stone-500 uppercase tracking-wider block">New Intake</span>
+      <p class="text-3xl font-black text-blue-600 mt-1"><%= @stats[:new_intake] %></p>
+      <span class="text-[11px] text-stone-400 group-hover:text-blue-600 transition-colors">Needs initial review &rarr;</span>
+    <% end %>
+
+    <!-- Under Review -->
+    <%= link_to admin_ask_questions_path(status: "under_review"), class: "p-5 rounded-2xl bg-white border border-stone-200/90 shadow-sm hover:border-amber-300 hover:shadow-md transition-all block group" do %>
+      <span class="text-xs font-bold text-stone-500 uppercase tracking-wider block">Under Review</span>
+      <p class="text-3xl font-black text-amber-600 mt-1"><%= @stats[:under_review] %></p>
+      <span class="text-[11px] text-stone-400 group-hover:text-amber-600 transition-colors">In moderation &rarr;</span>
+    <% end %>
+
+    <!-- Awaiting Response -->
+    <%= link_to admin_ask_questions_path(status: "awaiting_response"), class: "p-5 rounded-2xl bg-white border border-stone-200/90 shadow-sm hover:border-indigo-300 hover:shadow-md transition-all block group" do %>
+      <span class="text-xs font-bold text-stone-500 uppercase tracking-wider block">Awaiting Response</span>
+      <p class="text-3xl font-black text-indigo-600 mt-1"><%= @stats[:awaiting_response] %></p>
+      <span class="text-[11px] text-stone-400 group-hover:text-indigo-600 transition-colors">Assigned to responders &rarr;</span>
+    <% end %>
+
+    <!-- Follow-up Required -->
+    <%= link_to admin_ask_questions_path(status: "follow_up_required"), class: "p-5 rounded-2xl bg-white border border-stone-200/90 shadow-sm hover:border-purple-300 hover:shadow-md transition-all block group" do %>
+      <span class="text-xs font-bold text-stone-500 uppercase tracking-wider block">Follow-up</span>
+      <p class="text-3xl font-black text-purple-600 mt-1"><%= @stats[:follow_up] %></p>
+      <span class="text-[11px] text-stone-400 group-hover:text-purple-600 transition-colors">Private discussions &rarr;</span>
+    <% end %>
+
+    <!-- Answered / Published -->
+    <%= link_to admin_ask_questions_path(status: "answered"), class: "p-5 rounded-2xl bg-white border border-stone-200/90 shadow-sm hover:border-emerald-300 hover:shadow-md transition-all block group" do %>
+      <span class="text-xs font-bold text-stone-500 uppercase tracking-wider block">Answered &amp; Resolved</span>
+      <p class="text-3xl font-black text-emerald-600 mt-1"><%= @stats[:answered] %></p>
+      <span class="text-[11px] text-stone-400 group-hover:text-emerald-600 transition-colors">Published or completed &rarr;</span>
+    <% end %>
+
+    <!-- Live Sessions -->
+    <%= link_to admin_ask_live_sessions_path, class: "p-5 rounded-2xl bg-white border border-stone-200/90 shadow-sm hover:border-lime-400 hover:shadow-md transition-all block group" do %>
+      <span class="text-xs font-bold text-stone-500 uppercase tracking-wider block">Live Sessions</span>
+      <p class="text-3xl font-black text-emerald-800 mt-1"><%= @stats[:live_sessions] %></p>
+      <span class="text-[11px] text-stone-400 group-hover:text-emerald-800 transition-colors">Active live Q&amp;A &rarr;</span>
+    <% end %>
+
+    <!-- Safeguarding Alert Box (Restricted) -->
+    <% if current_user.can_access_safeguarding? %>
+      <%= link_to admin_ask_safeguarding_index_path, class: "p-5 rounded-2xl bg-rose-50 border border-rose-200 shadow-sm hover:border-rose-400 hover:shadow-md transition-all block group col-span-2 sm:col-span-1 lg:col-span-2" do %>
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-rose-800 uppercase tracking-wider">Safeguarding &bull; Restricted</span>
+          <% if @stats[:urgent].to_i > 0 %>
+            <span class="px-2 py-0.5 rounded text-[10px] font-black bg-rose-600 text-white animate-pulse">URGENT</span>
+          <% end %>
+        </div>
+        <div class="flex items-baseline gap-4 mt-1">
+          <p class="text-3xl font-black text-rose-700"><%= @stats[:safeguarding] %></p>
+          <span class="text-xs text-rose-600 font-semibold">(<%= @stats[:urgent] %> urgent cases)</span>
+        </div>
+        <span class="text-[11px] text-rose-700 group-hover:underline">Open confidential hub &rarr;</span>
+      <% end %>
+    <% end %>
+  </div>
+
+  <!-- Main Content Grid: Active Questions Queue & Actions Feed -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Questions Queue Table (2 Cols) -->
+    <div class="lg:col-span-2 bg-white rounded-3xl border border-stone-200/90 shadow-sm overflow-hidden">
+      <div class="p-6 border-b border-stone-100 flex items-center justify-between">
+        <div>
+          <h2 class="text-lg font-bold text-stone-900">Questions Requiring Action</h2>
+          <p class="text-xs text-stone-500">Unanswered submissions in the moderation and response workflow.</p>
+        </div>
+        <%= link_to "View all queue &rarr;".html_safe, admin_ask_questions_path, class: "text-xs font-bold text-emerald-700 hover:underline" %>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs">
+          <thead class="bg-stone-50 text-stone-500 font-semibold border-b border-stone-100">
+            <tr>
+              <th class="py-3 px-4">Ref / Question</th>
+              <th class="py-3 px-3">Category</th>
+              <th class="py-3 px-3">Priority</th>
+              <th class="py-3 px-3">Status</th>
+              <th class="py-3 px-4 text-right">Action</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-stone-100">
+            <% if @recent_questions.any? %>
+              <% @recent_questions.each do |q| %>
+                <tr class="hover:bg-stone-50/80 transition-colors">
+                  <td class="py-3.5 px-4 max-w-xs">
+                    <span class="font-mono text-[10px] text-stone-400 block"><%= q.public_reference %></span>
+                    <p class="font-semibold text-stone-900 line-clamp-1"><%= q.display_body %></p>
+                  </td>
+                  <td class="py-3.5 px-3 whitespace-nowrap">
+                    <span class="px-2 py-0.5 rounded text-[10px] font-semibold <%= q.ask_category&.color_badge_class || 'bg-gray-100 text-gray-700' %>">
+                      <%= q.ask_category&.name || "General" %>
+                    </span>
+                  </td>
+                  <td class="py-3.5 px-3 whitespace-nowrap">
+                    <span class="px-2 py-0.5 rounded text-[10px] font-bold <%= q.priority_badge_class %>">
+                      <%= q.priority.upcase %>
+                    </span>
+                  </td>
+                  <td class="py-3.5 px-3 whitespace-nowrap">
+                    <span class="px-2 py-0.5 rounded text-[10px] font-semibold <%= q.status_badge_class %>">
+                      <%= q.status.humanize %>
+                    </span>
+                  </td>
+                  <td class="py-3.5 px-4 text-right whitespace-nowrap">
+                    <%= link_to "Review", admin_ask_question_path(q), class: "px-3 py-1 rounded-lg bg-emerald-50 text-emerald-700 font-bold hover:bg-emerald-100 transition-all text-xs" %>
+                  </td>
+                </tr>
+              <% end %>
+            <% else %>
+              <tr>
+                <td colspan="5" class="py-8 text-center text-stone-400 text-xs">
+                  All caught up! No questions currently waiting for action.
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Right Column: Active Live Sessions & Audit Log (1 Col) -->
+    <div class="space-y-6">
+      <!-- Active Live Sessions Card -->
+      <div class="bg-white rounded-3xl border border-stone-200/90 shadow-sm p-6">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-sm font-bold text-stone-900">Live Q&amp;A Sessions</h3>
+          <%= link_to "+ New", new_admin_ask_live_session_path, class: "text-xs font-bold text-emerald-700 hover:underline" %>
+        </div>
+
+        <div class="space-y-3">
+          <% if @active_sessions.any? %>
+            <% @active_sessions.each do |session| %>
+              <div class="p-3.5 rounded-2xl bg-stone-50 border border-stone-200 flex items-center justify-between">
+                <div>
+                  <div class="flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full <%= session.active? ? 'bg-green-500 animate-ping' : 'bg-amber-500' %>"></span>
+                    <h4 class="text-xs font-bold text-stone-900"><%= session.title %></h4>
+                  </div>
+                  <span class="text-[10px] font-mono text-stone-400">Code: <%= session.access_code %></span>
+                </div>
+                <%= link_to "Moderate", moderation_admin_ask_live_session_path(session), class: "px-3 py-1 rounded-lg bg-emerald-700 text-white font-bold text-[11px] hover:bg-emerald-800 shadow-sm" %>
+              </div>
+            <% end %>
+          <% else %>
+            <p class="text-xs text-stone-400 text-center py-4">No active live sessions.</p>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Recent Moderation Activity Feed -->
+      <div class="bg-white rounded-3xl border border-stone-200/90 shadow-sm p-6">
+        <h3 class="text-sm font-bold text-stone-900 mb-4">Recent Audit Activity</h3>
+
+        <div class="space-y-3 max-h-80 overflow-y-auto pr-1">
+          <% if @recent_actions.any? %>
+            <% @recent_actions.each do |act| %>
+              <div class="text-xs border-l-2 border-emerald-500 pl-3 py-1">
+                <p class="font-semibold text-stone-800">
+                  <span class="text-emerald-700"><%= act.user&.first_name || "Staff" %></span>
+                  <%= act.action.humanize.downcase %>: <%= act.details.presence || act.ask_question&.public_reference %>
+                </p>
+                <span class="text-[10px] text-stone-400"><%= time_ago_in_words(act.created_at) %> ago</span>
+              </div>
+            <% end %>
+          <% else %>
+            <p class="text-xs text-stone-400 text-center py-4">No activity logged yet.</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,9 @@
+<%= turbo_stream.replace "question-votes-#{@question.id}" do %>
+  <div id="question-votes-<%= @question.id %>" class="shrink-0">
+    <%= render "ask/live/vote_button", question: @question, live_session: @live_session, voted: true %>
+  </div>
+<% end %>
+
+<%= turbo_stream.replace "vote-feedback-#{@question.id}" do %>
+  <div id="vote-feedback-<%= @question.id %>"></div>
+<% end %>

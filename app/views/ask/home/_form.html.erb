@@ -1,0 +1,240 @@
+<div data-controller="ask-form">
+  <!-- Progress Stepper -->
+  <div class="mb-8">
+    <div class="flex items-center justify-between relative">
+      <div class="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-stone-200 w-full z-0"></div>
+      
+      <% [
+        { num: 1, label: "Question" },
+        { num: 2, label: "Category" },
+        { num: 3, label: "Preference" },
+        { num: 4, label: "Review" }
+      ].each do |step| %>
+        <div class="relative z-10 flex flex-col items-center">
+          <div data-ask-form-target="stepIndicator" class="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm bg-gray-100 text-gray-500 transition-all duration-300">
+            <%= step[:num] %>
+          </div>
+          <span class="text-[11px] font-semibold text-stone-500 mt-1 hidden sm:block"><%= step[:label] %></span>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <%= form_with model: question, url: ask_submit_question_path, id: "ask-question-form", class: "space-y-6" do |f| %>
+    <!-- Anti-spam Honeypot (Hidden) -->
+    <div style="display:none !important;" aria-hidden="true">
+      <input type="text" name="website_hp" tabindex="-1" autocomplete="off" />
+      <input type="text" name="honey_field" tabindex="-1" autocomplete="off" />
+    </div>
+
+    <!-- Hidden form state fields -->
+    <%= f.hidden_field :ask_category_id, data: { ask_form_target: "categoryInput" } %>
+    <%= f.hidden_field :response_preference, value: "public_answer", data: { ask_form_target: "responseChoiceInput" } %>
+
+    <!-- STEP 1: Question Body -->
+    <div data-ask-form-target="step" class="space-y-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-xl sm:text-2xl font-bold text-stone-900">What's on your mind?</h2>
+          <p class="text-xs sm:text-sm text-stone-500 mt-0.5">Ask a question, share what's bothering you, or express what you're going through.</p>
+        </div>
+        <span class="px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-[11px] font-bold border border-emerald-200 shrink-0">
+          Anonymous
+        </span>
+      </div>
+
+      <div class="relative">
+        <%= f.text_area :body,
+          rows: 6,
+          required: true,
+          placeholder: "Type your question or concern here...\n\n(You don't have to use your real name, school, or location. Feel free to explain in your own words.)",
+          class: "w-full p-4 rounded-2xl border border-stone-300 text-stone-900 placeholder:text-stone-400 focus:ring-4 focus:ring-emerald-100 focus:border-emerald-600 focus:outline-none transition-all text-base leading-relaxed resize-y",
+          data: {
+            ask_form_target: "bodyInput",
+            action: "input->ask-form#updateCharCount keyup->ask-form#updateCharCount paste->ask-form#updateCharCount change->ask-form#updateCharCount"
+          } %>
+        
+        <div class="flex items-center justify-between text-xs text-stone-400 mt-1 px-1">
+          <span>Minimum 5 characters</span>
+          <span data-ask-form-target="charCount">0 characters</span>
+        </div>
+      </div>
+
+      <div class="p-3.5 rounded-xl bg-emerald-50/70 border border-emerald-100 flex items-start gap-3">
+        <svg class="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <p class="text-xs text-emerald-900 leading-relaxed">
+          <strong>Safe Space:</strong> TOM International will never publish your personal identity, contact details, or private concerns without explicit authorization.
+        </p>
+      </div>
+    </div>
+
+    <!-- STEP 2: Category Selection -->
+    <div data-ask-form-target="step" class="space-y-4 hidden">
+      <div>
+        <h2 class="text-xl sm:text-2xl font-bold text-stone-900">What is this about?</h2>
+        <p class="text-xs sm:text-sm text-stone-500 mt-0.5">Select the topic that best fits your question (optional, but helps us route to the right responder).</p>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+        <% categories.each do |cat| %>
+          <button type="button"
+                  data-ask-form-target="categoryCard"
+                  data-category-id="<%= cat.id %>"
+                  data-action="click->ask-form#selectCategory"
+                  class="p-3.5 rounded-xl border border-gray-200 bg-white text-left hover:border-emerald-400 hover:shadow-sm transition-all flex flex-col justify-between cursor-pointer group">
+            <span class="text-xs font-bold text-stone-900 group-hover:text-emerald-700 block mb-1">
+              <%= cat.name %>
+            </span>
+            <span class="text-[11px] text-stone-500 line-clamp-2">
+              <%= cat.description.presence || "Questions regarding #{cat.name}" %>
+            </span>
+          </button>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- STEP 3: Response Preference -->
+    <div data-ask-form-target="step" class="space-y-4 hidden">
+      <div>
+        <h2 class="text-xl sm:text-2xl font-bold text-stone-900">What would you like TOM to do?</h2>
+        <p class="text-xs sm:text-sm text-stone-500 mt-0.5">Tell us how you would like us to handle your question or concern.</p>
+      </div>
+
+      <div class="space-y-3">
+        <!-- Option 1: Answer Question (Public / Library) -->
+        <div data-ask-form-target="responseChoice"
+             data-choice="public_answer"
+             data-action="click->ask-form#selectResponseChoice"
+             class="p-4 rounded-2xl border-2 border-emerald-600 bg-emerald-50/70 ring-2 ring-emerald-500 cursor-pointer transition-all">
+          <div class="flex items-center justify-between">
+            <h3 class="text-sm font-bold text-stone-900">Answer my question</h3>
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-200 text-emerald-900">Standard</span>
+          </div>
+          <p class="text-xs text-stone-600 mt-1">
+            TOM staff will review and prepare an answer. If approved and helpful to others, it may be published anonymously in our public Q&amp;A library.
+          </p>
+        </div>
+
+        <!-- Option 2: Respond Privately -->
+        <div data-ask-form-target="responseChoice"
+             data-choice="private_response"
+             data-action="click->ask-form#selectResponseChoice"
+             class="p-4 rounded-2xl border border-gray-200 bg-white hover:border-emerald-400 cursor-pointer transition-all">
+          <div class="flex items-center justify-between">
+            <h3 class="text-sm font-bold text-stone-900">Respond to me privately</h3>
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-100 text-indigo-800">Private</span>
+          </div>
+          <p class="text-xs text-stone-600 mt-1">
+            This is personal or sensitive. I want a private response from an authorized TOM mentor and do NOT want this published publicly.
+          </p>
+        </div>
+
+        <!-- Option 3: Just Listen -->
+        <div data-ask-form-target="responseChoice"
+             data-choice="just_listen"
+             data-action="click->ask-form#selectResponseChoice"
+             class="p-4 rounded-2xl border border-gray-200 bg-white hover:border-emerald-400 cursor-pointer transition-all">
+          <div class="flex items-center justify-between">
+            <h3 class="text-sm font-bold text-stone-900">I just need someone to listen</h3>
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800">Support</span>
+          </div>
+          <p class="text-xs text-stone-600 mt-1">
+            I just wanted to share what I'm feeling without expecting an immediate formal answer.
+          </p>
+        </div>
+
+        <!-- Option 4: I Need Help -->
+        <div data-ask-form-target="responseChoice"
+             data-choice="need_help"
+             data-action="click->ask-form#selectResponseChoice"
+             class="p-4 rounded-2xl border border-gray-200 bg-white hover:border-rose-400 cursor-pointer transition-all">
+          <div class="flex items-center justify-between">
+            <h3 class="text-sm font-bold text-rose-700">I need urgent help or support</h3>
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-800 font-bold">Priority</span>
+          </div>
+          <p class="text-xs text-stone-600 mt-1">
+            I am dealing with a serious problem, danger, or distress and need guidance or safeguarding support from TOM.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 4: Review, Optional Contact, & Privacy Notice -->
+    <div data-ask-form-target="step" class="space-y-5 hidden">
+      <div>
+        <h2 class="text-xl sm:text-2xl font-bold text-stone-900">Final Step: Review &amp; Submit</h2>
+        <p class="text-xs sm:text-sm text-stone-500 mt-0.5">Check your information before submitting.</p>
+      </div>
+
+      <!-- Optional Contact Info Section -->
+      <div data-ask-form-target="contactSection" class="p-4 rounded-2xl bg-stone-100/80 border border-stone-200 space-y-3">
+        <div>
+          <h4 class="text-xs font-bold text-stone-800 uppercase tracking-wider">How should TOM reply to you? (Optional)</h4>
+          <p class="text-xs text-stone-500">If you'd like a response or follow-up, you can provide a safe contact method. No account required.</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <%= f.label :contact_method, "Contact Method", class: "block text-xs font-semibold text-stone-700 mb-1" %>
+            <%= f.select :contact_method, [
+              ["No contact info (Check with Reference Code)", "none_provided"],
+              ["WhatsApp", "whatsapp"],
+              ["Email", "email"],
+              ["Phone Call / SMS", "phone"],
+              ["Other", "other"]
+            ], {}, class: "w-full p-2.5 text-xs rounded-xl border border-stone-300 bg-white focus:ring-2 focus:ring-emerald-500 focus:outline-none",
+            data: { action: "change->ask-form#selectContactMethod", ask_form_target: "contactMethodInput" } %>
+          </div>
+
+          <div>
+            <label data-ask-form-target="contactLabel" class="block text-xs font-semibold text-stone-700 mb-1">
+              Your details (optional):
+            </label>
+            <%= f.text_field :contact_details,
+              placeholder: "e.g. WhatsApp number or email...",
+              class: "w-full p-2.5 text-xs rounded-xl border border-stone-300 bg-white focus:ring-2 focus:ring-emerald-500 focus:outline-none",
+              data: { ask_form_target: "contactDetailsInput" } %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Privacy & Safeguarding Notice -->
+      <div class="p-4 rounded-2xl bg-amber-50/80 border border-amber-200/80 text-xs text-amber-950 space-y-2">
+        <div class="flex items-center gap-2 font-bold text-amber-900">
+          <svg class="w-4 h-4 text-amber-700 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+          Privacy &amp; Safeguarding Commitment
+        </div>
+        <p class="leading-relaxed text-stone-700">
+          <%= SystemSetting.ask_privacy_notice %>
+        </p>
+      </div>
+    </div>
+
+    <!-- Navigation Buttons -->
+    <div class="pt-4 border-t border-stone-200 flex items-center justify-between">
+      <button type="button"
+              data-ask-form-target="prevButton"
+              data-action="click->ask-form#prev"
+              class="px-5 py-2.5 rounded-full border border-stone-300 text-stone-700 font-semibold text-xs sm:text-sm hover:bg-stone-100 transition-all hidden">
+        &larr; Back
+      </button>
+
+      <div class="ml-auto flex items-center gap-3">
+        <button type="button"
+                data-ask-form-target="nextButton"
+                data-action="click->ask-form#next"
+                class="px-6 py-2.5 rounded-full bg-emerald-700 text-white font-bold text-xs sm:text-sm hover:bg-emerald-800 shadow-md transition-all cursor-pointer">
+          Continue &rarr;
+        </button>
+
+        <%= f.submit "Submit to TOM ASK",
+          data: { ask_form_target: "submitButton" },
+          class: "px-6 py-2.5 rounded-full bg-emerald-700 text-white font-bold text-xs sm:text-sm hover:bg-emerald-800 shadow-md transition-all cursor-pointer hidden" %>
+      </div>
+    </div>
+  <% end %>
+</div>

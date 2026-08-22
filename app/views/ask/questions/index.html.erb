@@ -1,0 +1,120 @@
+<% content_for :title, "TOM ASK Library — Answered Questions" %>
+
+<section class="tom-page-hero" style="background: radial-gradient(circle at 80% 20%, rgba(163, 230, 53, 0.2), transparent 25rem), #052e16;">
+  <div class="tom-container px-4 sm:px-6 lg:px-8">
+    <div class="tom-ask-hero-panel py-10" data-reveal>
+      <span class="tom-eyebrow" style="color:var(--tom-lime);">TOM International &bull; Public Q&amp;A Library</span>
+      <h1 class="font-extrabold tracking-tight mt-2 mb-3 font-heading">
+        Answered Questions
+      </h1>
+      <p class="text-base sm:text-lg text-emerald-100/90 max-w-xl mx-auto">
+        Read answers to questions asked by teenagers across TOM clubs, camps, and outreaches.
+      </p>
+
+      <!-- Search Bar -->
+      <div class="mt-6 max-w-xl mx-auto">
+        <%= form_with url: ask_questions_path, method: :get, class: "relative flex items-center" do |f| %>
+          <%= f.hidden_field :category, value: params[:category] if params[:category].present? %>
+          <%= f.hidden_field :sort, value: params[:sort] if params[:sort].present? %>
+          <svg class="w-5 h-5 text-stone-400 absolute left-4 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <%= f.text_field :q,
+            value: params[:q],
+            placeholder: "Search questions by keyword or topic...",
+            class: "w-full pl-12 pr-28 py-3.5 rounded-full bg-white text-stone-900 placeholder:text-stone-400 text-sm shadow-xl focus:outline-none focus:ring-4 focus:ring-lime-300" %>
+          <%= f.submit "Search", class: "absolute right-2 px-5 py-2 rounded-full bg-emerald-800 text-white text-xs font-bold hover:bg-emerald-900 transition-all cursor-pointer" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="py-12 bg-stone-50 min-h-[60vh]">
+  <div class="tom-container">
+    <!-- Category Filter Pills -->
+    <div class="flex items-center justify-between flex-wrap gap-4 mb-8">
+      <div class="flex items-center gap-2 overflow-x-auto pb-2 max-w-full">
+        <%= link_to "All Topics", ask_questions_path(q: params[:q], sort: params[:sort]),
+          class: "px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-all #{params[:category].blank? ? 'bg-emerald-700 text-white shadow' : 'bg-white text-stone-700 border border-stone-200 hover:border-emerald-300'}" %>
+
+        <% @categories.each do |cat| %>
+          <%= link_to cat.name, ask_questions_path(category: cat.slug, q: params[:q], sort: params[:sort]),
+            class: "px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-all #{params[:category] == cat.slug ? 'bg-emerald-700 text-white shadow' : 'bg-white text-stone-700 border border-stone-200 hover:border-emerald-300'}" %>
+        <% end %>
+      </div>
+
+      <!-- Sort Toggle -->
+      <div class="flex items-center gap-2 text-xs">
+        <span class="text-stone-500 font-medium">Sort:</span>
+        <%= link_to "Recent", ask_questions_path(category: params[:category], q: params[:q], sort: "recent"),
+          class: "px-3 py-1.5 rounded-lg font-semibold #{params[:sort] != 'popular' ? 'bg-emerald-100 text-emerald-800 font-bold' : 'text-stone-600 hover:bg-stone-200'}" %>
+        <%= link_to "Popular", ask_questions_path(category: params[:category], q: params[:q], sort: "popular"),
+          class: "px-3 py-1.5 rounded-lg font-semibold #{params[:sort] == 'popular' ? 'bg-emerald-100 text-emerald-800 font-bold' : 'text-stone-600 hover:bg-stone-200'}" %>
+      </div>
+    </div>
+
+    <!-- Questions Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <% if @questions.any? %>
+        <% @questions.each do |q| %>
+          <article class="p-6 rounded-3xl bg-white border border-stone-200/90 hover:border-emerald-400 hover:shadow-lg transition-all flex flex-col justify-between group">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <% if q.ask_category %>
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold <%= q.ask_category.color_badge_class %>">
+                    <%= q.ask_category.name %>
+                  </span>
+                <% else %>
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-700">General</span>
+                <% end %>
+                <span class="text-xs text-stone-400 font-mono"><%= q.public_reference %></span>
+              </div>
+
+              <h3 class="text-base sm:text-lg font-bold text-stone-900 mb-2.5 group-hover:text-emerald-700 transition-colors leading-snug">
+                <%= link_to q.display_body.truncate(100), ask_question_path(q) %>
+              </h3>
+
+              <% if q.published_response %>
+                <p class="text-xs sm:text-sm text-stone-600 line-clamp-3 leading-relaxed">
+                  <%= q.published_response.body.truncate(160) %>
+                </p>
+              <% end %>
+            </div>
+
+            <div class="mt-5 pt-4 border-t border-stone-100 flex items-center justify-between text-xs text-stone-400">
+              <span><%= q.answered_at ? q.answered_at.strftime("%b %d, %Y") : "Answered" %></span>
+              <%= link_to "Read Answer &rarr;".html_safe, ask_question_path(q), class: "font-bold text-emerald-700 group-hover:translate-x-0.5 transition-transform" %>
+            </div>
+          </article>
+        <% end %>
+      <% else %>
+        <div class="col-span-full py-16 text-center bg-white rounded-3xl border border-stone-200 space-y-4">
+          <div class="w-14 h-14 rounded-full bg-stone-100 text-stone-400 flex items-center justify-center mx-auto">
+            <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
+          </div>
+          <h3 class="text-lg font-bold text-stone-800">No questions found</h3>
+          <p class="text-xs text-stone-500 max-w-md mx-auto">
+            <% if params[:q].present? || params[:category].present? %>
+              No answered questions matched your filter criteria. Try searching with different terms or selecting another category.
+            <% else %>
+              No questions published in the library yet.
+            <% end %>
+          </p>
+          <div class="pt-2">
+            <%= link_to "Ask a Question Now", ask_root_path, class: "px-6 py-2.5 rounded-full bg-emerald-700 text-white text-xs font-bold hover:bg-emerald-800 transition-all inline-block shadow" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Pagination -->
+    <% if @pagy.pages > 1 %>
+      <div class="mt-12 flex justify-center">
+        <%== @pagy.series_nav %>
+      </div>
+    <% end %>
+  </div>
+</section>

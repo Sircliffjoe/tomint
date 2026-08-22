@@ -1,0 +1,33 @@
+<%= turbo_stream.replace "approved-questions-list" do %>
+  <div id="approved-questions-list" class="space-y-3 max-h-[600px] overflow-y-auto pr-1">
+    <% @live_session.approved_questions.each do |q| %>
+      <div id="mod-approved-<%= q.id %>" class="p-4 rounded-2xl <%= q.pinned? ? 'bg-amber-50 border-2 border-amber-400 shadow-md' : 'bg-stone-50 border border-stone-200' %> flex items-start justify-between gap-4 transition-all">
+        <div class="flex-1">
+          <div class="flex items-center gap-2 mb-1">
+            <% if q.pinned? %>
+              <span class="px-2 py-0.5 rounded text-[10px] font-black bg-amber-500 text-stone-950 uppercase tracking-wider">
+                SPOTLIGHT ON SCREEN
+              </span>
+            <% end %>
+            <span class="text-xs font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded">
+              ▲ <%= q.upvotes_count %>
+            </span>
+            <span class="text-[11px] text-stone-400 font-mono">#<%= q.id %></span>
+          </div>
+          <p class="text-sm font-semibold text-stone-900 leading-snug">
+            <%= q.display_body %>
+          </p>
+        </div>
+
+        <div class="flex flex-col gap-1.5 shrink-0">
+          <% if q.pinned? %>
+            <%= button_to "Unpin", unpin_question_admin_ask_live_session_path(@live_session, question_id: q.id), method: :post, class: "px-3 py-1.5 rounded-xl bg-stone-200 text-stone-800 text-xs font-bold hover:bg-stone-300 cursor-pointer" %>
+          <% else %>
+            <%= button_to "Pin to Screen", pin_question_admin_ask_live_session_path(@live_session, question_id: q.id), method: :post, class: "px-3 py-1.5 rounded-xl bg-amber-400 text-stone-950 text-xs font-black hover:bg-amber-500 shadow-sm cursor-pointer" %>
+          <% end %>
+          <%= button_to "Mark Answered", mark_question_answered_admin_ask_live_session_path(@live_session, question_id: q.id), method: :post, class: "px-3 py-1 rounded-xl bg-emerald-100 text-emerald-800 text-[11px] font-bold hover:bg-emerald-200 cursor-pointer" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% end %>

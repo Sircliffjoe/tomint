@@ -44,6 +44,53 @@ Rails.application.routes.draw do
     resource :maintenance, only: [ :show, :update ] do
       post :toggle, on: :member
     end
+
+    # TOM ASK Admin
+    namespace :ask do
+      get "/", to: "dashboard#index", as: :dashboard
+      resources :questions do
+        member do
+          patch :moderate
+          post :approve_public
+          post :reject
+          post :flag_safeguarding
+          post :assign
+          post :close
+          post :reopen
+        end
+        resources :responses, only: [ :create, :update, :destroy ] do
+          member do
+            post :publish
+            post :send_private
+          end
+        end
+        resources :internal_notes, only: [ :create, :destroy ]
+      end
+      resources :safeguarding, only: [ :index, :show ] do
+        member do
+          post :escalate
+          patch :update_status
+        end
+        resources :escalations, only: [ :update, :destroy ]
+      end
+      resources :live_sessions, path: "live" do
+        member do
+          post :start
+          post :pause
+          post :end
+          get :moderation
+          get :qr_code
+          post "questions/:question_id/approve", to: "live_sessions#approve_question", as: :approve_question
+          post "questions/:question_id/reject", to: "live_sessions#reject_question", as: :reject_question
+          post "questions/:question_id/pin", to: "live_sessions#pin_question", as: :pin_question
+          post "questions/:question_id/unpin", to: "live_sessions#unpin_question", as: :unpin_question
+          post "questions/:question_id/mark_answered", to: "live_sessions#mark_question_answered", as: :mark_question_answered
+        end
+      end
+      resources :categories
+      get "analytics", to: "analytics#index"
+      resource :settings, only: [ :show, :update ]
+    end
   end
 
 
@@ -109,6 +156,22 @@ Rails.application.routes.draw do
   post "contact", to: "contact_messages#create"
   get "privacy", to: "pages#show", defaults: { slug: "privacy" }, as: :privacy
   get "terms", to: "pages#show", defaults: { slug: "terms" }, as: :terms
+
+  # TOM ASK Public Experience
+  scope :ask, as: :ask, module: :ask do
+    root to: "home#index"
+    post "questions", to: "home#create", as: :submit_question
+    get "confirmation/:reference", to: "home#confirmation", as: :confirmation
+    get "check", to: "home#status_check", as: :status_check
+
+    resources :questions, only: [ :index, :show ]
+
+    get "live", to: "live#index", as: :live_index
+    get "live/:slug", to: "live#show", as: :live_session
+    get "live/:slug/display", to: "live#display", as: :live_display
+    post "live/:slug/questions", to: "live#create_question", as: :live_create_question
+    post "live/:slug/questions/:id/vote", to: "live#vote", as: :live_vote_question
+  end
 
   # Catch-all for other CMS pages (Must be the last route)
   get ":slug", to: "pages#show", as: :page

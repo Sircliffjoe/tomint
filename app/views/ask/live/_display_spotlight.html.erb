@@ -1,0 +1,27 @@
+<div id="display-spotlight-container">
+  <% if question %>
+    <div class="p-8 sm:p-12 rounded-3xl bg-gradient-to-br from-amber-400 to-amber-500 text-stone-950 shadow-2xl border-4 border-amber-300 transition-all">
+      <div class="flex items-center justify-between mb-4">
+        <span class="px-4 py-1 rounded-full bg-stone-950 text-amber-300 text-xs sm:text-sm font-black uppercase tracking-widest">
+          NOW ANSWERING LIVE
+        </span>
+        <% if live_session.voting_enabled? %>
+          <span class="text-stone-950 font-black text-base sm:text-lg flex items-center gap-1">
+            ▲ <%= question.upvotes_count %> upvotes
+          </span>
+        <% end %>
+      </div>
+      <blockquote class="text-2xl sm:text-4xl lg:text-5xl font-black leading-tight font-heading">
+        "<%= question.display_body %>"
+      </blockquote>
+      <p class="text-xs sm:text-sm text-stone-800 mt-4 font-semibold">
+        Submitted by Anonymous Teenager &bull; TOM ASK LIVE
+      </p>
+    </div>
+  <% else %>
+    <div class="p-8 rounded-3xl bg-white/10 backdrop-blur-md border border-white/20 text-center py-16 text-emerald-200">
+      <p class="text-xl sm:text-2xl font-bold">Ask Anything!</p>
+      <p class="text-sm opacity-80 mt-1">Questions will be displayed here as they are addressed live by the speaker.</p>
+    </div>
+  <% end %>
+</div>

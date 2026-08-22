@@ -1,0 +1,83 @@
+<% content_for :title, "PRESENTATION: #{@live_session.title} — TOM ASK LIVE" %>
+
+<%= turbo_stream_from "live_session_#{@live_session.id}_display" %>
+
+<div class="min-h-screen bg-stone-950 text-white font-sans selection:bg-lime-400 selection:text-emerald-950 flex flex-col justify-between p-6 sm:p-10" data-controller="ask-display">
+  <!-- Top Bar -->
+  <header class="flex items-center justify-between border-b border-white/15 pb-6">
+    <div class="flex items-center gap-4">
+      <div class="px-4 py-1.5 rounded-full bg-lime-400 text-emerald-950 font-black text-sm uppercase tracking-widest flex items-center gap-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-emerald-950 animate-ping"></span>
+        TOM ASK LIVE
+      </div>
+      <div>
+        <h1 class="text-xl sm:text-2xl font-black text-white font-heading"><%= @live_session.title %></h1>
+        <p class="text-xs text-emerald-300">You can ask. We will listen.</p>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-4">
+      <div class="text-right">
+        <p class="text-[11px] text-stone-400 uppercase tracking-wider font-semibold">Join on your phone:</p>
+        <p class="text-sm sm:text-base font-mono font-bold text-lime-300">
+          <%= request.host_with_port %>/ask/live &bull; Code: <span class="bg-white/15 px-2 py-0.5 rounded text-white font-black"><%= @live_session.access_code %></span>
+        </p>
+      </div>
+
+      <button type="button"
+              data-action="click->ask-display#toggleFullscreen"
+              class="p-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-stone-300 hover:text-white transition-all cursor-pointer"
+              title="Toggle Fullscreen">
+        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Presentation Area (Grid: Spotlight Question on Left/Top, QR & Feed on Right) -->
+  <main class="grid grid-cols-1 lg:grid-cols-3 gap-8 my-auto py-8">
+    <!-- Spotlight Question (2 Cols) -->
+    <div class="lg:col-span-2 flex flex-col justify-center">
+      <%= render "ask/live/display_spotlight", question: @live_session.current_question, live_session: @live_session %>
+    </div>
+
+    <!-- QR Code & Top Questions (1 Col) -->
+    <div class="flex flex-col justify-between gap-6 bg-white/5 rounded-3xl border border-white/10 p-6 backdrop-blur-md">
+      <!-- QR Code Box -->
+      <div class="text-center bg-white p-6 rounded-2xl shadow-xl flex flex-col items-center">
+        <div class="w-44 h-44 flex items-center justify-center">
+          <% public_url = ask_live_session_url(@live_session) %>
+          <%== @live_session.qr_code_svg(public_url) %>
+        </div>
+        <p class="text-xs font-bold text-emerald-950 uppercase tracking-wider mt-3">Scan to Ask Anonymously</p>
+        <p class="text-[11px] font-mono font-bold text-emerald-800">Code: <%= @live_session.access_code %></p>
+      </div>
+
+      <!-- Top Upvoted Feed Preview -->
+      <div>
+        <h3 class="text-xs font-bold uppercase tracking-wider text-emerald-400 mb-3 flex items-center justify-between">
+          <span>Popular Questions</span>
+          <span class="text-[10px] text-stone-400">Live</span>
+        </h3>
+
+        <div class="space-y-2.5 max-h-64 overflow-y-auto pr-1">
+          <% @live_session.approved_questions.limit(5).each do |q| %>
+            <div class="p-3 rounded-xl bg-white/10 border border-white/10 flex items-start justify-between gap-3 text-xs">
+              <p class="font-medium text-stone-200 line-clamp-2 leading-snug">
+                <%= q.display_body %>
+              </p>
+              <%= render "ask/live/display_votes", question: q %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Bottom Footer -->
+  <footer class="border-t border-white/10 pt-4 flex items-center justify-between text-xs text-stone-500">
+    <span>Teenagers' Outreach Ministries International &bull; TOM ASK LIVE</span>
+    <span>No account required &bull; 100% Anonymous Q&amp;A</span>
+  </footer>
+</div>

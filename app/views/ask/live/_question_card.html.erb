@@ -1,0 +1,23 @@
+<div id="live-question-<%= question.id %>" class="p-4 sm:p-5 rounded-2xl bg-white border border-stone-200 shadow-sm flex items-start justify-between gap-4 transition-all hover:border-emerald-300">
+  <div class="flex-1">
+    <div class="flex items-center gap-2 mb-1.5">
+      <% if question.pinned? %>
+        <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500 text-stone-950 uppercase tracking-wider">
+          Pinned
+        </span>
+      <% end %>
+      <span class="text-xs text-stone-400 font-mono">#<%= question.id %></span>
+      <span class="text-xs text-stone-400">&bull; <%= time_ago_in_words(question.created_at) %> ago</span>
+    </div>
+    <p class="text-sm sm:text-base font-semibold text-stone-900 leading-snug">
+      <%= question.display_body %>
+    </p>
+    <div id="vote-feedback-<%= question.id %>"></div>
+  </div>
+
+  <% if live_session.voting_enabled? %>
+    <div id="question-votes-<%= question.id %>" class="shrink-0">
+      <%= render "ask/live/vote_button", question: question, live_session: live_session, voted: local_assigns[:voted] %>
+    </div>
+  <% end %>
+</div>

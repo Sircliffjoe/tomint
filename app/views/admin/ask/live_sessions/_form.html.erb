@@ -1,0 +1,59 @@
+<%= form_with model: live_session, url: (live_session.persisted? ? admin_ask_live_session_path(live_session) : admin_ask_live_sessions_path), class: "space-y-6" do |f| %>
+  <% if live_session.errors.any? %>
+    <div class="p-4 rounded-2xl bg-red-50 border border-red-200 text-red-700 text-xs">
+      <p class="font-bold mb-1"><%= pluralize(live_session.errors.count, "error") %> prohibited this session from being saved:</p>
+      <ul class="list-disc list-inside">
+        <% live_session.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= f.label :title, "Session Title", class: "block text-xs font-semibold text-stone-700 mb-1" %>
+    <%= f.text_field :title, required: true, placeholder: "e.g. TOM Camp Warri 2026 - Friday Night Ask Anything", class: "w-full p-3 rounded-xl border border-stone-300 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none" %>
+  </div>
+
+  <div>
+    <%= f.label :description, "Description / Instructions for Participants (optional)", class: "block text-xs font-semibold text-stone-700 mb-1" %>
+    <%= f.text_area :description, rows: 3, placeholder: "e.g. Welcome to our camp Q&A. Feel free to ask anything on your heart anonymously...", class: "w-full p-3 rounded-xl border border-stone-300 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none" %>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+    <div>
+      <%= f.label :event_id, "Link to Event (optional)", class: "block font-semibold text-stone-700 mb-1" %>
+      <%= f.collection_select :event_id, @events, :id, :title, { include_blank: "None (Standalone Session)" }, class: "w-full p-2.5 rounded-xl border border-stone-300 bg-white" %>
+    </div>
+
+    <div>
+      <%= f.label :status, "Session Status", class: "block font-semibold text-stone-700 mb-1" %>
+      <%= f.select :status, AskLiveSession.statuses.keys.map { |s| [s.humanize, s] }, {}, class: "w-full p-2.5 rounded-xl border border-stone-300 bg-white" %>
+    </div>
+  </div>
+
+  <!-- Settings Toggles -->
+  <div class="p-5 rounded-2xl bg-stone-50 border border-stone-200 space-y-3">
+    <h3 class="text-xs font-bold text-stone-800 uppercase tracking-wider">Live Interaction Controls</h3>
+    
+    <label class="flex items-center gap-3 text-xs font-semibold text-stone-700 cursor-pointer">
+      <%= f.check_box :moderation_required, class: "rounded border-stone-300 text-emerald-600 focus:ring-emerald-500" %>
+      <span><strong>Moderation Required:</strong> Questions must be approved by a moderator before appearing on the public live feed and projector screen. (Recommended)</span>
+    </label>
+
+    <label class="flex items-center gap-3 text-xs font-semibold text-stone-700 cursor-pointer">
+      <%= f.check_box :voting_enabled, class: "rounded border-stone-300 text-emerald-600 focus:ring-emerald-500" %>
+      <span><strong>Upvoting Enabled:</strong> Allow participants to upvote questions they want answered first.</span>
+    </label>
+
+    <label class="flex items-center gap-3 text-xs font-semibold text-stone-700 cursor-pointer">
+      <%= f.check_box :anonymous_mode, class: "rounded border-stone-300 text-emerald-600 focus:ring-emerald-500" %>
+      <span><strong>Anonymous Submissions:</strong> Allow teenagers to submit questions without accounts or names.</span>
+    </label>
+  </div>
+
+  <div class="flex items-center justify-end gap-3 pt-4 border-t border-stone-100">
+    <%= link_to "Cancel", admin_ask_live_sessions_path, class: "px-5 py-2.5 rounded-xl border border-stone-300 text-stone-700 font-semibold text-xs hover:bg-stone-100" %>
+    <%= f.submit live_session.new_record? ? "Create Live Session" : "Save Changes", class: "px-6 py-2.5 rounded-xl bg-emerald-700 text-white font-bold text-xs hover:bg-emerald-800 shadow cursor-pointer" %>
+  </div>
+<% end %>

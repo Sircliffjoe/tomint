@@ -1,0 +1,48 @@
+<% content_for :title, "Submission Confirmation — TOM ASK" %>
+
+<section class="py-16 sm:py-24 bg-stone-50 min-h-[75vh] flex items-center justify-center">
+  <div class="tom-container max-w-xl">
+    <div class="bg-white rounded-3xl shadow-xl border border-stone-200/80 p-8 sm:p-12 text-center space-y-6">
+      <div class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto ring-8 ring-emerald-50">
+        <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+        </svg>
+      </div>
+
+      <div>
+        <span class="px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-xs font-bold border border-emerald-200 uppercase tracking-wider">
+          Submission Received
+        </span>
+        <h1 class="tom-ask-status-heading font-heading mt-3">
+          You asked. We are listening.
+        </h1>
+        <p class="text-sm text-stone-600 max-w-md mx-auto mt-2 leading-relaxed">
+          Your submission has been safely delivered to the TOM team. We treat all submissions with utmost confidentiality and care.
+        </p>
+      </div>
+
+      <% if @reference.present? %>
+        <div class="p-5 rounded-2xl bg-stone-50 border border-stone-200">
+          <p class="text-xs text-stone-500 uppercase tracking-wider font-semibold">Your Question Reference Code</p>
+          <p class="text-3xl font-black font-mono text-emerald-800 tracking-wider mt-1"><%= @reference %></p>
+          <p class="text-[11px] text-stone-400 mt-1">Take a screenshot or note this code down to check your question status anytime.</p>
+        </div>
+      <% end %>
+
+      <div class="p-4 rounded-xl bg-amber-50 border border-amber-100 text-left text-xs text-amber-900 leading-relaxed flex items-start gap-3">
+        <svg class="w-5 h-5 text-amber-700 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <div>
+          <strong>What happens next?</strong>
+          <p class="mt-0.5 text-stone-600">Our moderators review your question. If you requested a private response and gave contact info, an authorized TOM mentor will reach out. If approved for the public library, an answered version will be published without your identity.</p>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap items-center justify-center gap-3 pt-4 border-t border-stone-100">
+        <%= link_to "Ask Another Question", ask_root_path, class: "px-6 py-2.5 rounded-full bg-emerald-700 text-white text-xs font-bold hover:bg-emerald-800 transition-all shadow" %>
+        <%= link_to "Browse Answered Q&A", ask_questions_path, class: "px-6 py-2.5 rounded-full border border-stone-300 text-stone-700 text-xs font-semibold hover:bg-stone-100 transition-all" %>
+      </div>
+    </div>
+  </div>
+</section>

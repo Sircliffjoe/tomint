@@ -134,6 +134,71 @@
           </li>
         <% end %>
 
+        <% if user_signed_in? && (current_user.super_admin? || current_user.can_moderate_ask? || current_user.can_respond_ask? || current_user.can_manage_live_sessions?) %>
+          <li>
+            <div class="px-4 py-2 text-xs font-semibold text-emerald-600 uppercase tracking-wider flex items-center justify-between">
+              <span>TOM ASK</span>
+              <span class="px-1.5 py-0.5 text-[10px] bg-emerald-100 text-emerald-800 rounded font-bold">Q&A</span>
+            </div>
+          </li>
+          <li>
+            <%= link_to admin_ask_dashboard_path, class: "flex items-center px-4 py-2 text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg group" do %>
+              <svg class="w-5 h-5 mr-3 text-emerald-600 group-hover:text-emerald-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+              </svg>
+              ASK Overview
+            <% end %>
+          </li>
+          <li>
+            <%= link_to admin_ask_questions_path, class: "flex items-center justify-between px-4 py-2 text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg group" do %>
+              <div class="flex items-center">
+                <svg class="w-5 h-5 mr-3 text-gray-500 group-hover:text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                </svg>
+                Questions Queue
+              </div>
+            <% end %>
+          </li>
+          <li>
+            <%= link_to admin_ask_live_sessions_path, class: "flex items-center px-4 py-2 text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg group" do %>
+              <svg class="w-5 h-5 mr-3 text-gray-500 group-hover:text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+              Live Sessions
+            <% end %>
+          </li>
+          <% if current_user.can_access_safeguarding? %>
+            <li>
+              <%= link_to admin_ask_safeguarding_index_path, class: "flex items-center justify-between px-4 py-2 text-rose-700 hover:bg-rose-50 hover:text-rose-800 rounded-lg group" do %>
+                <div class="flex items-center">
+                  <svg class="w-5 h-5 mr-3 text-rose-600 group-hover:text-rose-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                  Safeguarding Hub
+                </div>
+              <% end %>
+            </li>
+          <% end %>
+          <% if current_user.super_admin? || current_user.can_moderate_ask? %>
+            <li>
+              <%= link_to admin_ask_categories_path, class: "flex items-center px-4 py-2 text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg group" do %>
+                <svg class="w-5 h-5 mr-3 text-gray-500 group-hover:text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                </svg>
+                Categories
+              <% end %>
+          </li>
+          <li>
+            <%= link_to admin_ask_analytics_path, class: "flex items-center px-4 py-2 text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg group" do %>
+              <svg class="w-5 h-5 mr-3 text-gray-500 group-hover:text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+              </svg>
+              ASK Analytics
+            <% end %>
+          </li>
+          <% end %>
+        <% end %>
+
         <% if current_user.state_coordinator? || current_user.state_secretary? %>
           <li>
             <%= link_to states_state_path, class: "flex items-center px-4 py-2 text-gray-700 hover:bg-green-50 hover:text-green-700 rounded-lg group" do %>

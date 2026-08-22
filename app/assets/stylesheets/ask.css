@@ -1,0 +1,106 @@
+/* TOM ASK Custom Styles */
+
+/* Hero Panel & Centering */
+.tom-ask-hero-panel {
+  max-width: 820px !important;
+  margin-inline: auto !important;
+  text-align: center !important;
+  color: white !important;
+}
+
+.tom-ask-hero-panel h1 {
+  max-width: 100% !important;
+  margin-inline: auto !important;
+  text-align: center !important;
+  font-size: clamp(2.4rem, 5.5vw, 4.2rem) !important;
+  line-height: 1.15 !important;
+  color: #ffffff !important;
+}
+
+.tom-ask-hero-panel p {
+  max-width: 100% !important;
+  text-align: center !important;
+}
+
+.tom-ask-hero-actions {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 1rem !important;
+  margin-top: 2rem !important;
+}
+
+.tom-ask-hero-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.5rem !important;
+  padding: 0.85rem 1.85rem !important;
+  border-radius: 9999px !important;
+  font-weight: 700 !important;
+  font-size: 1rem !important;
+  text-decoration: none !important;
+  transition: all 0.2s ease !important;
+  white-space: nowrap !important;
+  cursor: pointer !important;
+}
+
+.tom-ask-hero-btn-primary {
+  background-color: #a3e635 !important;
+  color: #022c22 !important;
+  box-shadow: 0 10px 25px -5px rgba(163, 230, 53, 0.4) !important;
+}
+
+.tom-ask-hero-btn-primary:hover {
+  background-color: #bef264 !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 14px 28px -4px rgba(163, 230, 53, 0.5) !important;
+}
+
+.tom-ask-hero-btn-secondary {
+  background-color: rgba(255, 255, 255, 0.15) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  backdrop-filter: blur(8px) !important;
+}
+
+.tom-ask-hero-btn-secondary:hover {
+  background-color: rgba(255, 255, 255, 0.25) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Status Check Heading Centering */
+.tom-ask-status-heading {
+  max-width: 100% !important;
+  margin-inline: auto !important;
+  text-align: center !important;
+  font-size: clamp(1.75rem, 3.5vw, 2.5rem) !important;
+  font-weight: 800 !important;
+  line-height: 1.25 !important;
+  color: #1c1917 !important;
+}
+
+/* Question Show Heading */
+.tom-ask-question-heading {
+  max-width: 100% !important;
+  width: 100% !important;
+  font-size: clamp(1.2rem, 2.2vw, 1.55rem) !important;
+  font-weight: 600 !important;
+  line-height: 1.55 !important;
+  color: #1c1917 !important;
+  text-align: left !important;
+  margin-top: 0.5rem !important;
+  margin-bottom: 0.75rem !important;
+  word-break: break-word !important;
+}
+
+/* Question card in Library */
+.tom-ask-card-heading {
+  max-width: 100% !important;
+  width: 100% !important;
+  font-size: 1.05rem !important;
+  font-weight: 700 !important;
+  line-height: 1.45 !important;
+}

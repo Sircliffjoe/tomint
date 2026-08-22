@@ -1,0 +1,32 @@
+<h2>TOM ASK: New Question Assigned to You</h2>
+
+<p>Hello <%= @assignee.first_name %>,</p>
+
+<p>A question on TOM ASK has been assigned to you for response by <%= @assigned_by.full_name %>.</p>
+
+<table style="margin: 1.5rem 0; border-collapse: collapse;">
+  <tr>
+    <td style="padding: 6px 12px; font-weight: bold;">Reference Code:</td>
+    <td style="padding: 6px 12px;"><%= @question.public_reference %></td>
+  </tr>
+  <tr>
+    <td style="padding: 6px 12px; font-weight: bold;">Category:</td>
+    <td style="padding: 6px 12px;"><%= @question.ask_category&.name || "Uncategorized" %></td>
+  </tr>
+  <tr>
+    <td style="padding: 6px 12px; font-weight: bold;">Priority:</td>
+    <td style="padding: 6px 12px;"><%= @question.priority.humanize %></td>
+  </tr>
+  <% if @assignment.notes.present? %>
+  <tr>
+    <td style="padding: 6px 12px; font-weight: bold;">Assignment Note:</td>
+    <td style="padding: 6px 12px;"><%= @assignment.notes %></td>
+  </tr>
+  <% end %>
+</table>
+
+<p style="margin-top: 1.5rem;">
+  <a href="<%= admin_ask_question_url(@question) %>" style="background-color: #15803d; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">
+    Open Question Workbench
+  </a>
+</p>

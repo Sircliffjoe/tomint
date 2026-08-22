@@ -4,6 +4,15 @@
 
 import { application } from "controllers/application"
 
+import AskDisplayController from "controllers/ask_display_controller"
+application.register("ask-display", AskDisplayController)
+
+import AskFormController from "controllers/ask_form_controller"
+application.register("ask-form", AskFormController)
+
+import AskLiveController from "controllers/ask_live_controller"
+application.register("ask-live", AskLiveController)
+
 import EventTypeController from "controllers/event_type_controller"
 application.register("event-type", EventTypeController)
 

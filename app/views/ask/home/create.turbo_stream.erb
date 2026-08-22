@@ -1,0 +1,30 @@
+<%= turbo_stream.replace "ask-form-container" do %>
+  <div class="text-center py-8 px-4 space-y-6">
+    <div class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto ring-8 ring-emerald-50">
+      <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+      </svg>
+    </div>
+
+    <div>
+      <span class="px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-xs font-bold border border-emerald-200 uppercase tracking-wider">
+        Submission Received
+      </span>
+      <h2 class="text-2xl sm:text-3xl font-extrabold text-stone-900 mt-2">Thank you. We have received your question.</h2>
+      <p class="text-sm text-stone-600 max-w-md mx-auto mt-2 leading-relaxed">
+        Our team will review your question with care and discretion. You can save your Reference Code below to track its progress.
+      </p>
+    </div>
+
+    <div class="p-5 rounded-2xl bg-stone-50 border border-stone-200 max-w-sm mx-auto">
+      <p class="text-xs text-stone-500 uppercase tracking-wider font-semibold">Your Reference Code</p>
+      <p class="text-2xl font-black font-mono text-emerald-800 tracking-wider mt-1"><%= @question.public_reference %></p>
+      <p class="text-[11px] text-stone-400 mt-1">Keep this code to check your question later.</p>
+    </div>
+
+    <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
+      <%= link_to "Ask Another Question", ask_root_path, class: "px-6 py-2.5 rounded-full bg-emerald-700 text-white text-xs font-bold hover:bg-emerald-800 transition-all shadow" %>
+      <%= link_to "Browse Answered Q&A", ask_questions_path, class: "px-6 py-2.5 rounded-full border border-stone-300 text-stone-700 text-xs font-semibold hover:bg-stone-100 transition-all" %>
+    </div>
+  </div>
+<% end %>

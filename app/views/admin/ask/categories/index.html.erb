@@ -1,0 +1,67 @@
+<% content_for :title, "TOM ASK Categories" %>
+
+<div class="space-y-6">
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div>
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-stone-900">Question Categories</h1>
+      <p class="text-xs sm:text-sm text-stone-500 mt-0.5">Manage topics available for teen question categorization.</p>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <%= link_to admin_ask_dashboard_path, class: "px-4 py-2 rounded-xl border border-stone-300 text-stone-700 text-xs font-semibold hover:bg-stone-100" do %>
+        &larr; Dashboard
+      <% end %>
+      <%= link_to new_admin_ask_category_path, class: "px-4 py-2 rounded-xl bg-emerald-700 text-white font-bold text-xs hover:bg-emerald-800 shadow" do %>
+        + New Category
+      <% end %>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-3xl border border-stone-200/90 shadow-sm overflow-hidden">
+    <table class="w-full text-left text-xs">
+      <thead class="bg-stone-50 text-stone-500 font-semibold border-b border-stone-100">
+        <tr>
+          <th class="py-3.5 px-4">Order</th>
+          <th class="py-3.5 px-4">Name</th>
+          <th class="py-3.5 px-4">Slug</th>
+          <th class="py-3.5 px-4">Theme</th>
+          <th class="py-3.5 px-4">Questions</th>
+          <th class="py-3.5 px-4">Status</th>
+          <th class="py-3.5 px-4 text-right">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-stone-100">
+        <% if @categories.any? %>
+          <% @categories.each do |cat| %>
+            <tr class="hover:bg-stone-50">
+              <td class="py-3.5 px-4 font-mono font-bold text-stone-400"><%= cat.position %></td>
+              <td class="py-3.5 px-4 font-bold text-stone-900"><%= cat.name %></td>
+              <td class="py-3.5 px-4 font-mono text-stone-500"><%= cat.slug %></td>
+              <td class="py-3.5 px-4">
+                <span class="px-2 py-0.5 rounded text-[10px] font-semibold <%= cat.color_badge_class %>">
+                  <%= cat.color %>
+                </span>
+              </td>
+              <td class="py-3.5 px-4 font-semibold text-stone-700"><%= cat.questions_count %></td>
+              <td class="py-3.5 px-4">
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold <%= cat.active? ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600' %>">
+                  <%= cat.active? ? 'Active' : 'Inactive' %>
+                </span>
+              </td>
+              <td class="py-3.5 px-4 text-right space-x-2">
+                <%= link_to "Edit", edit_admin_ask_category_path(cat), class: "text-emerald-700 font-bold hover:underline" %>
+                <%= button_to "Delete", admin_ask_category_path(cat), method: :delete, data: { turbo_confirm: "Delete category '#{cat.name}'?" }, class: "text-red-600 hover:underline inline" %>
+              </td>
+            </tr>
+          <% end %>
+        <% else %>
+          <tr>
+            <td colspan="7" class="py-12 text-center text-stone-400">
+              No categories configured yet.
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

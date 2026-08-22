@@ -1,0 +1,13 @@
+<%= turbo_stream.replace "live-form-feedback" do %>
+  <div id="live-form-feedback" class="p-3 mb-3 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-semibold flex items-center justify-between">
+    <span>
+      <% if @question.approved_public? %>
+        Your question has been posted to the live feed!
+      <% else %>
+        Your question has been sent to the moderator queue.
+      <% end %>
+    </span>
+  </div>
+<% end %>
+
+<%= turbo_stream.remove "empty-live-state" %>

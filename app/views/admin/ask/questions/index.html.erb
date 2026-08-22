@@ -1,0 +1,153 @@
+<% content_for :title, "TOM ASK Questions Queue" %>
+
+<div class="space-y-6">
+  <!-- Header -->
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div>
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-stone-900">Questions Queue</h1>
+      <p class="text-xs sm:text-sm text-stone-500 mt-0.5">Manage, review, categorize, and respond to teen questions.</p>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <%= link_to admin_ask_dashboard_path, class: "px-4 py-2 rounded-xl border border-stone-300 text-stone-700 text-xs font-semibold hover:bg-stone-100 transition-all" do %>
+        &larr; Dashboard
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Filters Card -->
+  <div class="bg-white rounded-3xl border border-stone-200/90 shadow-sm p-5">
+    <%= form_with url: admin_ask_questions_path, method: :get, class: "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 text-xs" do |f| %>
+      <!-- Search Input -->
+      <div class="lg:col-span-2">
+        <label class="block font-semibold text-stone-600 mb-1">Search Keyword / Ref</label>
+        <%= f.text_field :q, value: params[:q], placeholder: "Search body or reference...", class: "w-full p-2.5 rounded-xl border border-stone-300 text-xs focus:ring-2 focus:ring-emerald-500 focus:outline-none" %>
+      </div>
+
+      <!-- Status Filter -->
+      <div>
+        <label class="block font-semibold text-stone-600 mb-1">Status</label>
+        <%= f.select :status, [
+          ["All Statuses", ""],
+          ["New Intake", "new_intake"],
+          ["Under Review", "under_review"],
+          ["Awaiting Response", "awaiting_response"],
+          ["Response Drafted", "response_drafted"],
+          ["Answered", "answered"],
+          ["Follow-up Required", "follow_up_required"],
+          ["Closed", "closed"]
+        ], { selected: params[:status] }, class: "w-full p-2.5 rounded-xl border border-stone-300 bg-white text-xs focus:ring-2 focus:ring-emerald-500 focus:outline-none" %>
+      </div>
+
+      <!-- Category Filter -->
+      <div>
+        <label class="block font-semibold text-stone-600 mb-1">Category</label>
+        <%= f.select :category_id, [["All Categories", ""]] + @categories.map { |c| [c.name, c.id] }, { selected: params[:category_id] }, class: "w-full p-2.5 rounded-xl border border-stone-300 bg-white text-xs focus:ring-2 focus:ring-emerald-500 focus:outline-none" %>
+      </div>
+
+      <!-- Priority Filter -->
+      <div>
+        <label class="block font-semibold text-stone-600 mb-1">Priority</label>
+        <%= f.select :priority, [
+          ["All Priorities", ""],
+          ["Urgent", "urgent"],
+          ["High", "high"],
+          ["Normal", "normal"],
+          ["Low", "low"]
+        ], { selected: params[:priority] }, class: "w-full p-2.5 rounded-xl border border-stone-300 bg-white text-xs focus:ring-2 focus:ring-emerald-500 focus:outline-none" %>
+      </div>
+
+      <!-- Submit & Reset Buttons -->
+      <div class="flex items-end gap-2">
+        <%= f.submit "Filter", class: "flex-1 py-2.5 rounded-xl bg-emerald-700 text-white font-bold hover:bg-emerald-800 transition-all cursor-pointer" %>
+        <%= link_to "Reset", admin_ask_questions_path, class: "px-3 py-2.5 rounded-xl border border-stone-300 text-stone-600 hover:bg-stone-100 text-center font-semibold" %>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Questions Table Card -->
+  <div class="bg-white rounded-3xl border border-stone-200/90 shadow-sm overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-xs">
+        <thead class="bg-stone-50 text-stone-500 font-semibold border-b border-stone-100">
+          <tr>
+            <th class="py-3.5 px-4">Reference / Question</th>
+            <th class="py-3.5 px-3">Category</th>
+            <th class="py-3.5 px-3">Type</th>
+            <th class="py-3.5 px-3">Status</th>
+            <th class="py-3.5 px-3">Priority</th>
+            <th class="py-3.5 px-3">Assignee</th>
+            <th class="py-3.5 px-3">Submitted</th>
+            <th class="py-3.5 px-4 text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-stone-100">
+          <% if @questions.any? %>
+            <% @questions.each do |q| %>
+              <tr class="hover:bg-stone-50/80 transition-colors">
+                <td class="py-4 px-4 max-w-sm">
+                  <div class="flex items-center gap-2 mb-1">
+                    <span class="font-mono text-xs font-bold text-emerald-900 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                      <%= q.public_reference %>
+                    </span>
+                    <% if q.approved_public? %>
+                      <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-green-100 text-green-800">Public</span>
+                    <% elsif q.private_only? %>
+                      <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-100 text-indigo-800">Private</span>
+                    <% end %>
+                  </div>
+                  <p class="font-semibold text-stone-900 line-clamp-2 leading-relaxed">
+                    <%= q.display_body %>
+                  </p>
+                </td>
+                <td class="py-4 px-3 whitespace-nowrap">
+                  <span class="px-2.5 py-0.5 rounded-full text-[10px] font-semibold <%= q.ask_category&.color_badge_class || 'bg-gray-100 text-gray-700' %>">
+                    <%= q.ask_category&.name || "General" %>
+                  </span>
+                </td>
+                <td class="py-4 px-3 whitespace-nowrap text-stone-600">
+                  <%= q.response_preference.humanize %>
+                </td>
+                <td class="py-4 px-3 whitespace-nowrap">
+                  <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold <%= q.status_badge_class %>">
+                    <%= q.status.humanize %>
+                  </span>
+                </td>
+                <td class="py-4 px-3 whitespace-nowrap">
+                  <span class="px-2 py-0.5 rounded text-[10px] font-bold <%= q.priority_badge_class %>">
+                    <%= q.priority.upcase %>
+                  </span>
+                </td>
+                <td class="py-4 px-3 whitespace-nowrap text-stone-600">
+                  <% if q.current_assignee %>
+                    <span class="font-semibold text-emerald-800"><%= q.current_assignee.first_name %></span>
+                  <% else %>
+                    <span class="text-stone-400 italic">Unassigned</span>
+                  <% end %>
+                </td>
+                <td class="py-4 px-3 whitespace-nowrap text-stone-400">
+                  <%= time_ago_in_words(q.submitted_at) %> ago
+                </td>
+                <td class="py-4 px-4 text-right whitespace-nowrap">
+                  <%= link_to "Open Workbench", admin_ask_question_path(q), class: "px-3.5 py-1.5 rounded-xl bg-emerald-700 text-white font-bold hover:bg-emerald-800 transition-all shadow-sm" %>
+                </td>
+              </tr>
+            <% end %>
+          <% else %>
+            <tr>
+              <td colspan="8" class="py-12 text-center text-stone-400">
+                No questions found matching your filter criteria.
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <% if @pagy.pages > 1 %>
+      <div class="p-4 border-t border-stone-100 flex justify-center">
+        <%== @pagy.series_nav %>
+      </div>
+    <% end %>
+  </div>
+</div>

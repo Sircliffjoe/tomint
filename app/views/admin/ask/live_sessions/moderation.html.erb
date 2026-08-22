@@ -1,0 +1,113 @@
+<% content_for :title, "LIVE MODERATOR: #{@live_session.title}" %>
+
+<%= turbo_stream_from "live_session_#{@live_session.id}_moderation" %>
+
+<div class="space-y-6">
+  <!-- Top Bar -->
+  <div class="bg-gradient-to-r from-emerald-950 via-emerald-900 to-emerald-950 text-white p-5 sm:p-6 rounded-3xl shadow-xl flex flex-wrap items-center justify-between gap-4">
+    <div class="flex items-center gap-3">
+      <span class="w-3 h-3 rounded-full <%= @live_session.active? ? 'bg-lime-400 animate-ping' : 'bg-amber-400' %>"></span>
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-black uppercase tracking-wider text-lime-300">LIVE MODERATION CONSOLE</span>
+          <span class="px-2 py-0.5 rounded bg-white/10 text-white font-mono text-xs">Code: <%= @live_session.access_code %></span>
+        </div>
+        <h1 class="text-xl sm:text-2xl font-black text-white mt-0.5"><%= @live_session.title %></h1>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <%= link_to ask_live_display_path(@live_session), target: "_blank", class: "px-4 py-2 rounded-xl bg-lime-400 text-emerald-950 font-bold text-xs hover:bg-lime-300 shadow flex items-center gap-1.5" do %>
+        <span>Launch Projector</span> &nearr;
+      <% end %>
+      <%= link_to admin_ask_live_session_path(@live_session), class: "px-3.5 py-2 rounded-xl bg-white/10 text-white font-semibold text-xs hover:bg-white/20" do %>
+        Session Overview
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Real-time Moderation Columns Grid -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Left Column: Pending Submissions Stream -->
+    <div class="bg-white rounded-3xl border border-stone-200/90 shadow-sm p-6 space-y-4">
+      <div class="flex items-center justify-between border-b border-stone-100 pb-3">
+        <div>
+          <h2 class="text-base font-bold text-stone-900 flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+            Pending Submissions
+          </h2>
+          <p class="text-xs text-stone-500">Review incoming questions before approving for live feed.</p>
+        </div>
+        <span id="pending-count-badge" class="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 text-xs font-bold">
+          <%= @pending_questions.count %> Pending
+        </span>
+      </div>
+
+      <div id="pending-questions-list" class="space-y-3 max-h-[600px] overflow-y-auto pr-1">
+        <% if @pending_questions.any? %>
+          <% @pending_questions.each do |q| %>
+            <%= render "admin/ask/live_sessions/moderation_question_card", question: q, live_session: @live_session %>
+          <% end %>
+        <% else %>
+          <div id="empty-pending-state" class="py-16 text-center text-stone-400 text-xs">
+            No pending questions right now. Incoming live questions will stream here automatically.
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Right Column: Approved Questions / Leaderboard -->
+    <div class="bg-white rounded-3xl border border-stone-200/90 shadow-sm p-6 space-y-4">
+      <div class="flex items-center justify-between border-b border-stone-100 pb-3">
+        <div>
+          <h2 class="text-base font-bold text-stone-900 flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+            Approved Live Feed
+          </h2>
+          <p class="text-xs text-stone-500">Visible on participant phones &amp; projector.</p>
+        </div>
+        <span class="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold">
+          <%= @approved_questions.count %> Live
+        </span>
+      </div>
+
+      <div id="approved-questions-list" class="space-y-3 max-h-[600px] overflow-y-auto pr-1">
+        <% if @approved_questions.any? %>
+          <% @approved_questions.each do |q| %>
+            <div id="mod-approved-<%= q.id %>" class="p-4 rounded-2xl <%= q.pinned? ? 'bg-amber-50 border-2 border-amber-400 shadow-md' : 'bg-stone-50 border border-stone-200' %> flex items-start justify-between gap-4 transition-all">
+              <div class="flex-1">
+                <div class="flex items-center gap-2 mb-1">
+                  <% if q.pinned? %>
+                    <span class="px-2 py-0.5 rounded text-[10px] font-black bg-amber-500 text-stone-950 uppercase tracking-wider">
+                      SPOTLIGHT ON SCREEN
+                    </span>
+                  <% end %>
+                  <span class="text-xs font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded">
+                    ▲ <%= q.upvotes_count %>
+                  </span>
+                  <span class="text-[11px] text-stone-400 font-mono">#<%= q.id %></span>
+                </div>
+                <p class="text-sm font-semibold text-stone-900 leading-snug">
+                  <%= q.display_body %>
+                </p>
+              </div>
+
+              <div class="flex flex-col gap-1.5 shrink-0">
+                <% if q.pinned? %>
+                  <%= button_to "Unpin", unpin_question_admin_ask_live_session_path(@live_session, question_id: q.id), method: :post, class: "px-3 py-1.5 rounded-xl bg-stone-200 text-stone-800 text-xs font-bold hover:bg-stone-300 cursor-pointer" %>
+                <% else %>
+                  <%= button_to "Pin to Screen", pin_question_admin_ask_live_session_path(@live_session, question_id: q.id), method: :post, class: "px-3 py-1.5 rounded-xl bg-amber-400 text-stone-950 text-xs font-black hover:bg-amber-500 shadow-sm cursor-pointer" %>
+                <% end %>
+                <%= button_to "Mark Answered", mark_question_answered_admin_ask_live_session_path(@live_session, question_id: q.id), method: :post, class: "px-3 py-1 rounded-xl bg-emerald-100 text-emerald-800 text-[11px] font-bold hover:bg-emerald-200 cursor-pointer" %>
+              </div>
+            </div>
+          <% end %>
+        <% else %>
+          <div class="py-16 text-center text-stone-400 text-xs">
+            No questions approved for the live feed yet. Approve questions from the left queue.
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

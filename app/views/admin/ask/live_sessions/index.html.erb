@@ -1,0 +1,113 @@
+<% content_for :title, "Live Q&A Sessions — TOM ASK" %>
+
+<div class="space-y-6">
+  <!-- Header -->
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div>
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-stone-900">Live Q&amp;A Sessions</h1>
+      <p class="text-xs sm:text-sm text-stone-500 mt-0.5">Manage real-time interactive Q&amp;A events for camps, seminars, and conferences.</p>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <%= link_to admin_ask_dashboard_path, class: "px-4 py-2 rounded-xl border border-stone-300 text-stone-700 text-xs font-semibold hover:bg-stone-100 transition-all" do %>
+        &larr; Dashboard
+      <% end %>
+      <%= link_to new_admin_ask_live_session_path, class: "px-4 py-2 rounded-xl bg-emerald-700 text-white font-bold text-xs hover:bg-emerald-800 transition-all shadow" do %>
+        + Create Live Session
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Active & Paused Sessions -->
+  <div class="space-y-4">
+    <h2 class="text-base font-bold text-stone-900 flex items-center gap-2">
+      <span class="w-2.5 h-2.5 rounded-full bg-green-500 animate-ping"></span>
+      Active &amp; Open Sessions
+    </h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <% if @active_sessions.any? %>
+        <% @active_sessions.each do |session| %>
+          <div class="p-6 rounded-3xl bg-white border border-stone-200 shadow-sm flex flex-col justify-between space-y-4">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-bold <%= session.status_badge_class %>">
+                  <%= session.status.upcase %>
+                </span>
+                <span class="font-mono text-xs font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                  CODE: <%= session.access_code %>
+                </span>
+              </div>
+              <h3 class="text-lg font-bold text-stone-900"><%= session.title %></h3>
+              <p class="text-xs text-stone-500 mt-1 line-clamp-2"><%= session.description.presence || "No description provided." %></p>
+            </div>
+
+            <div class="pt-4 border-t border-stone-100 flex flex-wrap items-center justify-between gap-3">
+              <span class="text-xs text-stone-400"><%= session.ask_questions.count %> submissions</span>
+              <div class="flex items-center gap-2">
+                <%= link_to "Live Moderation &rarr;".html_safe, moderation_admin_ask_live_session_path(session), class: "px-3.5 py-1.5 rounded-xl bg-emerald-700 text-white font-bold text-xs hover:bg-emerald-800 shadow" %>
+                <%= link_to "Manage", admin_ask_live_session_path(session), class: "px-3 py-1.5 rounded-xl border border-stone-300 text-stone-700 font-semibold text-xs hover:bg-stone-100" %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      <% else %>
+        <div class="col-span-2 p-8 text-center bg-white rounded-3xl border border-stone-200 text-stone-400 text-xs">
+          No live sessions currently active.
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Draft Sessions -->
+  <% if @draft_sessions.any? %>
+    <div class="space-y-4">
+      <h2 class="text-base font-bold text-stone-900">Draft Sessions</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <% @draft_sessions.each do |session| %>
+          <div class="p-5 rounded-2xl bg-white border border-stone-200 space-y-3">
+            <h3 class="text-sm font-bold text-stone-900"><%= session.title %></h3>
+            <span class="font-mono text-xs text-stone-400 block">Code: <%= session.access_code %></span>
+            <div class="flex items-center justify-between pt-2 border-t border-stone-100">
+              <%= button_to "Start Session", start_admin_ask_live_session_path(session), method: :post, class: "px-3 py-1 rounded-lg bg-green-600 text-white font-bold text-xs hover:bg-green-700" %>
+              <%= link_to "Edit", edit_admin_ask_live_session_path(session), class: "text-xs text-stone-600 hover:underline" %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- Ended / Archived Sessions -->
+  <% if @ended_sessions.any? %>
+    <div class="space-y-4">
+      <h2 class="text-base font-bold text-stone-900">Past Sessions</h2>
+      <div class="bg-white rounded-3xl border border-stone-200 overflow-hidden">
+        <table class="w-full text-left text-xs">
+          <thead class="bg-stone-50 text-stone-500 font-semibold border-b border-stone-100">
+            <tr>
+              <th class="py-3 px-4">Title</th>
+              <th class="py-3 px-3">Access Code</th>
+              <th class="py-3 px-3">Questions</th>
+              <th class="py-3 px-3">Ended At</th>
+              <th class="py-3 px-4 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-stone-100">
+            <% @ended_sessions.each do |s| %>
+              <tr class="hover:bg-stone-50">
+                <td class="py-3 px-4 font-bold text-stone-900"><%= s.title %></td>
+                <td class="py-3 px-3 font-mono"><%= s.access_code %></td>
+                <td class="py-3 px-3"><%= s.ask_questions.count %></td>
+                <td class="py-3 px-3 text-stone-400"><%= s.end_at ? s.end_at.strftime("%b %d, %Y") : "-" %></td>
+                <td class="py-3 px-4 text-right">
+                  <%= link_to "View Archive", admin_ask_live_session_path(s), class: "text-emerald-700 font-semibold hover:underline" %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,30 @@
+<h2>TOM ASK Safeguarding & Urgent Alert</h2>
+
+<p>A submission requiring immediate safeguarding review has been received on TOM ASK.</p>
+
+<table style="margin: 1.5rem 0; border-collapse: collapse;">
+  <tr>
+    <td style="padding: 6px 12px; font-weight: bold;">Reference Code:</td>
+    <td style="padding: 6px 12px;"><%= @reference %></td>
+  </tr>
+  <tr>
+    <td style="padding: 6px 12px; font-weight: bold;">Priority:</td>
+    <td style="padding: 6px 12px;"><%= @priority %></td>
+  </tr>
+  <tr>
+    <td style="padding: 6px 12px; font-weight: bold;">Submitted At:</td>
+    <td style="padding: 6px 12px;"><%= @submitted_at.strftime("%B %d, %Y at %I:%M %p") %></td>
+  </tr>
+</table>
+
+<p>This submission is held securely in the restricted Safeguarding Hub and is NOT publicly visible.</p>
+
+<p style="margin-top: 1.5rem;">
+  <a href="<%= admin_ask_safeguarding_url(@question) %>" style="background-color: #e11d48; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">
+    Open Safeguarding Hub & Review Case
+  </a>
+</p>
+
+<p style="color: #64748b; font-size: 0.85rem; margin-top: 2rem;">
+  In accordance with TOM Safeguarding and Data Protection policies, sensitive submission details are excluded from email transmissions and accessible only via the authorized dashboard.
+</p>

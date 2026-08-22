@@ -1,0 +1,83 @@
+<% content_for :title, "Check Question Status — TOM ASK" %>
+
+<section class="py-16 bg-stone-50 min-h-[75vh]">
+  <div class="tom-container max-w-2xl" style="margin-top:60px;">
+    <div class="mb-8 text-center flex flex-col items-center justify-center">
+      <span class="tom-eyebrow text-emerald-700 mb-2">Question Tracker</span>
+      <h1 class="tom-ask-status-heading font-heading">Check Your Question Status</h1>
+      <p class="text-sm text-stone-500 mt-2 max-w-lg mx-auto text-center">Enter your unique Reference Code to see if your question has been reviewed or answered.</p>
+    </div>
+
+    <!-- Search Box -->
+    <div class="bg-white rounded-2xl shadow-md border border-stone-200 p-6 mb-8">
+      <%= form_with url: ask_status_check_path, method: :get, class: "flex flex-col sm:flex-row gap-3" do |f| %>
+        <%= f.text_field :reference,
+          value: @reference,
+          placeholder: "e.g. ASK-K9X2P4",
+          class: "flex-1 p-3 text-base uppercase font-mono font-bold rounded-xl border border-stone-300 focus:ring-4 focus:ring-emerald-100 focus:border-emerald-600 focus:outline-none" %>
+        <%= f.submit "Check Status", class: "px-6 py-3 rounded-xl bg-emerald-700 text-white font-bold text-sm hover:bg-emerald-800 transition-all cursor-pointer" %>
+      <% end %>
+    </div>
+
+    <!-- Result Box -->
+    <% if @reference.present? %>
+      <% if @question %>
+        <div class="bg-white rounded-2xl shadow-lg border border-stone-200 p-6 sm:p-8 space-y-6">
+          <div class="flex items-center justify-between border-b border-stone-100 pb-4">
+            <div>
+              <span class="text-xs text-stone-400 font-mono font-semibold">Reference</span>
+              <p class="text-xl font-bold font-mono text-emerald-900"><%= @question.public_reference %></p>
+            </div>
+            <span class="px-3 py-1 rounded-full text-xs font-bold <%= @question.status_badge_class %>">
+              <%= @question.status.humanize %>
+            </span>
+          </div>
+
+          <div>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-stone-400 mb-1">Your Question:</h3>
+            <p class="text-base text-stone-800 italic bg-stone-50 p-4 rounded-xl border border-stone-200/60 leading-relaxed">
+              "<%= @question.display_body %>"
+            </p>
+          </div>
+
+          <% if @question.answered? && @question.published_response %>
+            <div class="p-5 rounded-2xl bg-emerald-50 border border-emerald-200 space-y-3">
+              <div class="flex items-center gap-2 text-emerald-900 font-bold text-sm">
+                <svg class="w-5 h-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                TOM's Response
+              </div>
+              <p class="text-sm text-stone-800 leading-relaxed whitespace-pre-line">
+                <%= @question.published_response.body %>
+              </p>
+              <div class="pt-2">
+                <%= link_to "View in Public Q&A Library &rarr;".html_safe, ask_question_path(@question), class: "text-xs font-bold text-emerald-800 hover:underline" %>
+              </div>
+            </div>
+          <% elsif @question.answered? && @question.private_response? %>
+            <div class="p-4 rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-900 text-xs leading-relaxed">
+              <strong>Private Response Sent:</strong> A member of the TOM team has processed your private request.
+            </div>
+          <% else %>
+            <div class="p-4 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs leading-relaxed">
+              <strong>Under Review:</strong> Your question is currently in our queue. Our team carefully reviews every submission. Please check back later.
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="bg-white rounded-2xl shadow border border-stone-200 p-8 text-center space-y-3">
+          <div class="w-12 h-12 rounded-full bg-stone-100 text-stone-400 flex items-center justify-center mx-auto">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h3 class="text-base font-bold text-stone-800">No Question Found</h3>
+          <p class="text-xs text-stone-500 max-w-sm mx-auto">
+            We couldn't find a question matching Reference Code <strong><%= @reference %></strong>. Please check that you typed the code correctly.
+          </p>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</section>

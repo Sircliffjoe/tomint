@@ -1,0 +1,154 @@
+<% content_for :title, "#{@live_session.title} — Live Session Management" %>
+
+<div class="space-y-6">
+  <!-- Header -->
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div class="flex items-center gap-3">
+      <%= link_to admin_ask_live_sessions_path, class: "p-2 rounded-xl bg-white border border-stone-200 text-stone-600 hover:bg-stone-50" do %>
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+      <% end %>
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="px-2.5 py-0.5 rounded-full text-xs font-bold <%= @live_session.status_badge_class %>">
+            <%= @live_session.status.upcase %>
+          </span>
+          <span class="font-mono text-xs font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+            CODE: <%= @live_session.access_code %>
+          </span>
+        </div>
+        <h1 class="text-2xl font-extrabold text-stone-900 mt-1"><%= @live_session.title %></h1>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="flex flex-wrap items-center gap-2">
+      <%= link_to moderation_admin_ask_live_session_path(@live_session), class: "px-5 py-2.5 rounded-xl bg-emerald-700 text-white font-bold text-xs hover:bg-emerald-800 shadow flex items-center gap-2" do %>
+        <span class="w-2 h-2 rounded-full bg-lime-400"></span>
+        Live Moderator Console &rarr;
+      <% end %>
+
+      <%= link_to ask_live_display_path(@live_session), target: "_blank", class: "px-4 py-2.5 rounded-xl bg-stone-900 text-white font-bold text-xs hover:bg-stone-800 shadow" do %>
+        Projector Display &nearr;
+      <% end %>
+
+      <%= link_to qr_code_admin_ask_live_session_path(@live_session), class: "px-3.5 py-2.5 rounded-xl border border-stone-300 bg-white text-stone-700 font-semibold text-xs hover:bg-stone-50" do %>
+        QR Code
+      <% end %>
+
+      <%= link_to edit_admin_ask_live_session_path(@live_session), class: "px-3.5 py-2.5 rounded-xl border border-stone-300 bg-white text-stone-700 font-semibold text-xs hover:bg-stone-50" do %>
+        Settings
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Session Controls & Links Bar -->
+  <div class="bg-white rounded-3xl border border-stone-200/90 shadow-sm p-6 flex flex-wrap items-center justify-between gap-4">
+    <div class="flex items-center gap-4">
+      <% if @live_session.draft? || @live_session.paused? %>
+        <%= button_to start_admin_ask_live_session_path(@live_session), method: :post, class: "px-5 py-2 rounded-xl bg-green-600 text-white font-bold text-xs hover:bg-green-700 shadow cursor-pointer" do %>
+          &bull; Set Session LIVE
+        <% end %>
+      <% elsif @live_session.active? %>
+        <%= button_to pause_admin_ask_live_session_path(@live_session), method: :post, class: "px-4 py-2 rounded-xl bg-amber-500 text-white font-bold text-xs hover:bg-amber-600 cursor-pointer" do %>
+          Pause Session
+        <% end %>
+        <%= button_to end_admin_ask_live_session_path(@live_session), method: :post, data: { turbo_confirm: "End this live session?" }, class: "px-4 py-2 rounded-xl bg-red-600 text-white font-bold text-xs hover:bg-red-700 cursor-pointer" do %>
+          End Session
+        <% end %>
+      <% end %>
+    </div>
+
+    <div class="flex items-center gap-2 text-xs text-stone-600">
+      <span class="font-semibold">Participant Link:</span>
+      <input type="text" readonly value="<%= @public_url %>" class="px-3 py-1 rounded-lg bg-stone-100 border border-stone-300 font-mono text-xs w-64 text-stone-800 select-all" />
+      <a href="<%= @public_url %>" target="_blank" class="text-emerald-700 font-bold hover:underline">Open &nearr;</a>
+    </div>
+  </div>
+
+  <!-- Stats Grid -->
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+    <div class="p-5 rounded-2xl bg-white border border-stone-200 shadow-sm">
+      <span class="text-xs font-bold text-stone-500 uppercase tracking-wider block">Total Questions</span>
+      <p class="text-3xl font-black text-stone-900 mt-1"><%= @live_session.ask_questions.count %></p>
+    </div>
+
+    <div class="p-5 rounded-2xl bg-white border border-amber-200 shadow-sm">
+      <span class="text-xs font-bold text-amber-700 uppercase tracking-wider block">Pending Review</span>
+      <p class="text-3xl font-black text-amber-600 mt-1"><%= @pending_questions.count %></p>
+    </div>
+
+    <div class="p-5 rounded-2xl bg-white border border-emerald-200 shadow-sm">
+      <span class="text-xs font-bold text-emerald-700 uppercase tracking-wider block">Approved for Live</span>
+      <p class="text-3xl font-black text-emerald-600 mt-1"><%= @approved_questions.count %></p>
+    </div>
+
+    <div class="p-5 rounded-2xl bg-white border border-stone-200 shadow-sm">
+      <span class="text-xs font-bold text-stone-500 uppercase tracking-wider block">Total Votes Recorded</span>
+      <p class="text-3xl font-black text-indigo-600 mt-1"><%= AskVote.where(ask_question_id: @live_session.ask_questions.pluck(:id)).count %></p>
+    </div>
+  </div>
+
+  <!-- Questions Lists -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- Pending Questions Queue -->
+    <div class="bg-white rounded-3xl border border-stone-200/90 shadow-sm p-6 space-y-4">
+      <div class="flex items-center justify-between">
+        <h2 class="text-base font-bold text-stone-900">Pending Review (<%= @pending_questions.count %>)</h2>
+        <%= link_to "Moderate Live &rarr;".html_safe, moderation_admin_ask_live_session_path(@live_session), class: "text-xs font-bold text-emerald-700 hover:underline" %>
+      </div>
+
+      <div class="space-y-3 max-h-96 overflow-y-auto pr-1">
+        <% if @pending_questions.any? %>
+          <% @pending_questions.each do |q| %>
+            <div class="p-4 rounded-2xl bg-stone-50 border border-stone-200 space-y-2">
+              <p class="text-xs font-semibold text-stone-900"><%= q.body %></p>
+              <div class="flex items-center justify-between text-[11px] text-stone-400">
+                <span><%= time_ago_in_words(q.created_at) %> ago</span>
+                <div class="flex items-center gap-2">
+                  <%= button_to "Approve", approve_question_admin_ask_live_session_path(@live_session, question_id: q.id), method: :post, class: "px-2.5 py-1 rounded bg-emerald-700 text-white font-bold hover:bg-emerald-800" %>
+                  <%= button_to "Reject", reject_question_admin_ask_live_session_path(@live_session, question_id: q.id), method: :post, class: "px-2.5 py-1 rounded bg-red-100 text-red-700 font-bold hover:bg-red-200" %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        <% else %>
+          <p class="text-xs text-stone-400 text-center py-6">No pending questions waiting.</p>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Approved Questions Feed -->
+    <div class="bg-white rounded-3xl border border-stone-200/90 shadow-sm p-6 space-y-4">
+      <div class="flex items-center justify-between">
+        <h2 class="text-base font-bold text-stone-900">Approved Live Feed (<%= @approved_questions.count %>)</h2>
+        <span class="text-xs text-stone-400">Ordered by votes &amp; pin</span>
+      </div>
+
+      <div class="space-y-3 max-h-96 overflow-y-auto pr-1">
+        <% if @approved_questions.any? %>
+          <% @approved_questions.each do |q| %>
+            <div class="p-4 rounded-2xl <%= q.pinned? ? 'bg-amber-50 border-2 border-amber-300' : 'bg-stone-50 border border-stone-200' %> flex items-start justify-between gap-3">
+              <div>
+                <% if q.pinned? %>
+                  <span class="px-2 py-0.5 rounded text-[10px] font-black bg-amber-500 text-stone-950 uppercase mb-1 inline-block">PINNED TO SCREEN</span>
+                <% end %>
+                <p class="text-xs font-semibold text-stone-900"><%= q.display_body %></p>
+                <span class="text-[10px] text-stone-400 mt-1 block">▲ <%= q.upvotes_count %> votes &bull; <%= time_ago_in_words(q.created_at) %> ago</span>
+              </div>
+              <div class="flex flex-col gap-1 shrink-0">
+                <% if q.pinned? %>
+                  <%= button_to "Unpin", unpin_question_admin_ask_live_session_path(@live_session, question_id: q.id), method: :post, class: "px-2 py-1 rounded bg-stone-200 text-stone-700 text-[10px] font-bold hover:bg-stone-300" %>
+                <% else %>
+                  <%= button_to "Pin to Screen", pin_question_admin_ask_live_session_path(@live_session, question_id: q.id), method: :post, class: "px-2 py-1 rounded bg-amber-400 text-stone-950 text-[10px] font-black hover:bg-amber-500" %>
+                <% end %>
+                <%= button_to "Answered", mark_question_answered_admin_ask_live_session_path(@live_session, question_id: q.id), method: :post, class: "px-2 py-1 rounded bg-emerald-100 text-emerald-800 text-[10px] font-bold hover:bg-emerald-200" %>
+              </div>
+            </div>
+          <% end %>
+        <% else %>
+          <p class="text-xs text-stone-400 text-center py-6">No approved questions yet.</p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

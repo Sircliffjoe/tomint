@@ -1,0 +1,12 @@
+<% voted = local_assigns[:voted] || false %>
+
+<%= button_to ask_live_vote_question_path(live_session, question),
+  method: :post,
+  class: "flex flex-col items-center justify-center min-w-[3rem] px-2.5 py-1.5 rounded-xl border transition-all cursor-pointer #{voted ? 'bg-emerald-600 border-emerald-600 text-white shadow' : 'bg-stone-50 border-stone-200 text-stone-700 hover:bg-emerald-50 hover:border-emerald-300 hover:text-emerald-800'}",
+  disabled: !live_session.can_vote?,
+  title: voted ? "You upvoted this" : "Upvote this question" do %>
+  <svg class="w-4 h-4 mb-0.5 #{voted ? 'text-white' : 'text-stone-500'}" fill="currentColor" viewBox="0 0 20 20">
+    <path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd" />
+  </svg>
+  <span class="text-xs font-black"><%= question.upvotes_count %></span>
+<% end %>

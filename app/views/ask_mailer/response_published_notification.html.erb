@@ -1,0 +1,17 @@
+<h2>TOM ASK: Your Question Has Been Answered</h2>
+
+<p>Hello,</p>
+
+<p>Thank you for reaching out to TOM ASK ("You can ask. We will listen.").</p>
+
+<p>The TOM team has reviewed and published an answer to your question (Reference: <strong><%= @question.public_reference %></strong>).</p>
+
+<p style="margin-top: 1.5rem;">
+  <a href="<%= ask_question_url(@question) %>" style="background-color: #15803d; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">
+    Read the Answer on TOM ASK
+  </a>
+</p>
+
+<p style="margin-top: 2rem; color: #64748b; font-size: 0.9rem;">
+  You can always visit <a href="<%= ask_root_url %>">TOM ASK</a> to ask further questions or check our answered library.
+</p>

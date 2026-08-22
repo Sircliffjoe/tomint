@@ -501,6 +501,186 @@ function initPublicSite() {
       if (clickedBackdrop) closeGlobalModal();
     });
   }
+
+  initAskForm();
+}
+
+function initAskForm() {
+  const container = document.querySelector('[data-controller="ask-form"]');
+  if (!container) return;
+
+  const bodyInput = container.querySelector('[data-ask-form-target="bodyInput"]');
+  const charCount = container.querySelector('[data-ask-form-target="charCount"]');
+  const steps = container.querySelectorAll('[data-ask-form-target="step"]');
+  const indicators = container.querySelectorAll('[data-ask-form-target="stepIndicator"]');
+  const nextBtn = container.querySelector('[data-ask-form-target="nextButton"]');
+  const prevBtn = container.querySelector('[data-ask-form-target="prevButton"]');
+  const submitBtn = container.querySelector('[data-ask-form-target="submitButton"]');
+  const categoryCards = container.querySelectorAll('[data-ask-form-target="categoryCard"]');
+  const categoryInput = container.querySelector('[data-ask-form-target="categoryInput"]');
+  const responseChoices = container.querySelectorAll('[data-ask-form-target="responseChoice"]');
+  const responseChoiceInput = container.querySelector('[data-ask-form-target="responseChoiceInput"]');
+  const contactSection = container.querySelector('[data-ask-form-target="contactSection"]');
+  const contactMethodInput = container.querySelector('[data-ask-form-target="contactMethodInput"]');
+  const contactLabel = container.querySelector('[data-ask-form-target="contactLabel"]');
+  const contactDetailsInput = container.querySelector('[data-ask-form-target="contactDetailsInput"]');
+
+  let currentStep = 1;
+  const totalSteps = 4;
+
+  function updateCount() {
+    if (bodyInput && charCount) {
+      const len = bodyInput.value.length;
+      charCount.textContent = `${len} ${len === 1 ? 'character' : 'characters'}`;
+      if (bodyInput.value.trim().length >= 5) {
+        bodyInput.classList.remove("border-red-400", "ring-2", "ring-red-200");
+      }
+    }
+  }
+
+  function show(stepNum) {
+    steps.forEach((st, idx) => {
+      if (idx + 1 === stepNum) {
+        st.classList.remove("hidden");
+        st.style.display = "block";
+      } else {
+        st.classList.add("hidden");
+        st.style.display = "none";
+      }
+    });
+
+    indicators.forEach((ind, idx) => {
+      if (idx + 1 === stepNum) {
+        ind.classList.add("bg-emerald-600", "text-white", "ring-4", "ring-emerald-100");
+        ind.classList.remove("bg-gray-100", "text-gray-500", "bg-emerald-100", "text-emerald-800");
+      } else if (idx + 1 < stepNum) {
+        ind.classList.add("bg-emerald-100", "text-emerald-800");
+        ind.classList.remove("bg-emerald-600", "text-white", "ring-4", "ring-emerald-100", "bg-gray-100", "text-gray-500");
+      } else {
+        ind.classList.add("bg-gray-100", "text-gray-500");
+        ind.classList.remove("bg-emerald-600", "text-white", "ring-4", "ring-emerald-100", "bg-emerald-100", "text-emerald-800");
+      }
+    });
+
+    if (prevBtn) {
+      if (stepNum === 1) {
+        prevBtn.classList.add("hidden");
+        prevBtn.style.display = "none";
+      } else {
+        prevBtn.classList.remove("hidden");
+        prevBtn.style.display = "inline-flex";
+      }
+    }
+
+    if (nextBtn && submitBtn) {
+      if (stepNum === totalSteps) {
+        nextBtn.classList.add("hidden");
+        nextBtn.style.display = "none";
+        submitBtn.classList.remove("hidden");
+        submitBtn.style.display = "inline-flex";
+      } else {
+        nextBtn.classList.remove("hidden");
+        nextBtn.style.display = "inline-flex";
+        submitBtn.classList.add("hidden");
+        submitBtn.style.display = "none";
+      }
+    }
+  }
+
+  if (bodyInput) {
+    bodyInput.addEventListener("input", updateCount);
+    bodyInput.addEventListener("keyup", updateCount);
+    bodyInput.addEventListener("paste", () => setTimeout(updateCount, 10));
+    bodyInput.addEventListener("change", updateCount);
+    updateCount();
+  }
+
+  if (nextBtn) {
+    nextBtn.onclick = (e) => {
+      e.preventDefault();
+      if (currentStep === 1) {
+        const val = bodyInput ? bodyInput.value.trim() : "";
+        if (!val || val.length < 5) {
+          if (bodyInput) {
+            bodyInput.focus();
+            bodyInput.classList.add("border-red-400", "ring-2", "ring-red-200");
+          }
+          return;
+        }
+        if (bodyInput) bodyInput.classList.remove("border-red-400", "ring-2", "ring-red-200");
+      }
+
+      if (currentStep < totalSteps) {
+        currentStep++;
+        show(currentStep);
+      }
+    };
+  }
+
+  if (prevBtn) {
+    prevBtn.onclick = (e) => {
+      e.preventDefault();
+      if (currentStep > 1) {
+        currentStep--;
+        show(currentStep);
+      }
+    };
+  }
+
+  categoryCards.forEach((card) => {
+    card.onclick = () => {
+      categoryCards.forEach((c) => {
+        c.classList.remove("border-emerald-600", "bg-emerald-50/70", "ring-2", "ring-emerald-500");
+        c.classList.add("border-gray-200", "bg-white");
+      });
+      card.classList.remove("border-gray-200", "bg-white");
+      card.classList.add("border-emerald-600", "bg-emerald-50/70", "ring-2", "ring-emerald-500");
+      if (categoryInput) categoryInput.value = card.dataset.categoryId || "";
+    };
+  });
+
+  responseChoices.forEach((choice) => {
+    choice.onclick = () => {
+      responseChoices.forEach((c) => {
+        c.classList.remove("border-emerald-600", "bg-emerald-50/70", "ring-2", "ring-emerald-500");
+        c.classList.add("border-gray-200", "bg-white");
+      });
+      choice.classList.remove("border-gray-200", "bg-white");
+      choice.classList.add("border-emerald-600", "bg-emerald-50/70", "ring-2", "ring-emerald-500");
+      const choiceVal = choice.dataset.choice || "public_answer";
+      if (responseChoiceInput) responseChoiceInput.value = choiceVal;
+
+      if (contactSection) {
+        if (choiceVal === "private_response" || choiceVal === "need_help") {
+          contactSection.classList.remove("hidden");
+          contactSection.style.display = "block";
+        } else {
+          contactSection.classList.add("hidden");
+          contactSection.style.display = "none";
+        }
+      }
+    };
+  });
+
+  if (contactMethodInput) {
+    contactMethodInput.onchange = (e) => {
+      const method = e.target.value;
+      if (contactLabel && contactDetailsInput) {
+        if (method === "whatsapp" || method === "phone") {
+          contactLabel.textContent = "Your WhatsApp or phone number (optional):";
+          contactDetailsInput.placeholder = "e.g. 08012345678";
+        } else if (method === "email") {
+          contactLabel.textContent = "Your email address (optional):";
+          contactDetailsInput.placeholder = "e.g. yourname@example.com";
+        } else {
+          contactLabel.textContent = "Your preferred contact details (optional):";
+          contactDetailsInput.placeholder = "Contact info...";
+        }
+      }
+    };
+  }
+
+  show(1);
 }
 
 document.addEventListener("turbo:before-cache", () => {

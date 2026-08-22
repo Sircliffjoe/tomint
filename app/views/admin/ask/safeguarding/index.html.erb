@@ -1,0 +1,132 @@
+<% content_for :title, "Safeguarding & Crisis Hub — TOM International" %>
+
+<div class="space-y-6">
+  <!-- Header -->
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-rose-900 text-white p-6 sm:p-8 rounded-3xl shadow-xl">
+    <div>
+      <div class="flex items-center gap-2">
+        <span class="px-2.5 py-0.5 rounded-full text-xs font-black bg-rose-600 text-white uppercase tracking-wider animate-pulse">
+          RESTRICTED ACCESS
+        </span>
+        <span class="text-xs text-rose-200">&bull; Authorized Safeguarding Personnel Only</span>
+      </div>
+      <h1 class="text-2xl sm:text-3xl font-black tracking-tight mt-1">Safeguarding &amp; Crisis Hub</h1>
+      <p class="text-xs sm:text-sm text-rose-100/90 mt-1 max-w-xl">
+        Manage sensitive disclosures, crisis concerns, and urgent safeguarding cases with strict confidentiality.
+      </p>
+    </div>
+
+    <%= link_to admin_ask_dashboard_path, class: "px-4 py-2 rounded-xl bg-white/10 text-white text-xs font-bold hover:bg-white/20 border border-white/20 self-start sm:self-auto" do %>
+      &larr; Return to Dashboard
+    <% end %>
+  </div>
+
+  <!-- Safeguarding Summary Stats -->
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+    <div class="p-5 rounded-2xl bg-white border border-rose-200 shadow-sm">
+      <span class="text-xs font-bold text-rose-700 uppercase tracking-wider block">Urgent Cases</span>
+      <p class="text-3xl font-black text-rose-600 mt-1"><%= @stats[:urgent] %></p>
+      <span class="text-[11px] text-stone-400">Immediate action required</span>
+    </div>
+
+    <div class="p-5 rounded-2xl bg-white border border-stone-200 shadow-sm">
+      <span class="text-xs font-bold text-amber-700 uppercase tracking-wider block">Under Review</span>
+      <p class="text-3xl font-black text-amber-600 mt-1"><%= @stats[:under_review] %></p>
+      <span class="text-[11px] text-stone-400">Awaiting assessment</span>
+    </div>
+
+    <div class="p-5 rounded-2xl bg-white border border-stone-200 shadow-sm">
+      <span class="text-xs font-bold text-indigo-700 uppercase tracking-wider block">Escalated</span>
+      <p class="text-3xl font-black text-indigo-600 mt-1"><%= @stats[:escalated] %></p>
+      <span class="text-[11px] text-stone-400">Active investigation/referral</span>
+    </div>
+
+    <div class="p-5 rounded-2xl bg-white border border-stone-200 shadow-sm">
+      <span class="text-xs font-bold text-emerald-700 uppercase tracking-wider block">Resolved &amp; Closed</span>
+      <p class="text-3xl font-black text-emerald-600 mt-1"><%= @stats[:resolved] %></p>
+      <span class="text-[11px] text-stone-400">Action completed</span>
+    </div>
+  </div>
+
+  <!-- Safeguarding Queue Table -->
+  <div class="bg-white rounded-3xl border border-rose-200 shadow-sm overflow-hidden">
+    <div class="p-6 border-b border-stone-100 flex items-center justify-between">
+      <h2 class="text-lg font-bold text-stone-900 flex items-center gap-2">
+        <svg class="w-5 h-5 text-rose-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+        Confidential Safeguarding Cases
+      </h2>
+      <span class="text-xs text-stone-400 font-semibold"><%= @questions.total_count rescue @questions.size %> cases</span>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-xs">
+        <thead class="bg-stone-50 text-stone-500 font-semibold border-b border-stone-100">
+          <tr>
+            <th class="py-3.5 px-4">Ref / Disclosure</th>
+            <th class="py-3.5 px-3">Priority</th>
+            <th class="py-3.5 px-3">Status</th>
+            <th class="py-3.5 px-3">Contact Supplied</th>
+            <th class="py-3.5 px-3">Submitted</th>
+            <th class="py-3.5 px-4 text-right">Action</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-stone-100">
+          <% if @questions.any? %>
+            <% @questions.each do |q| %>
+              <tr class="hover:bg-rose-50/40 transition-colors">
+                <td class="py-4 px-4 max-w-md">
+                  <div class="flex items-center gap-2 mb-1">
+                    <span class="font-mono text-xs font-bold text-rose-900 bg-rose-50 px-2 py-0.5 rounded border border-rose-200">
+                      <%= q.public_reference %>
+                    </span>
+                    <% if q.urgent_flag? %>
+                      <span class="px-2 py-0.5 rounded text-[10px] font-black bg-rose-600 text-white animate-pulse">URGENT</span>
+                    <% end %>
+                  </div>
+                  <p class="font-semibold text-stone-900 line-clamp-2 leading-relaxed">
+                    <%= q.body %>
+                  </p>
+                </td>
+                <td class="py-4 px-3 whitespace-nowrap">
+                  <span class="px-2.5 py-0.5 rounded text-[10px] font-bold <%= q.priority_badge_class %>">
+                    <%= q.priority.upcase %>
+                  </span>
+                </td>
+                <td class="py-4 px-3 whitespace-nowrap">
+                  <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold <%= q.status_badge_class %>">
+                    <%= q.status.humanize %>
+                  </span>
+                </td>
+                <td class="py-4 px-3 whitespace-nowrap text-stone-600">
+                  <% if q.has_contact_info? %>
+                    <span class="font-semibold text-indigo-700">&check; <%= q.contact_method.humanize %></span>
+                  <% else %>
+                    <span class="text-stone-400 italic">None</span>
+                  <% end %>
+                </td>
+                <td class="py-4 px-3 whitespace-nowrap text-stone-400">
+                  <%= time_ago_in_words(q.submitted_at) %> ago
+                </td>
+                <td class="py-4 px-4 text-right whitespace-nowrap">
+                  <%= link_to "Open Case File &rarr;".html_safe, admin_ask_safeguarding_path(q), class: "px-3.5 py-1.5 rounded-xl bg-rose-700 text-white font-bold hover:bg-rose-800 transition-all shadow-sm" %>
+                </td>
+              </tr>
+            <% end %>
+          <% else %>
+            <tr>
+              <td colspan="6" class="py-12 text-center text-stone-400">
+                No active safeguarding cases.
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <% if @pagy.pages > 1 %>
+      <div class="p-4 border-t border-stone-100 flex justify-center">
+        <%== @pagy.series_nav %>
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,284 @@
+<% content_for :title, "Workbench: #{@question.public_reference} — TOM ASK" %>
+
+<div class="space-y-6">
+  <!-- Top Bar -->
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div class="flex items-center gap-3">
+      <%= link_to admin_ask_questions_path, class: "p-2 rounded-xl bg-white border border-stone-200 text-stone-600 hover:bg-stone-50" do %>
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+      <% end %>
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="font-mono text-sm font-black text-emerald-950 bg-emerald-100 px-2.5 py-0.5 rounded border border-emerald-300">
+            <%= @question.public_reference %>
+          </span>
+          <span class="px-2.5 py-0.5 rounded-full text-xs font-bold <%= @question.status_badge_class %>">
+            <%= @question.status.humanize %>
+          </span>
+          <span class="px-2 py-0.5 rounded text-xs font-bold <%= @question.priority_badge_class %>">
+            <%= @question.priority.upcase %>
+          </span>
+        </div>
+        <h1 class="text-xl font-bold text-stone-900 mt-1">Question Moderation &amp; Response Workbench</h1>
+      </div>
+    </div>
+
+    <!-- Quick Action Buttons -->
+    <div class="flex flex-wrap items-center gap-2">
+      <% if @question.can_publish_publicly? && !@question.approved_public? %>
+        <%= button_to approve_public_admin_ask_question_path(@question), method: :post, class: "px-4 py-2 rounded-xl bg-emerald-700 text-white text-xs font-bold hover:bg-emerald-800 shadow cursor-pointer" do %>
+          &check; Approve for Public
+        <% end %>
+      <% end %>
+
+      <%= button_to flag_safeguarding_admin_ask_question_path(@question), method: :post, data: { turbo_confirm: "Are you sure you want to flag this question for Safeguarding review?" }, class: "px-3.5 py-2 rounded-xl bg-rose-50 text-rose-700 border border-rose-200 text-xs font-bold hover:bg-rose-100 cursor-pointer" do %>
+        &Delta; Flag Safeguarding
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Main Grid: Left Workbench (2 cols), Right Metadata & Notes (1 col) -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Left Column (2 Cols) -->
+    <div class="lg:col-span-2 space-y-6">
+      <!-- Original Submission Card -->
+      <div class="bg-white rounded-3xl border border-stone-200/90 shadow-sm p-6 sm:p-8 space-y-4">
+        <div class="flex items-center justify-between border-b border-stone-100 pb-3">
+          <span class="text-xs font-bold text-stone-400 uppercase tracking-wider">Raw Teen Submission</span>
+          <span class="text-xs text-stone-400 font-medium">Submitted <%= @question.submitted_at.strftime("%b %d, %Y at %I:%M %p") %></span>
+        </div>
+
+        <p class="text-base sm:text-lg text-stone-900 leading-relaxed italic bg-stone-50 p-5 rounded-2xl border border-stone-200/70">
+          "<%= @question.body %>"
+        </p>
+
+        <% if @question.has_contact_info? %>
+          <div class="p-4 rounded-2xl bg-indigo-50/80 border border-indigo-100 flex items-center justify-between">
+            <div>
+              <span class="text-xs font-bold text-indigo-950 uppercase tracking-wider block">Voluntary Contact Details</span>
+              <span class="text-xs text-indigo-700 font-semibold"><%= @question.contact_method.humanize %>: <%= @question.contact_details %></span>
+            </div>
+            <% if @question.whatsapp? || @question.phone? %>
+              <% clean_phone = @question.contact_details.gsub(/[^0-9]/, "") %>
+              <% if clean_phone.start_with?("0") %>
+                <% clean_phone = "234" + clean_phone[1..] %>
+              <% end %>
+              <a href="https://wa.me/<%= clean_phone %>?text=Hello%20from%20TOM%20International%20regarding%20your%20TOM%20ASK%20question%20(<%= @question.public_reference %>)" target="_blank" class="px-3.5 py-1.5 rounded-xl bg-green-600 text-white text-xs font-bold hover:bg-green-700 shadow-sm flex items-center gap-1.5">
+                <span>WhatsApp</span> &rarr;
+              </a>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Moderator Anonymization & Edit Form -->
+      <div class="bg-white rounded-3xl border border-stone-200/90 shadow-sm p-6 sm:p-8 space-y-4">
+        <h2 class="text-base font-bold text-stone-900 flex items-center gap-2">
+          <svg class="w-5 h-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+          Anonymize &amp; Classify Question
+        </h2>
+        <p class="text-xs text-stone-500">Edit out any names, schools, churches, or identifying info before approving for public display.</p>
+
+        <%= form_with model: @question, url: moderate_admin_ask_question_path(@question), method: :patch, class: "space-y-4" do |f| %>
+          <div>
+            <%= f.label :anonymized_body, "Public Question Text (Anonymized)", class: "block text-xs font-semibold text-stone-700 mb-1" %>
+            <%= f.text_area :anonymized_body, value: @question.display_body, rows: 3, class: "w-full p-3 text-sm rounded-xl border border-stone-300 focus:ring-2 focus:ring-emerald-500 focus:outline-none" %>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+            <div>
+              <%= f.label :ask_category_id, "Category", class: "block font-semibold text-stone-700 mb-1" %>
+              <%= f.collection_select :ask_category_id, @categories, :id, :name, { prompt: "Select Category" }, class: "w-full p-2.5 rounded-xl border border-stone-300 bg-white" %>
+            </div>
+
+            <div>
+              <%= f.label :priority, "Priority", class: "block font-semibold text-stone-700 mb-1" %>
+              <%= f.select :priority, AskQuestion.priorities.keys.map { |p| [p.humanize, p] }, {}, class: "w-full p-2.5 rounded-xl border border-stone-300 bg-white" %>
+            </div>
+
+            <div>
+              <%= f.label :status, "Workflow Status", class: "block font-semibold text-stone-700 mb-1" %>
+              <%= f.select :status, AskQuestion.statuses.keys.map { |s| [s.humanize, s] }, {}, class: "w-full p-2.5 rounded-xl border border-stone-300 bg-white" %>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between pt-2">
+            <label class="flex items-center gap-2 text-xs font-semibold text-stone-700 cursor-pointer">
+              <%= f.check_box :featured, class: "rounded border-stone-300 text-emerald-600 focus:ring-emerald-500" %>
+              Featured in Public Library
+            </label>
+
+            <%= f.submit "Save Moderation Changes", class: "px-5 py-2 rounded-xl bg-emerald-700 text-white font-bold text-xs hover:bg-emerald-800 shadow cursor-pointer" %>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Response Section -->
+      <div class="bg-white rounded-3xl border border-stone-200/90 shadow-sm p-6 sm:p-8 space-y-6">
+        <div class="flex items-center justify-between border-b border-stone-100 pb-3">
+          <h2 class="text-base font-bold text-stone-900 flex items-center gap-2">
+            <svg class="w-5 h-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" /></svg>
+            TOM Response Editor
+          </h2>
+          <% if @question.published_response %>
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-green-100 text-green-800">
+              Answer Published
+            </span>
+          <% end %>
+        </div>
+
+        <!-- Existing Responses List -->
+        <% if @responses.any? %>
+          <div class="space-y-4">
+            <% @responses.each do |resp| %>
+              <div class="p-5 rounded-2xl <%= resp.published? ? 'bg-emerald-50/70 border border-emerald-200' : 'bg-stone-50 border border-stone-200' %> space-y-3">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs font-bold text-stone-900"><%= resp.user.full_name %></span>
+                    <span class="px-2 py-0.5 rounded text-[10px] font-bold <%= resp.published? ? 'bg-emerald-600 text-white' : 'bg-stone-200 text-stone-700' %>">
+                      <%= resp.status.humanize %>
+                    </span>
+                  </div>
+                  <span class="text-xs text-stone-400"><%= time_ago_in_words(resp.created_at) %> ago</span>
+                </div>
+
+                <p class="text-sm text-stone-800 leading-relaxed whitespace-pre-line">
+                  <%= resp.body %>
+                </p>
+
+                <div class="flex items-center justify-end gap-2 pt-2 border-t border-stone-200/50">
+                  <% unless resp.published? %>
+                    <%= button_to publish_admin_ask_question_response_path(@question, resp), method: :post, class: "px-3 py-1 rounded-lg bg-emerald-700 text-white text-xs font-bold hover:bg-emerald-800" do %>
+                      Publish to Library
+                    <% end %>
+                  <% end %>
+                  <%= button_to admin_ask_question_response_path(@question, resp), method: :delete, data: { turbo_confirm: "Delete response?" }, class: "text-xs text-red-600 hover:underline" do %>
+                    Delete
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+
+        <!-- Draft / New Response Form -->
+        <%= form_with model: [@question, @new_response], url: admin_ask_question_responses_path(@question), class: "space-y-3" do |f| %>
+          <div>
+            <%= f.label :body, "Draft Official Answer / Pastoral Advice", class: "block text-xs font-semibold text-stone-700 mb-1" %>
+            <%= f.text_area :body, rows: 5, required: true, placeholder: "Type clear, encouraging, biblically sound advice tailored for teenagers...", class: "w-full p-4 rounded-2xl border border-stone-300 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none" %>
+          </div>
+
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-3 text-xs">
+              <%= f.select :response_type, [
+                ["Public Answer", "public_answer"],
+                ["Private Reply", "private_reply"],
+                ["Pastoral Note", "pastoral_note"]
+              ], {}, class: "p-2 rounded-xl border border-stone-300 bg-white" %>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <button type="submit" name="commit_action" value="draft" class="px-4 py-2 rounded-xl border border-stone-300 text-stone-700 text-xs font-bold hover:bg-stone-100 cursor-pointer">
+                Save Draft
+              </button>
+              <button type="submit" name="commit_action" value="publish" class="px-5 py-2 rounded-xl bg-emerald-700 text-white text-xs font-bold hover:bg-emerald-800 shadow cursor-pointer">
+                Publish Response &rarr;
+              </button>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Right Column: Assignments, Internal Notes & Audit Trail (1 Col) -->
+    <div class="space-y-6">
+      <!-- Assign Responder Card -->
+      <div class="bg-white rounded-3xl border border-stone-200/90 shadow-sm p-6 space-y-4">
+        <h3 class="text-sm font-bold text-stone-900 flex items-center justify-between">
+          <span>Assigned Responder</span>
+          <% if @question.current_assignee %>
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">Assigned</span>
+          <% end %>
+        </h3>
+
+        <% if @question.current_assignee %>
+          <div class="p-3 rounded-2xl bg-stone-50 border border-stone-200 flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full bg-emerald-200 text-emerald-800 font-bold flex items-center justify-center text-xs">
+              <%= @question.current_assignee.initials %>
+            </div>
+            <div>
+              <p class="text-xs font-bold text-stone-900"><%= @question.current_assignee.full_name %></p>
+              <p class="text-[10px] text-stone-400"><%= @question.current_assignee.display_role %></p>
+            </div>
+          </div>
+        <% end %>
+
+        <%= form_with url: assign_admin_ask_question_path(@question), method: :post, class: "space-y-3" do |f| %>
+          <div>
+            <label class="block text-xs font-semibold text-stone-600 mb-1">Assign to Staff / Responder</label>
+            <%= f.collection_select :assignee_id, @responders, :id, :full_name, { prompt: "Select responder..." }, class: "w-full p-2.5 text-xs rounded-xl border border-stone-300 bg-white" %>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-stone-600 mb-1">Assignment Note (optional)</label>
+            <%= f.text_field :notes, placeholder: "e.g. Please draft answer on peer pressure", class: "w-full p-2 text-xs rounded-xl border border-stone-300" %>
+          </div>
+
+          <%= f.submit "Assign Question", class: "w-full py-2 rounded-xl bg-stone-800 text-white font-bold text-xs hover:bg-stone-900 cursor-pointer" %>
+        <% end %>
+      </div>
+
+      <!-- Internal Notes (Staff Only) -->
+      <div class="bg-white rounded-3xl border border-stone-200/90 shadow-sm p-6 space-y-4">
+        <div class="flex items-center justify-between">
+          <h3 class="text-sm font-bold text-stone-900">Internal Staff Notes</h3>
+          <span class="text-[10px] font-bold text-rose-600 uppercase">Never Public</span>
+        </div>
+
+        <div class="space-y-3 max-h-60 overflow-y-auto pr-1">
+          <% if @internal_notes.any? %>
+            <% @internal_notes.each do |note| %>
+              <div class="p-3 rounded-2xl bg-stone-50 border border-stone-200 text-xs space-y-1">
+                <div class="flex items-center justify-between text-[10px] text-stone-400">
+                  <span class="font-bold text-stone-700"><%= note.user&.first_name || "Staff" %></span>
+                  <span><%= time_ago_in_words(note.created_at) %> ago</span>
+                </div>
+                <p class="text-stone-800"><%= note.body %></p>
+              </div>
+            <% end %>
+          <% else %>
+            <p class="text-xs text-stone-400 text-center py-2">No internal notes yet.</p>
+          <% end %>
+        </div>
+
+        <%= form_with model: [@question, @new_internal_note], url: admin_ask_question_internal_notes_path(@question), class: "space-y-2" do |f| %>
+          <%= f.text_area :body, rows: 2, placeholder: "Add private note for staff...", required: true, class: "w-full p-2.5 text-xs rounded-xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-emerald-500" %>
+          <%= f.submit "Add Note", class: "w-full py-1.5 rounded-xl bg-stone-200 text-stone-800 font-bold text-xs hover:bg-stone-300 cursor-pointer" %>
+        <% end %>
+      </div>
+
+      <!-- Moderation Audit Trail -->
+      <div class="bg-white rounded-3xl border border-stone-200/90 shadow-sm p-6 space-y-3">
+        <h3 class="text-sm font-bold text-stone-900">Audit Trail</h3>
+
+        <div class="space-y-2.5 max-h-56 overflow-y-auto pr-1 text-xs">
+          <% if @moderation_actions.any? %>
+            <% @moderation_actions.each do |act| %>
+              <div class="border-l-2 border-emerald-500 pl-2.5 py-0.5">
+                <p class="font-semibold text-stone-800">
+                  <span class="text-emerald-700"><%= act.user&.first_name %></span>: <%= act.action.humanize %>
+                </p>
+                <% if act.details.present? %>
+                  <p class="text-[11px] text-stone-500"><%= act.details %></p>
+                <% end %>
+                <span class="text-[10px] text-stone-400"><%= time_ago_in_words(act.created_at) %> ago</span>
+              </div>
+            <% end %>
+          <% else %>
+            <p class="text-xs text-stone-400 text-center py-2">No audit actions recorded.</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
