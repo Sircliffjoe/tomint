@@ -6,7 +6,7 @@ RSpec.describe AskResponse, type: :model do
   let(:user) do
     User.create!(
       first_name: "Responder", last_name: "Staff", email: "staff_resp@tomint.org",
-      password: "password123", role: :ask_responder
+      password: "password123", role: :responder
     )
   end
   let(:question) { AskQuestion.create!(body: "How to overcome peer pressure?") }

@@ -70,7 +70,7 @@ RSpec.describe AskQuestion, type: :model do
     let(:responder) do
       User.create!(
         first_name: "Responder", last_name: "User", email: "responder_test@tomint.org",
-        password: "password123", role: :ask_responder
+        password: "password123", role: :responder
       )
     end
     let(:question) { AskQuestion.create!(body: "Can someone help me understand baptism?") }

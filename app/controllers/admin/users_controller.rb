@@ -7,10 +7,10 @@ module Admin
     def index
       @role = params[:role]
       @users = if @role.present?
-                 User.where(role: @role).order(:first_name)
-      else
-                 User.where.not(role: :super_admin).order(created_at: :desc)
-      end
+                 User.where(role: @role).order(:first_name, :last_name)
+               else
+                 User.all.order(created_at: :desc)
+               end
     end
 
     def show

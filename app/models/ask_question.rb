@@ -100,19 +100,22 @@ class AskQuestion < ApplicationRecord
   end
 
   def assign_to!(assignee, assigned_by, notes = nil)
+    assignment = nil
     transaction do
       ask_assignments.where(active: true).update_all(active: false, completed_at: Time.current)
-      ask_assignments.create!(
+      assignment = ask_assignments.create!(
         assignee: assignee,
         assigned_by: assigned_by,
         assigned_at: Time.current,
         notes: notes,
         active: true
       )
-      self.status = :awaiting_response if new_intake? || under_review?
+      self.status = :awaiting_response unless safeguarding_flag?
       save!
-      log_action!(assigned_by, "assigned", "Assigned to #{assignee.full_name}")
+      log_action!(assigned_by, "assigned", "Assigned to #{assignee.full_name}#{": #{notes}" if notes.present?}")
     end
+    AskMailer.question_assigned(assignment).deliver_later rescue nil
+    assignment
   end
 
   def log_action!(user, action_name, details = nil)

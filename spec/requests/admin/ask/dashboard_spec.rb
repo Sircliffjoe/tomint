@@ -9,10 +9,10 @@ RSpec.describe "Admin::Ask::DashboardController", type: :request do
       password: "password123", role: :super_admin
     )
   end
-  let!(:moderator) do
+  let!(:responder) do
     User.create!(
-      first_name: "Mod", last_name: "User", email: "mod_dash@tomint.org",
-      password: "password123", role: :ask_moderator
+      first_name: "Responder", last_name: "User", email: "resp_dash@tomint.org",
+      password: "password123", role: :responder
     )
   end
 

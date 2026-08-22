@@ -15,9 +15,38 @@
     </div>
   </div>
 
+  <!-- Quick View Tabs -->
+  <div class="flex items-center gap-2 overflow-x-auto pb-1 text-xs">
+    <%= link_to admin_ask_questions_path, class: "px-4 py-2 rounded-xl font-bold transition-all whitespace-nowrap #{params[:filter].blank? && params[:status].blank? ? 'bg-emerald-800 text-white shadow' : 'bg-white border border-stone-200 text-stone-700 hover:bg-stone-50'}" do %>
+      All Questions
+    <% end %>
+
+    <%= link_to admin_ask_questions_path(filter: "assigned_to_me"), class: "px-4 py-2 rounded-xl font-bold transition-all whitespace-nowrap flex items-center gap-2 #{params[:filter] == 'assigned_to_me' ? 'bg-emerald-800 text-white shadow' : 'bg-white border border-stone-200 text-stone-700 hover:bg-stone-50'}" do %>
+      <span>Assigned to Me</span>
+      <% if @assigned_to_me_count && @assigned_to_me_count > 0 %>
+        <span class="px-1.5 py-0.5 rounded-full text-[10px] font-black <%= params[:filter] == 'assigned_to_me' ? 'bg-lime-400 text-emerald-950' : 'bg-emerald-600 text-white' %>">
+          <%= @assigned_to_me_count %>
+        </span>
+      <% end %>
+    <% end %>
+
+    <%= link_to admin_ask_questions_path(filter: "unassigned"), class: "px-4 py-2 rounded-xl font-bold transition-all whitespace-nowrap #{params[:filter] == 'unassigned' ? 'bg-emerald-800 text-white shadow' : 'bg-white border border-stone-200 text-stone-700 hover:bg-stone-50'}" do %>
+      Unassigned / Open
+    <% end %>
+
+    <%= link_to admin_ask_questions_path(status: "awaiting_response"), class: "px-4 py-2 rounded-xl font-bold transition-all whitespace-nowrap #{params[:status] == 'awaiting_response' ? 'bg-emerald-800 text-white shadow' : 'bg-white border border-stone-200 text-stone-700 hover:bg-stone-50'}" do %>
+      Awaiting Response
+    <% end %>
+
+    <%= link_to admin_ask_questions_path(status: "new_intake"), class: "px-4 py-2 rounded-xl font-bold transition-all whitespace-nowrap #{params[:status] == 'new_intake' ? 'bg-emerald-800 text-white shadow' : 'bg-white border border-stone-200 text-stone-700 hover:bg-stone-50'}" do %>
+      New Intake
+    <% end %>
+  </div>
+
   <!-- Filters Card -->
   <div class="bg-white rounded-3xl border border-stone-200/90 shadow-sm p-5">
     <%= form_with url: admin_ask_questions_path, method: :get, class: "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 text-xs" do |f| %>
+      <%= f.hidden_field :filter, value: params[:filter] if params[:filter].present? %>
       <!-- Search Input -->
       <div class="lg:col-span-2">
         <label class="block font-semibold text-stone-600 mb-1">Search Keyword / Ref</label>

@@ -52,6 +52,10 @@ class InternalMessagesController < ApplicationController
   end
 
   def authorize_messaging_user!
-    redirect_to dashboard_path, alert: "Messaging is not available for Super Admin." if current_user.super_admin?
+    if current_user.super_admin?
+      redirect_to dashboard_path, alert: "Messaging is not available for Super Admin."
+    elsif current_user.responder?
+      redirect_to dashboard_path_for_current_user, alert: "You are not authorized to access internal messages."
+    end
   end
 end

@@ -25,9 +25,7 @@ class User < ApplicationRecord
     state_coordinator: 2,
     state_secretary: 3,
     public_user: 4,
-    ask_moderator: 5,
-    ask_responder: 6,
-    safeguarding_lead: 7
+    responder: 6
   }, default: :public_user
 
   ROLE_DISPLAY_NAMES = {
@@ -36,25 +34,23 @@ class User < ApplicationRecord
     "state_coordinator" => "State Coordinator",
     "state_secretary" => "State Secretary",
     "public_user" => "User",
-    "ask_moderator" => "TOM ASK Moderator",
-    "ask_responder" => "TOM ASK Responder",
-    "safeguarding_lead" => "Safeguarding Lead"
+    "responder" => "Responder"
   }.freeze
 
   def can_moderate_ask?
-    super_admin? || ask_moderator? || safeguarding_lead?
+    super_admin? || responder?
   end
 
   def can_respond_ask?
-    super_admin? || ask_moderator? || ask_responder? || safeguarding_lead?
+    super_admin? || responder?
   end
 
   def can_access_safeguarding?
-    super_admin? || safeguarding_lead?
+    super_admin? || responder?
   end
 
   def can_manage_live_sessions?
-    super_admin? || ask_moderator? || directorate_director? || state_coordinator?
+    super_admin? || responder? || directorate_director? || state_coordinator?
   end
 
   def self.generate_temporary_password

@@ -1,5 +1,6 @@
 class ReportsController < ApplicationController
   before_action :authenticate_user!
+  before_action :authorize_report_user!
   before_action :set_report, only: %i[ show edit update submit destroy ]
 
   def index
@@ -74,6 +75,12 @@ class ReportsController < ApplicationController
   end
 
   private
+    def authorize_report_user!
+      if current_user.responder?
+        redirect_to dashboard_path_for_current_user, alert: "You are not authorized to access reports."
+      end
+    end
+
     def set_report
       @report = Report.find(params[:id])
     end

@@ -12,7 +12,7 @@ RSpec.describe "Admin::Ask::QuestionsController", type: :request do
   let!(:responder) do
     User.create!(
       first_name: "Responder", last_name: "User", email: "responder_q_test@tomint.org",
-      password: "password123", role: :ask_responder
+      password: "password123", role: :responder
     )
   end
   let!(:category) { AskCategory.create!(name: "General Topic", slug: "general-topic") }

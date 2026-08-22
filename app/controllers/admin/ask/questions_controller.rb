@@ -12,13 +12,23 @@ module Admin
 
       def index
         @categories = AskCategory.ordered
-        @responders = User.where(role: [ :super_admin, :ask_moderator, :ask_responder ])
+        @responders = User.where(role: [ :super_admin, :responder ]).order(:first_name, :last_name)
+        @assigned_to_me_count = AskQuestion.where(safeguarding_flag: false)
+                                           .joins(:ask_assignments)
+                                           .where(ask_assignments: { assignee_id: current_user.id, active: true })
+                                           .count
 
         scope = policy_scope(AskQuestion).includes(:ask_category, :current_assignee, :published_response)
 
         # Do not include safeguarding questions in standard queue unless specifically filtered by authorized user
         unless params[:safeguarding] == "true" && current_user.can_access_safeguarding?
           scope = scope.where(safeguarding_flag: false)
+        end
+
+        if params[:filter] == "assigned_to_me"
+          scope = scope.joins(:ask_assignments).where(ask_assignments: { assignee_id: current_user.id, active: true })
+        elsif params[:filter] == "unassigned"
+          scope = scope.left_joins(:ask_assignments).where("ask_assignments.id IS NULL OR ask_assignments.active = false")
         end
 
         if params[:status].present? && params[:status] != "all"
@@ -38,7 +48,11 @@ module Admin
         end
 
         if params[:assignee_id].present?
-          scope = scope.joins(:ask_assignments).where(ask_assignments: { assignee_id: params[:assignee_id], active: true })
+          if params[:assignee_id] == "me"
+            scope = scope.joins(:ask_assignments).where(ask_assignments: { assignee_id: current_user.id, active: true })
+          else
+            scope = scope.joins(:ask_assignments).where(ask_assignments: { assignee_id: params[:assignee_id], active: true })
+          end
         end
 
         if params[:q].present?
@@ -53,7 +67,7 @@ module Admin
       def show
         @new_response = @question.ask_responses.build
         @new_internal_note = @question.ask_internal_notes.build
-        @responders = User.where(role: [ :super_admin, :ask_moderator, :ask_responder, :safeguarding_lead ])
+        @responders = User.where(role: [ :super_admin, :responder ]).order(:first_name, :last_name)
         @categories = AskCategory.active.ordered
         @internal_notes = @question.ask_internal_notes.includes(:user).recent
         @moderation_actions = @question.ask_moderation_actions.includes(:user).recent

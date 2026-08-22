@@ -1,0 +1,136 @@
+<%# Desktop Floating TOM Ask Modal Widget (Bottom-Left) %>
+<% categories = AskCategory.active.ordered rescue [] %>
+
+<div id="tom-ask-floating-widget"
+     class="hidden lg:block fixed bottom-6 left-6 z-40 select-none"
+     data-controller="ask-floating-widget">
+
+  <!-- Floating Popup Window (Modal) -->
+  <div data-ask-floating-widget-target="panel"
+       class="hidden absolute bottom-18 left-0 w-[380px] sm:w-[410px] bg-white rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.3)] border border-emerald-900/10 flex flex-col overflow-hidden transition-all duration-200">
+    
+    <!-- Widget Header -->
+    <div class="bg-gradient-to-r from-[#031d0e] via-[#052e16] to-[#0a4523] text-white p-4 flex items-center justify-between border-b border-emerald-800/40">
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded-xl bg-lime-400 text-emerald-950 flex items-center justify-center shadow-sm">
+          <svg class="w-4 h-4 font-bold" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h3 class="font-bold text-sm font-heading" style="color: white;">TOM ASK</h3>
+            <span class="px-1.5 py-0.5 rounded text-[9px] font-black uppercase bg-lime-400/20 text-lime-300 border border-lime-400/30">Anonymous</span>
+          </div>
+          <p class="text-[11px] text-emerald-200/80">Teen Q&amp;A, guidance &amp; safe space</p>
+        </div>
+      </div>
+      <button type="button"
+              data-action="click->ask-floating-widget#close"
+              class="p-1.5 rounded-full text-white/70 hover:text-white hover:bg-white/10 active:scale-95 transition-all cursor-pointer"
+              aria-label="Close widget">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Widget Body: Fast Question Form -->
+    <div id="floating-ask-widget-body" class="p-4 space-y-3.5 bg-stone-50/50">
+      <%= form_with model: AskQuestion.new, url: ask_submit_question_path, id: "floating-ask-form", class: "space-y-3" do |f| %>
+        <!-- Honeypot -->
+        <div style="display:none !important;" aria-hidden="true">
+          <input type="text" name="website_hp" tabindex="-1" autocomplete="off" />
+          <input type="text" name="honey_field" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-stone-800 mb-1">What's on your mind?</label>
+          <%= f.text_area :body,
+                          rows: 3,
+                          required: true,
+                          placeholder: "Ask a question, share what's bothering you, or express what you're going through...",
+                          class: "w-full p-3 rounded-xl border border-stone-200 text-xs text-stone-900 placeholder:text-stone-400 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:bg-white bg-white focus:outline-none transition-all resize-none shadow-inner leading-relaxed" %>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-[11px] font-semibold text-stone-600 mb-0.5">Topic</label>
+            <%= f.collection_select :ask_category_id,
+                                    categories,
+                                    :id,
+                                    :name,
+                                    { prompt: "General / Any Topic" },
+                                    class: "w-full p-2 text-xs rounded-xl border border-stone-200 text-stone-800 bg-white focus:ring-2 focus:ring-emerald-500 focus:outline-none cursor-pointer" %>
+          </div>
+          <div>
+            <label class="block text-[11px] font-semibold text-stone-600 mb-0.5">Preference</label>
+            <%= f.select :response_preference,
+                         [
+                           ["Answer Publicly (Library)", "public_answer"],
+                           ["Private Response", "private_response"],
+                           ["Just Listen", "just_listen"],
+                           ["Need Urgent Help", "need_help"]
+                         ],
+                         {},
+                         class: "w-full p-2 text-xs rounded-xl border border-stone-200 text-stone-800 bg-white focus:ring-2 focus:ring-emerald-500 focus:outline-none cursor-pointer" %>
+          </div>
+        </div>
+
+        <button type="submit"
+                class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#031d0e] via-[#052e16] to-[#0a4523] text-white font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2 active:scale-95 cursor-pointer">
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          </svg>
+          <span>Submit Anonymously</span>
+        </button>
+      <% end %>
+    </div>
+
+    <!-- Widget Footer Links -->
+    <div class="px-4 py-2.5 bg-emerald-50/70 border-t border-emerald-100 flex items-center justify-between text-xs">
+      <%= link_to ask_questions_path, class: "font-semibold text-emerald-800 hover:text-emerald-950 transition-colors flex items-center gap-1" do %>
+        <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+        </svg>
+        <span>Browse Q&amp;A Library</span>
+      <% end %>
+
+      <%= link_to "Full Portal &rarr;".html_safe, ask_root_path, class: "text-[11px] font-bold text-emerald-700 hover:underline" %>
+    </div>
+
+  </div>
+
+  <!-- Floating Trigger Button (Square with rounded borders) -->
+  <button type="button"
+          data-action="click->ask-floating-widget#toggle"
+          data-ask-floating-widget-target="button"
+          class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-[#031d0e] via-[#052e16] to-[#0a4523] border-2 border-lime-400/40 text-lime-300 shadow-[0_10px_25px_rgba(3,29,14,0.5)] hover:shadow-[0_12px_30px_rgba(163,230,53,0.4)] hover:border-lime-400 hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer flex items-center justify-center relative group"
+          aria-label="Open TOM Ask Question Widget">
+
+    <!-- Open Icon -->
+    <div data-ask-floating-widget-target="openIcon" class="flex flex-col items-center justify-center">
+      <svg class="w-6 h-6 stroke-[2] group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <span class="text-[9px] font-black uppercase tracking-wider text-lime-300 mt-0.5 leading-none">Ask</span>
+    </div>
+
+    <!-- Close Icon (when open) -->
+    <svg data-ask-floating-widget-target="closeIcon" class="w-6 h-6 stroke-[2.5] hidden text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+    </svg>
+
+    <!-- Glowing Notification Dot -->
+    <span class="absolute -top-1 -right-1 flex h-3.5 w-3.5">
+      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-lime-400 opacity-75"></span>
+      <span class="relative inline-flex rounded-full h-3.5 w-3.5 bg-lime-400 shadow-[0_0_8px_#a3e635]"></span>
+    </span>
+
+    <!-- Hover Tooltip Label -->
+    <span class="absolute left-full ml-3 px-3 py-1.5 rounded-xl bg-[#042411] text-lime-300 text-xs font-bold whitespace-nowrap shadow-xl border border-lime-400/30 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+      Ask TOM &bull; 100% Anonymous
+    </span>
+  </button>
+
+</div>

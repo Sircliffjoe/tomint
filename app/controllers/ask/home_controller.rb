@@ -23,11 +23,18 @@ module Ask
             redirect_to ask_root_path, alert: rate_check[:reason]
           end
           format.turbo_stream do
-            render turbo_stream: turbo_stream.replace(
-              "ask-form-container",
-              partial: "ask/home/form_error",
-              locals: { error: rate_check[:reason] }
-            )
+            render turbo_stream: [
+              turbo_stream.replace(
+                "ask-form-container",
+                partial: "ask/home/form_error",
+                locals: { error: rate_check[:reason] }
+              ),
+              turbo_stream.replace(
+                "floating-ask-widget-body",
+                partial: "ask/home/form_error",
+                locals: { error: rate_check[:reason] }
+              )
+            ]
           end
         end
         return
@@ -62,11 +69,18 @@ module Ask
         respond_to do |format|
           format.html { render :index, status: :unprocessable_entity }
           format.turbo_stream do
-            render turbo_stream: turbo_stream.replace(
-              "ask-form-container",
-              partial: "ask/home/form",
-              locals: { question: @question, categories: @categories }
-            )
+            render turbo_stream: [
+              turbo_stream.replace(
+                "ask-form-container",
+                partial: "ask/home/form",
+                locals: { question: @question, categories: @categories }
+              ),
+              turbo_stream.replace(
+                "floating-ask-widget-body",
+                partial: "ask/home/floating_form_error",
+                locals: { question: @question, categories: @categories }
+              )
+            ]
           end
         end
       end
@@ -96,7 +110,7 @@ module Ask
     end
 
     def notify_safeguarding_team(question)
-      recipients = User.where(role: [ :super_admin, :safeguarding_lead ]).pluck(:email)
+      recipients = User.where(role: [ :super_admin, :responder ]).pluck(:email)
       recipients.each do |email|
         AskMailer.safeguarding_alert(question, email).deliver_later rescue nil
       end

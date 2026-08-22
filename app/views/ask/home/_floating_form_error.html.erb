@@ -1,0 +1,59 @@
+<div id="floating-ask-widget-body" class="p-4 space-y-3.5 bg-stone-50/50">
+  <div class="p-3 rounded-xl bg-red-50 border border-red-200 text-xs text-red-700">
+    <p class="font-bold">Please check the following:</p>
+    <ul class="list-disc pl-4 mt-1 space-y-0.5">
+      <% question.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+    </ul>
+  </div>
+
+  <%= form_with model: question, url: ask_submit_question_path, id: "floating-ask-form", class: "space-y-3" do |f| %>
+    <!-- Honeypot -->
+    <div style="display:none !important;" aria-hidden="true">
+      <input type="text" name="website_hp" tabindex="-1" autocomplete="off" />
+      <input type="text" name="honey_field" tabindex="-1" autocomplete="off" />
+    </div>
+
+    <div>
+      <label class="block text-xs font-bold text-stone-800 mb-1">What's on your mind?</label>
+      <%= f.text_area :body,
+                      rows: 3,
+                      required: true,
+                      placeholder: "Ask a question, share what's bothering you, or express what you're going through...",
+                      class: "w-full p-3 rounded-xl border border-red-300 text-xs text-stone-900 placeholder:text-stone-400 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:bg-white bg-white focus:outline-none transition-all resize-none shadow-inner leading-relaxed" %>
+    </div>
+
+    <div class="grid grid-cols-2 gap-2">
+      <div>
+        <label class="block text-[11px] font-semibold text-stone-600 mb-0.5">Topic</label>
+        <%= f.collection_select :ask_category_id,
+                                categories,
+                                :id,
+                                :name,
+                                { prompt: "General / Any Topic" },
+                                class: "w-full p-2 text-xs rounded-xl border border-stone-200 text-stone-800 bg-white focus:ring-2 focus:ring-emerald-500 focus:outline-none cursor-pointer" %>
+      </div>
+      <div>
+        <label class="block text-[11px] font-semibold text-stone-600 mb-0.5">Preference</label>
+        <%= f.select :response_preference,
+                     [
+                       ["Answer Publicly (Library)", "public_answer"],
+                       ["Private Response", "private_response"],
+                       ["Just Listen", "just_listen"],
+                       ["Need Urgent Help", "need_help"]
+                     ],
+                     {},
+                     class: "w-full p-2 text-xs rounded-xl border border-stone-200 text-stone-800 bg-white focus:ring-2 focus:ring-emerald-500 focus:outline-none cursor-pointer" %>
+      </div>
+    </div>
+
+    <button type="submit"
+            class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#031d0e] via-[#052e16] to-[#0a4523] text-white font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2 active:scale-95 cursor-pointer">
+      <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+      </svg>
+      <span>Submit Anonymously</span>
+    </button>
+  <% end %>
+</div>

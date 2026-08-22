@@ -34,22 +34,26 @@
   <body class="tom-public bg-stone-50 font-sans text-gray-900 antialiased selection:bg-leaf-100 selection:text-leaf-900 min-h-screen flex flex-col">
     <%= render "shared/public_header" %>
 
-    <main class="isolate flex-auto">
-      <% if notice %>
-        <div class="flash-alert fixed top-20 right-5 z-50 p-4 text-leaf-700 bg-leaf-50 rounded-lg shadow-lg border border-leaf-100" role="alert" style="transition: opacity 0.5s ease;">
-          <%= notice %>
-        </div>
-      <% end %>
-      <% if alert %>
-        <div class="flash-alert fixed top-20 right-5 z-50 p-4 text-red-700 bg-red-50 rounded-lg shadow-lg border border-red-100" role="alert" style="transition: opacity 0.5s ease;">
-          <%= alert %>
-        </div>
-      <% end %>
+    <main class="isolate flex-auto pb-24 lg:pb-0">
+      <div id="global-flash-container">
+        <% if notice %>
+          <div class="flash-alert fixed top-20 right-5 z-50 p-4 text-leaf-700 bg-leaf-50 rounded-lg shadow-lg border border-leaf-100" role="alert" style="transition: opacity 0.5s ease;">
+            <%= notice %>
+          </div>
+        <% end %>
+        <% if alert %>
+          <div class="flash-alert fixed top-20 right-5 z-50 p-4 text-red-700 bg-red-50 rounded-lg shadow-lg border border-red-100" role="alert" style="transition: opacity 0.5s ease;">
+            <%= alert %>
+          </div>
+        <% end %>
+      </div>
 
       <%= yield %>
     </main>
 
     <%= render "shared/footer" %>
+    <%= render "shared/mobile_bottom_nav" %>
+    <%= render "shared/ask_floating_widget" if !admin_area? %>
 
     <button type="button" class="tom-back-top" aria-label="Back to top" data-back-to-top>
       <span aria-hidden="true">&uarr;</span>

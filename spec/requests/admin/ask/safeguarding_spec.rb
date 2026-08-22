@@ -9,10 +9,10 @@ RSpec.describe "Admin::Ask::SafeguardingController", type: :request do
       password: "password123", role: :super_admin
     )
   end
-  let!(:safeguarding_lead) do
+  let!(:responder) do
     User.create!(
-      first_name: "Lead", last_name: "User", email: "lead_safe_test@tomint.org",
-      password: "password123", role: :safeguarding_lead
+      first_name: "Responder", last_name: "User", email: "resp_safe_test@tomint.org",
+      password: "password123", role: :responder
     )
   end
   let!(:regular_user) do
@@ -38,8 +38,8 @@ RSpec.describe "Admin::Ask::SafeguardingController", type: :request do
       expect(response).to redirect_to(admin_ask_dashboard_path)
     end
 
-    it "grants access to safeguarding lead" do
-      sign_in safeguarding_lead
+    it "grants access to responder" do
+      sign_in responder
       get admin_ask_safeguarding_index_path
       expect(response).to have_http_status(:success)
       expect(response.body).to include("Safeguarding &amp; Crisis Hub")
@@ -48,7 +48,7 @@ RSpec.describe "Admin::Ask::SafeguardingController", type: :request do
   end
 
   describe "POST /admin/ask/safeguarding/:id/escalate" do
-    before { sign_in safeguarding_lead }
+    before { sign_in responder }
 
     it "creates a formal escalation case" do
       expect {
@@ -57,7 +57,7 @@ RSpec.describe "Admin::Ask::SafeguardingController", type: :request do
             escalation_type: "urgent_crisis",
             severity: "critical",
             reason: "Suicidal ideation reported by teenager",
-            assigned_safeguarding_lead_id: safeguarding_lead.id
+            assigned_safeguarding_lead_id: responder.id
           }
         }
       }.to change(safeguarding_question.ask_escalations, :count).by(1)

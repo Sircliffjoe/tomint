@@ -31,6 +31,8 @@ class ApplicationController < ActionController::Base
       directorates_dashboard_path
     when "state_coordinator", "state_secretary"
       states_dashboard_path
+    when "responder"
+      admin_ask_dashboard_path
     else
       reports_path
     end

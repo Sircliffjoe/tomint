@@ -33,7 +33,7 @@ module Admin
       def show
         @escalation = @question.ask_escalations.build
         @active_escalation = @question.ask_escalations.active.first
-        @safeguarding_leads = User.where(role: [ :super_admin, :safeguarding_lead ])
+        @safeguarding_leads = User.where(role: [ :super_admin, :responder ])
         @internal_notes = @question.ask_internal_notes.includes(:user).recent
         @moderation_actions = @question.ask_moderation_actions.includes(:user).recent
       end

@@ -7,6 +7,9 @@ import { application } from "controllers/application"
 import AskDisplayController from "controllers/ask_display_controller"
 application.register("ask-display", AskDisplayController)
 
+import AskFloatingWidgetController from "controllers/ask_floating_widget_controller"
+application.register("ask-floating-widget", AskFloatingWidgetController)
+
 import AskFormController from "controllers/ask_form_controller"
 application.register("ask-form", AskFormController)
 
@@ -21,6 +24,9 @@ application.register("hello", HelloController)
 
 import PageTemplateController from "controllers/page_template_controller"
 application.register("page-template", PageTemplateController)
+
+import PasswordVisibilityController from "controllers/password_visibility_controller"
+application.register("password-visibility", PasswordVisibilityController)
 
 import ReportFormController from "controllers/report_form_controller"
 application.register("report-form", ReportFormController)

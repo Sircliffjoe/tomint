@@ -20,7 +20,7 @@ class ReportPolicy < ApplicationPolicy
   end
 
   def index?
-    true
+    !user.responder?
   end
 
   def show?

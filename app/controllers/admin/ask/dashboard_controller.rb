@@ -7,7 +7,13 @@ module Admin
       before_action :ensure_authorized!
 
       def index
+        @my_assigned_questions = AskQuestion.where(safeguarding_flag: false)
+                                             .joins(:ask_assignments)
+                                             .where(ask_assignments: { assignee_id: current_user.id, active: true })
+                                             .order(priority: :desc, submitted_at: :desc)
+
         @stats = {
+          assigned_to_me: @my_assigned_questions.count,
           new_intake: AskQuestion.where(status: :new_intake, safeguarding_flag: false).count,
           under_review: AskQuestion.where(status: :under_review, safeguarding_flag: false).count,
           awaiting_response: AskQuestion.where(status: :awaiting_response, safeguarding_flag: false).count,
@@ -20,11 +26,15 @@ module Admin
         }
 
         # Questions awaiting action
-        @recent_questions = policy_scope(AskQuestion)
-                             .where(safeguarding_flag: false)
-                             .where(status: [ :new_intake, :under_review, :awaiting_response ])
-                             .order(priority: :desc, submitted_at: :desc)
-                             .limit(8)
+        @recent_questions = if current_user.responder? && @my_assigned_questions.any?
+                              @my_assigned_questions.limit(8)
+                            else
+                              policy_scope(AskQuestion)
+                                .where(safeguarding_flag: false)
+                                .where(status: [ :new_intake, :under_review, :awaiting_response, :follow_up_required ])
+                                .order(priority: :desc, submitted_at: :desc)
+                                .limit(8)
+                            end
 
         # Active live sessions
         @active_sessions = AskLiveSession.open_sessions.limit(4)

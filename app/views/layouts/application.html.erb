@@ -50,24 +50,28 @@
       <%= render "shared/header" %>
     <% else %>
       <%= render "shared/public_header" %>
+      <%= render "shared/mobile_bottom_nav" %>
     <% end %>
 
-    <main class="<%= (user_signed_in? && admin_area?) ? 'md:ml-64 pt-20 px-6 pb-6' : '' %>">
-      <% if notice %>
-        <div class="flash-alert flash-notice mb-4 p-4 text-green-700 bg-green-100 rounded-lg flex items-center justify-between" role="alert" style="transition: opacity 0.5s ease;">
-          <span><%= notice %></span>
-          <button type="button" onclick="this.parentElement.style.opacity='0';setTimeout(function(){this.parentElement.remove()}.bind(this),500);" class="text-green-700 hover:text-green-900 ml-4 text-lg font-bold leading-none">&times;</button>
-        </div>
-      <% end %>
-      <% if alert %>
-        <div class="flash-alert flash-error mb-4 p-4 text-red-700 bg-red-100 rounded-lg flex items-center justify-between" role="alert" style="transition: opacity 0.5s ease;">
-          <span><%= alert %></span>
-          <button type="button" onclick="this.parentElement.style.opacity='0';setTimeout(function(){this.parentElement.remove()}.bind(this),500);" class="text-red-700 hover:text-red-900 ml-4 text-lg font-bold leading-none">&times;</button>
-        </div>
-      <% end %>
+    <main class="<%= (user_signed_in? && admin_area?) ? 'md:ml-64 pt-20 px-6 pb-6' : 'pb-24 lg:pb-0' %>">
+      <div id="global-flash-container">
+        <% if notice %>
+          <div class="flash-alert flash-notice mb-4 p-4 text-green-700 bg-green-100 rounded-lg flex items-center justify-between" role="alert" style="transition: opacity 0.5s ease;">
+            <span><%= notice %></span>
+            <button type="button" onclick="this.parentElement.style.opacity='0';setTimeout(function(){this.parentElement.remove()}.bind(this),500);" class="text-green-700 hover:text-green-900 ml-4 text-lg font-bold leading-none">&times;</button>
+          </div>
+        <% end %>
+        <% if alert %>
+          <div class="flash-alert flash-error mb-4 p-4 text-red-700 bg-red-100 rounded-lg flex items-center justify-between" role="alert" style="transition: opacity 0.5s ease;">
+            <span><%= alert %></span>
+            <button type="button" onclick="this.parentElement.style.opacity='0';setTimeout(function(){this.parentElement.remove()}.bind(this),500);" class="text-red-700 hover:text-red-900 ml-4 text-lg font-bold leading-none">&times;</button>
+          </div>
+        <% end %>
+      </div>
 
       <%= yield %>
     </main>
+    <%= render "shared/ask_floating_widget" if !admin_area? %>
     <%= render "shared/global_modal" if !admin_area? %>
   </body>
 </html>

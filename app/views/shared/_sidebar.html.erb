@@ -150,6 +150,7 @@
             <% end %>
           </li>
           <li>
+            <% active_assigned_count = current_user.assigned_questions.where(safeguarding_flag: false).where.not(status: [ :answered, :closed, :rejected ]).count rescue 0 %>
             <%= link_to admin_ask_questions_path, class: "flex items-center justify-between px-4 py-2 text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg group" do %>
               <div class="flex items-center">
                 <svg class="w-5 h-5 mr-3 text-gray-500 group-hover:text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -157,6 +158,11 @@
                 </svg>
                 Questions Queue
               </div>
+              <% if active_assigned_count > 0 %>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-600 text-white animate-pulse">
+                  <%= active_assigned_count %>
+                </span>
+              <% end %>
             <% end %>
           </li>
           <li>
@@ -224,7 +230,7 @@
           </li>
         <% end %>
 
-        <% unless current_user.super_admin? %>
+        <% unless current_user.super_admin? || current_user.responder? || current_user.public_user? %>
           <li>
             <%= link_to internal_messages_path, class: "flex items-center px-4 py-2 text-gray-700 hover:bg-green-50 hover:text-green-700 rounded-lg group" do %>
               <svg class="w-5 h-5 mr-3 text-gray-500 group-hover:text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -236,12 +242,14 @@
         <% end %>
       <% end %>
       
-       <li>
-        <%= link_to reports_path, class: "flex items-center px-4 py-2 text-gray-700 hover:bg-green-50 hover:text-green-700 rounded-lg group" do %>
-          <svg class="w-5 h-5 mr-3 text-gray-500 group-hover:text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-          Reports
-        <% end %>
-      </li>
+      <% if user_signed_in? && (current_user.super_admin? || current_user.directorate_director? || current_user.state_coordinator? || current_user.state_secretary?) %>
+        <li>
+          <%= link_to reports_path, class: "flex items-center px-4 py-2 text-gray-700 hover:bg-green-50 hover:text-green-700 rounded-lg group" do %>
+            <svg class="w-5 h-5 mr-3 text-gray-500 group-hover:text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+            Reports
+          <% end %>
+        </li>
+      <% end %>
 
       <li>
         <%= link_to root_path, class: "flex items-center px-4 py-2 text-green-700 hover:bg-green-50 hover:text-green-700 rounded-lg group" do %>

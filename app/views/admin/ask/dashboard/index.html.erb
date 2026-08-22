@@ -1,4 +1,4 @@
-<% content_for :title, "TOM ASK Administration Dashboard" %>
+<% content_for :title, "TOM ASK Dashboard" %>
 
 <div class="space-y-8">
   <!-- Header -->
@@ -23,8 +23,38 @@
     </div>
   </div>
 
+  <!-- Assigned Questions Banner (if any) -->
+  <% if @stats[:assigned_to_me] && @stats[:assigned_to_me] > 0 %>
+    <div class="p-5 rounded-2xl bg-emerald-900 text-white flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 shadow-lg border border-emerald-700">
+      <div class="flex items-center gap-4">
+        <div class="w-12 h-12 rounded-xl bg-emerald-800 flex items-center justify-center text-lime-400 flex-shrink-0">
+          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
+        </div>
+        <div>
+          <h2 class="text-base font-bold text-white">Questions Assigned to You</h2>
+          <p class="text-xs text-emerald-200 mt-0.5">You have <strong><%= pluralize(@stats[:assigned_to_me], "question") %></strong> currently assigned to you awaiting a response.</p>
+        </div>
+      </div>
+      <%= link_to admin_ask_questions_path(filter: "assigned_to_me"), class: "px-5 py-2.5 rounded-xl bg-lime-400 text-emerald-950 font-bold text-xs hover:bg-lime-300 transition-all shadow text-center flex-shrink-0" do %>
+        Respond to My Questions &rarr;
+      <% end %>
+    </div>
+  <% end %>
+
   <!-- Stat Counters Grid -->
   <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+    <!-- Assigned to Me -->
+    <%= link_to admin_ask_questions_path(filter: "assigned_to_me"), class: "p-5 rounded-2xl bg-white border #{(@stats[:assigned_to_me] && @stats[:assigned_to_me] > 0) ? 'border-emerald-400 ring-2 ring-emerald-100 shadow-md' : 'border-stone-200/90 shadow-sm'} hover:border-emerald-400 hover:shadow-md transition-all block group" do %>
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-bold text-stone-500 uppercase tracking-wider block">Assigned to Me</span>
+        <% if @stats[:assigned_to_me] && @stats[:assigned_to_me] > 0 %>
+          <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 animate-pulse">Action</span>
+        <% end %>
+      </div>
+      <p class="text-3xl font-black text-emerald-700 mt-1"><%= @stats[:assigned_to_me] || 0 %></p>
+      <span class="text-[11px] text-stone-400 group-hover:text-emerald-700 transition-colors">My assigned queue &rarr;</span>
+    <% end %>
+
     <!-- New Intake -->
     <%= link_to admin_ask_questions_path(status: "new_intake"), class: "p-5 rounded-2xl bg-white border border-stone-200/90 shadow-sm hover:border-blue-300 hover:shadow-md transition-all block group" do %>
       <span class="text-xs font-bold text-stone-500 uppercase tracking-wider block">New Intake</span>
