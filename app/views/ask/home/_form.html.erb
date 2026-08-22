@@ -77,20 +77,27 @@
         <p class="text-xs sm:text-sm text-stone-500 mt-0.5">Select the topic that best fits your question (optional, but helps us route to the right responder).</p>
       </div>
 
+      <% current_categories = (local_assigns[:categories].presence || @categories.presence || AskCategory.active.ordered) %>
       <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-        <% categories.each do |cat| %>
-          <button type="button"
-                  data-ask-form-target="categoryCard"
-                  data-category-id="<%= cat.id %>"
-                  data-action="click->ask-form#selectCategory"
-                  class="p-3.5 rounded-xl border border-gray-200 bg-white text-left hover:border-emerald-400 hover:shadow-sm transition-all flex flex-col justify-between cursor-pointer group">
-            <span class="text-xs font-bold text-stone-900 group-hover:text-emerald-700 block mb-1">
-              <%= cat.name %>
-            </span>
-            <span class="text-[11px] text-stone-500 line-clamp-2">
-              <%= cat.description.presence || "Questions regarding #{cat.name}" %>
-            </span>
-          </button>
+        <% if current_categories.any? %>
+          <% current_categories.each do |cat| %>
+            <button type="button"
+                    data-ask-form-target="categoryCard"
+                    data-category-id="<%= cat.id %>"
+                    data-action="click->ask-form#selectCategory"
+                    class="p-3.5 rounded-xl border border-gray-200 bg-white text-left hover:border-emerald-400 hover:shadow-sm transition-all flex flex-col justify-between cursor-pointer group">
+              <span class="text-xs font-bold text-stone-900 group-hover:text-emerald-700 block mb-1">
+                <%= cat.name %>
+              </span>
+              <span class="text-[11px] text-stone-500 line-clamp-2">
+                <%= cat.description.presence || "Questions regarding #{cat.name}" %>
+              </span>
+            </button>
+          <% end %>
+        <% else %>
+          <div class="col-span-full p-6 rounded-2xl bg-stone-50 border border-stone-200 text-center text-xs text-stone-500">
+            No specific topics available at this time. You can proceed to the next step by clicking Continue.
+          </div>
         <% end %>
       </div>
     </div>
