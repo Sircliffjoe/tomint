@@ -68,4 +68,27 @@ RSpec.describe "Admin::Ask::QuestionsController", type: :request do
       expect(question.reload.current_assignee).to eq(responder)
     end
   end
+
+  describe "DELETE /admin/ask/questions/:id" do
+    it "deletes the question as super admin" do
+      expect {
+        delete admin_ask_question_path(question)
+      }.to change(AskQuestion, :count).by(-1)
+
+      expect(response).to redirect_to(admin_ask_questions_path)
+      follow_redirect!
+      expect(response.body).to include("Question deleted")
+    end
+
+    it "deletes the question as responder" do
+      sign_out admin
+      sign_in responder
+
+      expect {
+        delete admin_ask_question_path(question)
+      }.to change(AskQuestion, :count).by(-1)
+
+      expect(response).to redirect_to(admin_ask_questions_path)
+    end
+  end
 end

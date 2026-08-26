@@ -33,7 +33,7 @@ class AskQuestionPolicy < ApplicationPolicy
   end
 
   def destroy?
-    user.present? && user.super_admin?
+    user.present? && (user.super_admin? || user.responder?)
   end
 
   def safeguarding_access?
