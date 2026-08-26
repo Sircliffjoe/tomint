@@ -60,6 +60,19 @@ RSpec.describe "Ask::LiveController", type: :request do
 
       expect(response).to redirect_to(ask_live_session_path(live_session))
     end
+
+    it "submits a live question into moderation via turbo_stream" do
+      expect {
+        post ask_live_create_question_path(live_session), as: :turbo_stream, params: {
+          ask_question: {
+            body: "How do we handle fear of the future?"
+          }
+        }
+      }.to change(live_session.ask_questions, :count).by(1)
+
+      expect(response).to have_http_status(:success)
+      expect(response.media_type).to eq("text/vnd.turbo-stream.html")
+    end
   end
 
   describe "POST /ask/live/:slug/questions/:id/vote" do
@@ -67,6 +80,15 @@ RSpec.describe "Ask::LiveController", type: :request do
       expect {
         post ask_live_vote_question_path(live_session, live_question)
       }.to change { live_question.reload.upvotes_count }.by(1)
+    end
+
+    it "upvotes the question via turbo_stream" do
+      expect {
+        post ask_live_vote_question_path(live_session, live_question), as: :turbo_stream
+      }.to change { live_question.reload.upvotes_count }.by(1)
+
+      expect(response).to have_http_status(:success)
+      expect(response.media_type).to eq("text/vnd.turbo-stream.html")
     end
   end
 

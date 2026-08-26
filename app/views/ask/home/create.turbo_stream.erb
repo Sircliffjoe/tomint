@@ -56,7 +56,7 @@
     </div>
 
     <div class="space-y-2 pt-1">
-      <%= link_to ask_check_status_path(reference: @question.public_reference), class: "block w-full py-2 px-3 rounded-xl bg-emerald-700 text-white font-bold text-xs hover:bg-emerald-800 transition-all shadow-sm text-center" do %>
+      <%= link_to ask_status_check_path(reference: @question.public_reference), class: "block w-full py-2 px-3 rounded-xl bg-emerald-700 text-white font-bold text-xs hover:bg-emerald-800 transition-all shadow-sm text-center" do %>
         Check Status Now &rarr;
       <% end %>
       <%= link_to "Ask Another Question", ask_root_path, class: "block w-full py-2 px-3 rounded-xl border border-stone-200 bg-white text-stone-700 font-semibold text-xs hover:bg-stone-100 transition-all text-center" %>

@@ -32,6 +32,24 @@ RSpec.describe "Ask::HomeController", type: :request do
       expect(question.public_reference).to be_present
     end
 
+    it "creates a new anonymous question via turbo_stream format" do
+      expect {
+        post ask_submit_question_path, as: :turbo_stream, params: {
+          ask_question: {
+            body: "How do I know what career to choose?",
+            ask_category_id: category.id,
+            response_preference: "public_answer"
+          }
+        }
+      }.to change(AskQuestion, :count).by(1)
+
+      question = AskQuestion.last
+      expect(response).to have_http_status(:success)
+      expect(response.media_type).to eq("text/vnd.turbo-stream.html")
+      expect(response.body).to include(question.public_reference)
+      expect(response.body).to include(ask_status_check_path(reference: question.public_reference))
+    end
+
     it "blocks spam honeypot submissions" do
       expect {
         post ask_submit_question_path, params: {
